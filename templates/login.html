@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+<link rel="stylesheet" href="http://me.point.services/meet/meet.css">
+
+{% block body %}
+
+<div id = "login-container">
+
+{% if session['language'] == 'he' %}
+  <a href="{{url_for('loginWithFacebook')}}">
+    <img src = "{{url_for('static', filename='facebook1.png')}}" height=100px style=" height: 40px;" >
+  </a>
+
+  <a href="{{url_for('loginWithGoogle')}}">
+    <img src = "{{url_for('static', filename='google1.png')}}" height=60px style="max-height: 39px;">
+  </a>
+
+  </br>
+  </br>
+
+  <form action="{{ url_for('login') }}" method = 'post'>
+    <div class="form-group">
+      <input id="input-email1" class="email form-control" type="text" name="email" placeholder="כתובת אימייל">
+    </div>
+
+    <div class="form-group">
+      <input id="input-password1" class="password form-control" type="password" name="password" placeholder="סיסמה">
+    </div>
+
+    <button  class="btn btn-success" type="submit" id="submit-login"> Login </button>
+  </form>
+
+  <p class="black"><a href="{{url_for('forgotPassword')}}">?שכחת את הסיסמא</a></p>
+  <p class="black">?אין לך חשבון <br>  <a href="{{url_for('signup')}}">!צור אחד כאן</a></p>
+
+{%elif session['language'] == 'ar' %}
+  <a href="{{url_for('loginWithFacebook')}}">
+    <img src = "{{url_for('static', filename='facebook1.png')}}" height=100px style="height: 40px;">
+  </a>
+
+  <a href="{{url_for('loginWithGoogle')}}">
+    <img src = "{{url_for('static', filename='google1.png')}}" height=60px style="max-height: 39px;">
+  </a>
+
+  </br>
+  </br>
+
+  <form action="{{ url_for('login') }}" method = 'post'>
+    <div class="form-group">
+      <input id="input-email1" class="email form-control" type="text" name="email" placeholder="البريد الإلكتروني">
+    </div>
+
+    <div class="form-group">
+      <input id="input-password1" class="password form-control" type="password" name="password" placeholder="كلمة السر">
+    </div>
+
+    <button class="btn btn-success"  type="submit" id="submit-login"> Login </button>
+  </form>
+
+  <p class="black"><a href="{{url_for('forgotPassword')}}">نسيت كلمة المرور ؟</a></p>
+  <p class="black">ليس لديك حساب ؟  <br>   <a href="{{url_for('signup')}}">إعمل حساب هنا</a></p>
+
+{%else%}
+  <a href="{{url_for('loginWithFacebook')}}">
+    <img src = "{{url_for('static', filename='facebook1.png')}}" height=100px  style=" height: 40px;">
+  </a>
+
+  <a href="{{url_for('loginWithGoogle')}}">
+    <img src = "{{url_for('static', filename='google1.png')}}" height=60px style="max-height: 39px;">
+  </a>
+
+  </br>
+  </br>
+
+  <form action="{{ url_for('login') }}" method = 'post'>
+    <div class="form-group">
+      <input id="input-email1" class="email form-control" type="text" name="email" placeholder="Email Address">
+    </div>
+
+    <div class="form-group">
+      <input id="input-password1" class="password form-control" type="password" name="password" placeholder="Password">
+    </div>
+
+    <button class="btn btn-success" type="submit" id="submit-login"> Login </button>
+  </form>
+
+  <p><a href="{{url_for('forgotPassword')}}">Forgot your password?</a></p>
+  <p class="black">Don't have an account?<br>  <a href="{{url_for('signup')}}">Create one here!</a></p>
+
+{%endif%}
+</div>
+
+{%endblock%}
+

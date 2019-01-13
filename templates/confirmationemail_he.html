@@ -1,0 +1,9 @@
+<h2> היי {{ user.first_name }}!,</h2>
+
+<p>קוד האישור שלך הוא {{user.confirmation_code}}. הקוד הזה יפוג בעוד 10 דקות. אתה יכול לוודא שהקוד נמצא באתר על ידי לחיצה על הלינק הבא </p>
+
+<a href="{{ url_for('verify', email=user.email|string , _external=True)}}">אשר את חשבונך כאן</a>.
+
+<p>השקעה שמחה!</p>
+
+<p>מיט שנה 3 צוות מאיץ </p>

@@ -1,0 +1,117 @@
+
+{% extends "layout.html" %}
+{% block body %}
+
+
+{% if session['language'] == 'ar' %}
+	<style>
+		.body {
+			text-align: right;
+			direction: rtl;
+		}
+
+	</style>
+
+	<div class="body">
+		<h2>:آلية العمل </h2>
+		<div class="right-align" style="padding:20px;">
+			<ul>
+				<li>سجل الدخول كمستخدم جديد و إحصل على 10,000 نقود <span><img class="meet-inline-logo" src="{{url_for('static', filename='meet_logo_1.png')}}" height=30px></span></li>
+				<li>إستخدم النقود من أجل الإستثمار في أفكار المشاريع التي عمل عليها الطلاب</li>
+				<li>تجول في هذا الموقع و شاهد مقاطع فيديو عن أفكار هذه المشاريع , شاهد الدعايات التجارية و الموقع الإلكتروني أيضا  </li>
+				<li>المشاريع التي تحصل على أكبر قدر من الإستثمار سوف تدخل في برنامج مسرعة الأعمال الناشئة و سوف تكون واضحة للعيان هذا الصيف </li>
+				<li>الحملة تبدأ في 2018\3\26 و تنتهي في <b style="font-size: 17px">2018\4\8</b> لا تضيع فرصة التصويت قبل نهاية الحملة</li>
+			</ul>
+		</div>
+
+		<div id="notify">
+			{% if timeline == "before" %}
+				<div class="before-notify">
+					<p>Add your email address below to be notified when the campaign begins.</p></br>
+					<form action="{{url_for('notifyList')}}" method = 'post' value="Type your Email Address Here">
+						<input  class="emailindex" type="email" name="email"  placeholder="email">
+						<button class="btn btn-success" type = "submit" name="Notify me">Notify Me</button><br>
+					</form>
+				</div>
+			{% elif timeline == "after" %}
+				<a href="/login"><button class="btn btn-success btn-lg" type = "submit" name="Notify me" disabled>فل نستثمر!</button></a>
+			{% else %}
+				<!-- during the competition -->
+				<a href="/login"><button class="btn btn-success btn-lg" type = "submit" name="Notify me">فل نستثمر!</button></a>
+			{% endif %}
+		</div>
+	</div>
+
+
+{% elif session['language'] == 'he' %}
+	<style>
+		.body {
+			text-align: right;
+			direction: rtl;
+		}
+
+	</style>
+
+	<div class="body">
+		<h2>איך זה עובד:</h2>
+		<div class="right-align" style="padding:20px;" dir="rtl">
+			<ul>
+				<li><span>הרשמו כמשתמשים חדשים וקבלו 10,000 מטבעות <img class="meet-inline-logo" src="{{url_for('static', filename='meet_logo_1.png')}}" height=30px></span></li>
+				<li>השתמשו במטבעות ה- <span><img class="meet-inline-logo" src="{{url_for('static', filename='meet_logo_1.png')}}" height=30px></span> שלכם על מנת להשקיע ברעיונות לסטארט-אפים שאהבתם שהועלו על ידי התלמידים שלנו</li>
+				<li>דפדפו באתר על מנת לראות רעיונות לסטארט-אפים, צפו בפרסומות ועיינו בדגם הראשוני שלהם</li>
+				<li>הרעיונות שיקבלו את ההשקעות המירביות יכנסו למאיץ הסרטארט-אפים שלנו ויהיו זמינים לקהל הרחב כבר בקיץ הקרוב!</li>
+				<li>הקמפיין יתחיל ב-26 במרץ ויסתיים <b style="font-size: 17px">ב-8 באַפּרִיל, 2018</b> - אל תפספסו את ההזדמנות להצביע</li>
+			</ul>
+		</div>
+
+		<div id="notify">
+			{% if timeline == "before" %}
+				<div class="before-notify">
+					<p>הוסף את כתובת המייל שלך למטה כדי לקבל עדכונים כשהקמפיין מתחיל</p></br>
+					<form action="{{url_for('notifyList')}}" method = 'post' value="Type your Email Address Here">
+						<input  class="emailindex" type="email" name="email"  placeholder="email">
+						<button class="btn btn-success" type = "submit" name="Notify me">שלח לי הודעה</button><br>
+					</form>
+				</div>
+			{% elif timeline == "after" %}
+				<a href="/login"><button class="btn btn-success btn-lg" type="submit" name="Notify me" disabled>יאללה משקיעים!</button></a>
+			{% else %}
+				<a href="/login"><button class="btn btn-success btn-lg" type="submit" name="Notify me">יאללה משקיעים!</button></a>
+			{% endif %}
+		</div>
+	</div>
+
+
+{% else %}
+	<div class="body">
+		<h2>How it works:</h2>
+		<ul style="padding: 20px;">
+			<li>Sign up as a new user and receive 10,000 <span><img class="meet-inline-logo" src="{{url_for('static', filename='meet_logo_1.png')}}" height=30px></span> coins.</li>
+			<li>Use your <span><img class="meet-inline-logo" src="{{url_for('static', filename='meet_logo_1.png')}}" height=30px></span> coins to invest in the student-created startup ideas you like most.</li>
+			<li>Look around this site to see videos of the startup ideas, watch their commercials and view their preliminary mockups.</li>
+			<li>The startup ideas with the most investments will enter our Y3 Accelerator program and be available to the public this summer!</li>
+			<li>The campaign begins March 26th and closes on <b style="font-size: 17px">April 8th, 2018</b> - don't miss your chance to vote!</li>
+		</ul>
+
+		<div id="notify">
+			{% if timeline == "before" %}
+				<div class="before-notify">
+					<p>Add your email address below to be notified when the campaign begins.</p></br>
+					<form action="{{url_for('notifyList')}}" method='post' value="Type your Email Address Here">
+						<input class="emailindex" type="email" name="email"  placeholder="email">
+						<button class="btn btn-success" type = "submit" name="Notify me">Notify Me</button><br>
+					</form>
+				</div>
+			{% elif timeline == "after" %}
+				<a href="/login"><button class="btn btn-success btn-lg" type="submit" name="Notify me" disabled>Let's invest! </button></a>
+			{% else %}
+				<a href="/login"><button class="btn btn-success btn-lg" type="submit" name="Notify me">Let's invest!</button></a>
+			{% endif %}
+		</div>
+
+	</div>
+
+{%endif%}
+
+
+{%endblock%}

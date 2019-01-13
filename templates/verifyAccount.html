@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<!-- http://localhost:5000/verify/runningman%40mit.edu -->
+
+<div id="password-reset-div">
+{% if session['language'] == 'he' %}
+	<p>אנא הכנס את קוד הווידוא</p><br>
+	<form action = "{{url_for('verify', email = user.email|string)}}", method = 'post'>
+		<input class="form-control" type="text" name="code"><br>
+		<input class="btn btn-success" type="submit" value="שלח">
+	</form>
+
+{% elif session['language'] == 'ar' %}
+	<p>من فضلك قم بإدخال كود التفعيل الخاص بك</p><br>
+	<form action = "{{url_for('verify', email = user.email|string)}}", method = 'post'>
+		<input class="form-control" type="text" name="code"><br>
+		<input class="btn btn-success" type="submit" value="أرسل">
+	</form>
+
+{% else %}
+	<p>Please enter your account verification code</p><br>
+	<form action = "{{url_for('verify', email = user.email|string)}}", method = 'post'>
+		<input class="form-control" type="text" name="code"><br>
+		<input class="btn btn-success" type="submit" value="submit">
+	</form>
+
+{% endif %}
+</div>
+
+{%endblock%}

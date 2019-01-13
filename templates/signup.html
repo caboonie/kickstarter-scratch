@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+{% block body %}
+
+{% if session['language'] == 'he'%}
+  <div id="signup-container">
+    <h2 style="color: black; margin-bottom: 20px;"> הירשם כמשתמש חדש</h2>
+    <form action = "{{url_for('signup')}}" class="form-horizontal" method = 'post'>
+
+      <div class="form-group">
+        <label for="first-name1" class="col-sm-4 control-label">שם</label>
+        <div class="col-sm-8">
+          <input id="first-name1" type="text" class="form-control" placeholder="שם" name="first_name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="last-name1" class="col-sm-4 control-label">שם משפחה</label>
+        <div class="col-sm-8">
+          <input id="last-name1" type="text" class="form-control" placeholder="שם משפחה" name="last_name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password1" class="col-sm-4 control-label">סיסמא</label>
+        <div class="col-sm-8">
+          <input id="password1" type="password" class="form-control" placeholder="סיסמא" name="password">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="verify-password1" class="col-sm-4 control-label">וודא סיסמא</label>
+        <div class="col-sm-8">
+          <input id="verify-password1" type="password" class="form-control" placeholder="סיסמא" name="verify_password">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="hometown1" class="col-sm-4 control-label">עיר מגורים</label>
+        <div class="col-sm-8">
+          <input id="hometown1" type="text" class="form-control" placeholder="עיר מגורים" name="hometown">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email1" class="col-sm-4 control-label">כתובת אימייל</label>
+        <div class="col-sm-8">
+          <input id="email1" type="email" class="form-control" placeholder="כתובת אימייל" name="email">
+        </div>
+      </div>
+    
+      <button class="btn btn-success" type="submit">הירשם</button>
+    </form>
+  </div>
+
+{%elif session['language']=='ar'%}
+  <div id="signup-container">
+    <h2 style="color: black; margin-bottom: 20px;"> سجل الدخول كمستخدم جديد</h2>
+    <form action = "{{url_for('signup')}}" class="form-horizontal" method = 'post'>
+
+      <div class="form-group">
+        <label for="first-name1" class="col-sm-4 control-label">الأسم</label>
+        <div class="col-sm-8">
+          <input id="first-name1" type="text" class="form-control" placeholder="الأسم" name="first_name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="last-name1" class="col-sm-4 control-label">أسم العائلة</label>
+        <div class="col-sm-8">
+          <input id="last-name1" type="text" class="form-control" placeholder="أسم العائلة" name="last_name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password1" class="col-sm-4 control-label">كلمة السر</label>
+        <div class="col-sm-8">
+          <input id="password1" type="password" class="form-control" placeholder="كلمة السر" name="password">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="verify-password1" class="col-sm-4 control-label">أكد كلمة السر</label>
+        <div class="col-sm-8">
+          <input id="verify-password1" type="password" class="form-control" placeholder="كلمة السر" name="verify_password">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="hometown1" class="col-sm-4 control-label">البلدة</label>
+        <div class="col-sm-8">
+          <input id="hometown1" type="text" class="form-control" placeholder="البلدة" name="hometown">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email1" class="col-sm-4 control-label">البريد الإلكتروني</label>
+        <div class="col-sm-8">
+          <input id="email1" type="email" class="form-control" placeholder="البريد الإلكتروني" name="email">
+        </div>
+      </div>
+    
+      <button class="btn btn-success" type="submit">سجل الدخول</button>
+    </form>
+  </div>
+
+{% else %}
+  <div id="signup-container">
+    <h2 style="color: black; margin-bottom: 20px;"> Sign Up as a New User</h2>
+    <form action = "{{url_for('signup')}}" class="form-horizontal" method = 'post'>
+
+      <div class="form-group">
+        <label for="first-name1" class="col-sm-4 control-label">First Name</label>
+        <div class="col-sm-8">
+          <input id="first-name1" type="text" class="form-control" placeholder="First Name" name="first_name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="last-name1" class="col-sm-4 control-label">Last Name</label>
+        <div class="col-sm-8">
+          <input id="last-name1" type="text" class="form-control" placeholder="Last Name" name="last_name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password1" class="col-sm-4 control-label">Password</label>
+        <div class="col-sm-8">
+          <input id="password1" type="password" class="form-control" placeholder="Password" name="password">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="verify-password1" class="col-sm-4 control-label">Verify Password</label>
+        <div class="col-sm-8">
+          <input id="verify-password1" type="password" class="form-control" placeholder="Password" name="verify_password">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="hometown1" class="col-sm-4 control-label">Hometown</label>
+        <div class="col-sm-8">
+          <input id="hometown1" type="text" class="form-control" placeholder="Hometown" name="hometown">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email1" class="col-sm-4 control-label">Email</label>
+        <div class="col-sm-8">
+          <input id="email1" type="email" class="form-control" placeholder="Email" name="email">
+        </div>
+      </div>
+    
+      <button class="btn btn-success" type="submit">Sign Up</button>
+    </form>
+  </div>
+
+{% endif %}
+
+{%endblock%}

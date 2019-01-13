@@ -1,0 +1,155 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="http://meet.mit.edu/wp-content/themes/costa/img/icons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="http://meet.mit.edu/wp-content/themes/costa/img/icons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="http://meet.mit.edu/wp-content/themes/costa/img/icons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="http://meet.mit.edu/wp-content/themes/costa/img/icons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="http://meet.mit.edu/wp-content/themes/costa/img/icons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="http://meet.mit.edu/wp-content/themes/costa/img/icons/manifest.json">
+  <link rel="shortcut icon" href="http://meet.mit.edu/wp-content/themes/costa/img/icons/favicon.ico">
+
+  <title>MEET Y3 Accelerator Crowd Funding Campaign</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" href="{{url_for('static', filename='w3.css')}}"> -->
+  <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+  
+</head>
+
+<body>
+  <script src="//code.jquery.com/jquery-latest.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/brandClick">
+          <img alt="Brand Meet_Logoredv" src="{{url_for('static', filename='meet_logo_1.png')}}" style="max-height: 100%;">
+        </a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-left flags">
+          <!-- <div class="flags"> -->
+          <li><a href="{{url_for('changeLanguage', language = 'ar')}}">العربية</a></li>
+          <li><a href="{{url_for('changeLanguage', language = 'en')}}">English</a></li>
+          <li><a href="{{url_for('changeLanguage', language = 'he')}}">עברית</a></li>
+          <!-- </div> -->
+        </ul>
+
+        <div class="navbar-right">
+        {% if 'id' in session %}
+          <div class="navbar-text" id="userbox">
+            {%if session['language'] == 'he'%}
+                .{{session['email']}} הנך כרגע רשום כ 
+              </div>
+              <ul class="nav navbar-nav">
+                <li><a href = "{{url_for('logout')}}"> התנתק </a></li>
+              </ul>
+
+            {%elif session['language']=='ar'%}
+                .{{session['email']}} تم تسجيل الدخول بإسم 
+              </div>
+              <ul class="nav navbar-nav">
+                <li><a href = "{{url_for('logout')}}">تسجيل الخروج</a></li>
+              </ul>
+           
+            {%else%}
+                You are currently signed in as {{session['email']}}. 
+              </div>
+              <ul class="nav navbar-nav">
+                <li><a href = "{{url_for('logout')}}">Log Out</a></li>
+              </ul>
+
+            {%endif%}
+
+        {%endif%}
+        </div>
+
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- Title Container -->
+  <div class="logo">
+    <!-- <img src = "{{url_for('static', filename='meet_logo_1.png')}}" alt="Meet_Logoredv" style="max-height: 50px;"> -->
+    <h2>Y3 Accelerator Crowd Funding Campaign</h2>
+  </div>
+  <!-- End Title Container -->
+
+	<!-- <div> -->
+    {% if wallet is defined and wallet.current_value is defined%}
+      <div id='account_balance'>
+        {% if session['language'] == 'he'%}
+          <p> יתרת חשבונך כרגע היא: {{"${:,.2f}".format(wallet.current_value)}}</p>
+
+        {%elif session['language'] == 'ar'%}
+          <p> رصيدك الحالي : {{"${:,.2f}".format(wallet.current_value)}}</p>
+
+        {%else%}
+          <p> Your Current Balance: {{"${:,.2f}".format(wallet.current_value)}}</p>
+
+        {%endif%}
+      </div>
+    {%endif%}
+ 
+    <!--Flash Messaging --> 
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <div class="alert alert-info alert-dismissible message" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="text-align: right"><span aria-hidden="true">&times;</span></button>
+
+          {% for message in messages %}
+            <strong> {{ message }} </strong><br>
+          {% endfor %}
+        </ul>
+
+      </div>
+      {% endif %}
+
+<!--       <script>
+        $(".alert-dismissible").fadeTo(2000, 500).slideUp(500, function(){
+            $(".alert-dismissible").alert('close');
+        });
+      </script> -->
+    {% endwith %}  		
+    <!-- End FLash Messaging --> 
+
+  <!-- </div>  -->
+
+
+  {% block body %}
+
+  {% endblock %}
+  
+  
+  <footer>
+    <div><h4 style="color: #A0A0A0;"> Sponsored by: </h4></div>
+    <img class="footer" src="{{url_for('static', filename='sponsors/logo-netherlandsbw-trans.png')}}" height="100px">
+    <a href="http://meet.mit.edu"><img id="meet-img" class="footer" src="{{url_for('static', filename='meet_logo_21.png')}}" height="30px"></a>
+    <img class="footer" src="{{url_for('static', filename='sponsors/usaidbw.png')}}" height="90px">
+    <img class="footer" src="{{url_for('static', filename='sponsors/mercycorpsbw.png')}}" height="75px">
+
+<!-- 
+    <a href="http://meet.mit.edu"><img class="footer" src="{{url_for('static', filename='meet_logo_21.png')}}" height=40px></a>
+    <img class="footer" src="{{url_for('static', filename='Y3Accelerator1.png')}}" height=100px>
+    <img class="footer" src="{{url_for('static', filename='usaid1.png')}}" height=110px> -->
+  </footer>
+
+</body>
+</html>

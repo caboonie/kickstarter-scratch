@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div id="password-reset-div">
+{% if session['language'] == 'ar'%}
+	<p>أنقر على المربع في الأسفل من إجل إعادة إرسال كود التفعيل {{email}}</p><br>
+
+	<form action="{{url_for('resendCode', email = email)}}"method = 'post'>
+		<input class="btn btn-success" type='submit' value='أرسل الكود'>
+	</form>
+
+{%elif session['language'] == 'he'%}
+	<p>הקלק על הכפתור להלן על מנת לשלוח מחדש את קוד האישור {{email}}</p><br>
+
+	<form action="{{url_for('resendCode', email = email)}}"method = 'post'>
+		<input class="btn btn-success" type='submit' value='שלח קוד מחדש '>
+	</form>
+
+{%else%}
+	<p>Click the button below to resend the confirmation code to {{email}}.</p><br>
+
+	<form action="{{url_for('resendCode', email = email)}}"method = 'post'>
+		<input class="btn btn-success" type='submit' value='Resend Code'>
+	</form>
+
+{%endif%}
+</div>
+
+{%endblock%}

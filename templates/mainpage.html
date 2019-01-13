@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+<h1> Main Page of this test website</h1>
+
+<a href='{{url_for("login")}}'>login</a>
+
+
+Don't have an account? Sign up <a href="{{url_for('signup')}}">here</a>.
+
+
+<a href="{{url_for('logout')}}">Log Out </a> 
+{%endblock%}

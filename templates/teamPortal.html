@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<h2> Welcome {{user.first_name}}</h2>
+<h3> {{team.name}}</h3>
+
+
+
+
+
+<!-- Before Competition --> 
+<h1> Your Team Profile </h1>
+<form action="{{ url_for('updateSubmission') }}" method = 'post'  enctype="multipart/form-data">
+
+<p> Your Team Name </p>
+<input type = "text", name = "team_name", value = '{{team.name}}'>
+
+<p> Team Logo </p> 
+<img src = "{{team.product.photo}}" width = 300px >
+<p>Logo URL</p>
+<input type='text', name='photo_url', value = '{{team.product.photo}}'>
+
+<p> English MVP Description </p>
+<textarea name='description_en'>{{team.product.description_en}}</textarea>
+
+<p> Arabic MVP Description </p>
+<textarea name='description_ar'>{{team.product.description_ar}}</textarea>
+
+
+<p> Hebrew MVP Description </p>
+<textarea name='description_he'>{{team.product.description_he}}</textarea>
+
+
+<p>MVP URL</p>
+<input type = 'text', name='website_url', value = '{{team.product.website_url}}'>
+
+<p> MVP Commercial</p>
+	<input type='text', name='video_url', value = '{{team.product.video}}'>
+
+
+	<input type="submit" name="Save Changes" id="submit">
+</form>
+
+
+
+<h1>Total Investments {{total_investments}}</h1>
+
+<p>Comments</p> 
+{%for comment in comments %}
+<h3>{{comment.user.first_name}} {{comment.user.last_name}}</h3>
+<p>{{comment.text}}</p> 
+{%endfor%}
+
+<a href = "{{url_for('showDashboard')}}"> View Dashboard</p> 
+
+
+{%endblock%}

@@ -1,0 +1,200 @@
+{% extends "layout.html" %}
+{% block body %}
+
+{% if session['language'] == 'he' %}
+	<div class="two" class="right-align">
+		<h1> HELLO WHYYY dont it work{{product.team.name}}</h1>
+
+		{%if product.team_members != None %}
+			<div id="team-members">
+				<h4>{{product.team_members}}</h4><br>
+			</div>
+		{%endif%}
+
+		{%if product.website_url != None %}
+			<div id="product-url">
+				<h4>אתר: <a href={{product.website_url}} target="_blank">{{product.website_url}}</a></h4><br>
+			</div>
+		{%endif%}
+
+		<div class="video-container"><iframe class="video_desktop" width="600" height="334" src="{{product.video}}" allowfullscreen>
+		</iframe></div>
+
+
+
+		<div class=" mainco">
+			<p>
+				{{product.description_he}}
+			</p>
+			<hr>
+
+			{% if session['group'] == 'silver' or session['group'] == 'gold'%}
+				<div class="invest-form">
+					<form action = "{{url_for('addComment', team_id = product.team_id)}}" method = 'post'>
+						<div class="form-group">
+							<!-- <h4>Please leave commentary or feedback for this team here.</h4> -->
+							<textarea name='commentary' class="form-control" rows="3">אנא השאר תגובה או ביקורת לקבוצה כאן.</textarea>
+						</div>
+
+						<button type="submit" class="submitproduct btn btn-success">שלח</button>
+					</form>
+				</div>
+				<br>
+			{%endif%}
+
+			<div class="invest-form">
+				<form action="{{ url_for('makeAnInvestment', product_id = product.id) }}" method = 'post'>
+					<h4>האם ברצונך להשקיע בסטארט-אפ זה? הגדר את סכום השקעתך למטה:</h4>
+					<div class="form-group">
+						<!-- <label for="invest-amount"> Specify your investment amount below: </label> -->
+						<!-- <p> Specify your investment amount below: </p> -->
+						<input id="invest-amount" class="number form-control" type="number" name="amount">
+					</div>
+
+					<button type="submit" class="submitproduct btn btn-success">שלח</button>
+				</form>
+			</div>
+		</div> 
+
+
+		<div id="back-btn">
+			<a href="/products">
+				<button class="btn btn-danger">חזור לרשימת הקבוצות</button>
+			</a>
+		</div>
+
+	</div>
+
+{% elif session['language'] == 'ar' %}
+	<div class="two" class="right-align">
+		<h1>{{product.team.name}}</h1>
+
+		{%if product.team_members != None %}
+			<div id="team-members">
+				<h4>{{product.team_members}}</h4><br>
+			</div>
+		{%endif%}
+
+		{%if product.website_url != None %}
+			<div id="product-url">
+				<h4>Website: <a href={{product.website_url}} target="_blank">{{product.website_url}}</a></h4><br>
+			</div>
+		{%endif%}
+
+
+		<iframe class="video_desktop" width="600" height="334" src="{{product.video}}">
+		</iframe>
+
+		<iframe class="video_mobile" width="304" height="170" src="{{product.video}}">
+		</iframe>
+
+		<div class=" mainco">
+			<p>
+				{{product.description_ar}}
+			</p>
+			<hr>
+
+			{% if session['group'] == 'silver' or session['group'] == 'gold'%}
+				<div class="invest-form">
+					<form action = "{{url_for('addComment', team_id = product.team_id)}}" method = 'post'>
+						<div class="form-group">
+							<!-- <h4>Please leave commentary or feedback for this team here.</h4> -->
+							<textarea name='commentary' class="form-control" rows="3">من فضلك قم بترك ملاحظاتك و تعليقاتك لهذا الفريق هنا</textarea>
+						</div>
+
+						<button type="submit" class="submitproduct btn btn-success">أرسل</button>
+					</form>
+				</div>
+				<br>
+			{%endif%}
+
+			<div class="invest-form">
+				<form action="{{ url_for('makeAnInvestment', product_id = product.id) }}" method = 'post'>
+					<h4>هل تريد الإستثمار في هذا المشروع ؟ حدد مقدار الإستثمار الذي تريده هنا </h4>
+					<div class="form-group">
+						<!-- <label for="invest-amount"> Specify your investment amount below: </label> -->
+						<!-- <p> Specify your investment amount below: </p> -->
+						<input id="invest-amount" class="number form-control" type="number" name="amount">
+					</div>
+
+					<button type="submit" class="submitproduct btn btn-success">أرسل</button>
+				</form>
+			</div>
+		</div> 
+
+
+		<div id="back-btn">
+			<a href="/products">
+				<button class="btn btn-danger">العودة لقائمة المجموعات</button>
+			</a>
+		</div>
+
+	</div>
+
+{% else %}
+	<div class="two">
+		<h1>{{product.team.name}}</h1>
+
+		{%if product.team_members != None %}
+			<div id="team-members">
+				<h4>{{product.team_members}}</h4><br>
+			</div>
+		{%endif%}
+
+		{%if product.website_url != None %}
+			<div id="product-url">
+				<h4>Website: <a href={{product.website_url}} target="_blank">{{product.website_url}}</a></h4><br>
+			</div>
+		{%endif%}
+
+		<iframe class="video_desktop" width="600" height="334" src="{{product.video}}">
+		</iframe>
+
+		<iframe class="video_mobile" width="304" height="170" src="{{product.video}}">
+		</iframe>
+
+		<div class=" mainco">
+			<p>
+				{{product.description_en}}
+			</p>
+			<hr>
+
+			{% if session['group'] == 'silver' or session['group'] == 'gold'%}
+				<div class="invest-form">
+					<form action = "{{url_for('addComment', team_id = product.team_id)}}" method = 'post'>
+						<div class="form-group">
+							<!-- <h4>Please leave commentary or feedback for this team here.</h4> -->
+							<textarea name='commentary' class="form-control" rows="3">Please leave commentary or feedback for this team here.</textarea>
+						</div>
+
+						<button type="submit" class="submitproduct btn btn-success">Submit</button>
+					</form>
+				</div>
+				<br>
+			{%endif%}
+
+			<div class="invest-form">
+				<form action="{{ url_for('makeAnInvestment', product_id = product.id) }}" method = 'post'>
+					<h4>Would you like to invest in this startup?</h4>
+					<div class="form-group">
+						<!-- <label for="invest-amount"> Specify your investment amount below: </label> -->
+						<p> Specify your investment amount below: </p>
+						<input id="invest-amount" class="number form-control" type="number" name="amount">
+					</div>
+
+					<button type="submit" class="submitproduct btn btn-success">Submit</button>
+				</form>
+			</div>
+		</div> 
+
+
+		<div id="back-btn">
+			<a href="/products">
+				<button class="btn btn-danger">Back to List of Groups</button>
+			</a>
+		</div>
+
+	</div>
+{%endif%}
+
+{%endblock%}

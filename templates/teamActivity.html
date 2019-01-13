@@ -1,0 +1,38 @@
+<h1> Team Investment Activity</h1>
+
+{% for x in range(11) %}
+
+<table style="width:100%;text-align:center;border:2px;"
+<tr>
+	<th>ID</th>
+	<th>First Name</th>
+	<th>Last Name</th>
+	<th>Email</th>
+	<th>Team Name</th>
+	<th>Amount</th>
+	<th>Timestamp</th>
+</tr>
+	{% for i in investments %}
+
+
+		{%if i.product.team.id == x+1 %}
+		<tr>
+		<td>{{i.id}}</td>
+		<td>{{i.wallet.user.first_name}}</td>
+		<td>{{i.wallet.user.last_name}}</td>
+		<td>{{i.wallet.user.email}}</td>
+		<td>{{i.product.team.name}}</td>
+		<td>{{i.amount}}</td>
+		<td>{{i.timestamp}}</td>
+		</tr>
+
+		{%endif%}
+	{%endfor%}
+
+</table> 
+<br>
+<br>
+
+
+
+{%endfor%}
