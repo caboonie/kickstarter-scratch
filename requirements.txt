@@ -1,0 +1,15 @@
+Flask
+Flask-HTTPAuth
+Jinja2
+passlib
+python-dateutil
+requests
+SQLAlchemy
+Werkzeug
+gevent
+gunicorn
+psycopg2
+validate_email
+flask_mail
+flask_oauthlib
+Py3DNS
