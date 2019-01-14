@@ -165,19 +165,19 @@ def facebook_authorized(resp):
 	name = me.data['name']
 	query = get_user_by_email(email)
 	if query == None:
-		first_name = name.split(" ")[0]
-		last_name = name.split(" ")[1]
-		dummy_password = "cantguessthis"
+                first_name = name.split(" ")[0]
+                last_name = name.split(" ")[1]
+                dummy_password = "cantguessthis"
                 newUser = create_user(first_name, last_name, "home", email, dummy_password, verified=True)
-		if email in goldMembers:
-			newUser.group = "gold"
-		elif email in silverMembers:
-			newUser.group = "silver"
-		else:
-			newUser.group = "bronze"
-		session.add(newUser)
-		session.commit()
-		## Make a Wallet for  newUser
+                if email in goldMembers:
+                        newUser.group = "gold"
+                elif email in silverMembers:
+                        newUser.group = "silver"
+                else:
+                        newUser.group = "bronze"
+                session.add(newUser)
+                session.commit()
+                ## Make a Wallet for  newUser
                 if email in goldMembers:
                         initial_value = '1000000.00'
                 elif email in silverMembers:
