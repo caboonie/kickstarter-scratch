@@ -23,6 +23,7 @@
 	<form action = "{{url_for('verify', email = user.email|string)}}", method = 'post'>
 		<input class="form-control" type="text" name="code"><br>
 		<input class="btn btn-success" type="submit" value="submit">
+		<a href = '{{url_for("resendCode", email = user.email|string)}}'><span class ="btn btn-success">resend code</span></a>
 	</form>
 
 {% endif %}

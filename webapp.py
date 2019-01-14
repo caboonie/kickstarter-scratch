@@ -21,10 +21,13 @@ LAUNCHDATE = datetime.datetime.strptime('26/03/2018', "%d/%m/%Y").date()
 DEADLINE = datetime.datetime.strptime('09/04/2019', "%d/%m/%Y").date()
 
 app = Flask(__name__)
-mail = Mail(app)
 app.secret_key = CONFIG['SECRET_KEY']
 app.config['GOOGLE_ID'] = CONFIG['GOOGLE_ID']
 app.config['GOOGLE_SECRET'] = CONFIG['GOOGLE_SECRET']
+##FACEBOOK CONFIGURATIONS## 
+FACEBOOK_APP_ID = CONFIG['FACEBOOK_APP_ID']
+FACEBOOK_APP_SECRET = CONFIG['FACEBOOK_APP_SECRET']
+
 oauth = OAuth(app)
 
 app.config.update(
@@ -122,12 +125,89 @@ def authorized():
 def get_google_oauth_token():
     return login_session.get('google_token')
 
+####################################
+#### LOGIN WITH FACEBOOK ROUTES ####
+####################################
+
+facebook = oauth.remote_app('facebook',
+    base_url='https://graph.facebook.com/',
+    request_token_url=None,
+    access_token_url='/oauth/access_token',
+    authorize_url='https://www.facebook.com/dialog/oauth',
+    consumer_key=FACEBOOK_APP_ID,
+    consumer_secret=FACEBOOK_APP_SECRET,
+    request_token_params={'scope': 'email'}
+)
+
 @app.route('/loginWithFacebook')
 def loginWithFacebook():
 	#Toggle the comments between the two lines below if you are running the app locally.
-	#callback = url_for('facebook_authorized', next = request.args.get('next') or request.referrer or None, _external=True)
+	callback = url_for('facebook_authorized', next = request.args.get('next') or request.referrer or None, _external=True)
 	#callback = 'https://meetcampaign18.herokuapp.com/loginWithFacebook/authorized'
-	return "Not implemented"
+	return facebook.authorize(callback=callback)
+
+@app.route('/loginWithFacebook/authorized')
+@facebook.authorized_handler
+def facebook_authorized(resp):
+	if resp is None:
+		return 'Access denied: reason=%s error=%s' % (
+		request.args['error_reason'],
+		request.args['error_description']
+		)
+	if isinstance(resp, OAuthException):
+		return 'Access denied: %s' % resp.message
+	login_session['oauth_token'] = (resp['access_token'], '')
+	me = facebook.get('/me?fields=email,name')
+	if 'email' not in me.data:
+		email = me.data['id']
+	else:
+		email = me.data['email']
+	name = me.data['name']
+	query = get_user_by_email(email)
+	if query == None:
+		first_name = name.split(" ")[0]
+		last_name = name.split(" ")[1]
+		dummy_password = "cantguessthis"
+                newUser = create_user(first_name, last_name, "home", email, dummy_password, verified=True)
+		if email in goldMembers:
+			newUser.group = "gold"
+		elif email in silverMembers:
+			newUser.group = "silver"
+		else:
+			newUser.group = "bronze"
+		session.add(newUser)
+		session.commit()
+		## Make a Wallet for  newUser
+                if email in goldMembers:
+                        initial_value = '1000000.00'
+                elif email in silverMembers:
+                        initial_value = '100000.00'
+                else:
+                        initial_value = '10000.00'
+                create_wallet(initial_value,newUser)
+	else:
+		newUser = query
+
+	login_session.clear()
+	login_session['first_name'] = newUser.first_name
+	login_session['id'] = newUser.id
+	login_session['last_name'] = newUser.last_name
+	login_session['group'] = newUser.group
+	login_session['email'] = newUser.email
+	# if 'language' in login_session:
+	# 	if login_session['language'] == 'ar':
+	# 		flash("تم تسجيل الدخول بنجاح ! أهلا و سهلا،  %s!" % newUser.first_name)
+	# 	elif login_session['language']== 'he':
+	# 		flash("התחברות מוצלחת. ברוכים הבאים, %s!" % newUser.first_name)
+	# else:
+	# 	flash("Login Successful. Welcome, %s!" % newUser.first_name)
+	return redirect(url_for('showProducts'))
+    
+@facebook.tokengetter
+def get_facebook_oauth_token():
+    return login_session.get('oauth_token')
+
+
 
 @app.route("/")
 @app.route("/main")
@@ -328,16 +408,16 @@ def resendCode(email):
 	if request.method == 'POST':
 		reset_confirmation(user)
 		if login_session['language'] == 'he':
-			send_email("איפוס קוד חשבון קמפיין המיט שלך",EMAIL_SENDER,[user.email],render_template("confirmationemail_he.txt", user=user),
-               render_template("confirmationemail_he.html", user=user))
+			send_email("איפוס קוד חשבון קמפיין המיט שלך",EMAIL_SENDER,[user.email],render_template("confirmationemail_he.html", user=user),
+                        render_template("confirmationemail_he.html", user=user))
 			flash("קוד אישור חדש נשלח אל כתובת האימייל שלך.")
 		elif login_session['language'] == 'ar':
-			send_email("إعادة ضبط الكود الخاص بحساب الحملة",EMAIL_SENDER,[user.email],render_template("confirmationemail_ar.txt", user=user),
-               render_template("confirmationemail_ar.html", user=user))
+			send_email("إعادة ضبط الكود الخاص بحساب الحملة",EMAIL_SENDER,[user.email],render_template("confirmationemail_ar.html", user=user),
+                        render_template("confirmationemail_ar.html", user=user))
 			flash("تم إرسال كود تفعيل جديد إلى بريدك الإلكتروني")
 		else:
-			send_email("Resetting your MEETCampaign Account Code",EMAIL_SENDER,[user.email],render_template("confirmationemail.txt", user=user),
-               render_template("confirmationemail.html", user=user))
+			send_email("Resetting your MEETCampaign Account Code",EMAIL_SENDER,[user.email],render_template("confirmationemail.html", user=user),
+                        render_template("confirmationemail.html", user=user))
 			flash("A new verification code has been sent to your email address")
 
 		return redirect(url_for('verify', email = email))
