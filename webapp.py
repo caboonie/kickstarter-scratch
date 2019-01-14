@@ -307,7 +307,16 @@ def verify(email):
                         flash("تم تفعيل الحساب بنجاح")
                 else:
                         flash("Account Verified Successfully")
-                return redirect(url_for('login'))
+                login_session['first_name'] = user.first_name
+                login_session['last_name'] = user.last_name	
+                login_session['email'] = email
+                login_session['id'] = user.id
+                login_session['group'] = user.group
+                if user.group == 'student':
+                        return redirect(url_for('studentPortal'))
+                if user.group == 'administrator':
+                        return redirect(url_for('showDashboard'))
+                return redirect(url_for('showProducts'))
 
 @app.route("/resendCode/<email>", methods = ['GET', 'POST'])
 def resendCode(email):

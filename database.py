@@ -117,6 +117,7 @@ def create_comment(text,team_id):
 
 def make_investment(wallet_id, product_id, amount):
         inv = Investment(wallet_id = wallet_id, product_id = product_id, amount = amount)
+        wallet = session.query(Wallet).filter_by(id = wallet_id).one_or_none()
         wallet.current_value = wallet.current_value - amount
         session.add_all([wallet,inv])
         session.commit()
