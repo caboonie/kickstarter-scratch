@@ -725,7 +725,8 @@ def showDashboard():
 		return redirect(url_for('showLandingPage'))
 	if request.method == 'POST':
             if "members" in request.form: #create new team!
-                create_team(request.form["team_name"],request.form["members"])
+                if get_team_by_name(request.form["team_name"])==None:
+                    create_team(request.form["team_name"],request.form["members"])
             else: #create new student
                 create_user(request.form["first_name"],request.form["last_name"],"home",request.form["email"],request.form["password"],
                             None,True,"student",request.form["team_name"])
@@ -735,6 +736,7 @@ def showDashboard():
 	totals = []
 	rankdict = dict()
 	investorsdict = dict()
+	print("products",[(a.team.name,a.investments) for a in products])
 	for product in products:
 		total_investments = 0.0
 		for inv in product.investments:
@@ -742,7 +744,10 @@ def showDashboard():
 		totals.append(total_investments)
 		rankdict[product.team.name] = total_investments
 		investorsdict[product.team.name] = len(product.investments)
+	print("rankdict",rankdict)
 	rankings = sorted(rankdict.items(), key=operator.itemgetter(1),reverse=True)
+	print("rankings",rankings)
+	print("totals",totals)
 	teams=get_teams()
 	team_list = [team.name for team in teams]
 	return render_template('dashboard.html', totals = totals, products = products, bronze_investors = bronze_investors,

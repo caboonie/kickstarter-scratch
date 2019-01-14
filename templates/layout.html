@@ -57,21 +57,21 @@
           <div class="navbar-text" id="userbox">
             
             {%if session['language'] == 'he'%}
-                .{{session['email']}} הנך כרגע רשום כ 
+                {{session['email']}} הנך כרגע רשום כ 
               </div>
               <ul class="nav navbar-nav">
                 <li><a href = "{{url_for('logout')}}"> התנתק </a></li>
               </ul>
 
             {%elif session['language']=='ar'%}
-                .{{session['email']}} تم تسجيل الدخول بإسم 
+                {{session['email']}} تم تسجيل الدخول بإسم 
               </div>
               <ul class="nav navbar-nav">
                 <li><a href = "{{url_for('logout')}}">تسجيل الخروج</a></li>
               </ul>
            
             {%else%}
-                You are currently signed in as {{session['email']}}. 
+                You are currently signed in as {{session['email']}}
               </div>
               <ul class="nav navbar-nav">
                 <li><a href = "{{url_for('logout')}}">Log Out</a></li>

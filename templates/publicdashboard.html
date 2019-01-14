@@ -1,5 +1,8 @@
 		 <head>
 		 	<meta http-equiv="refresh" content="60">
+		 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+			<!-- <link rel="stylesheet" href="{{url_for('static', filename='w3.css')}}"> -->
+			<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 		 </head>
 
 		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -8,6 +11,7 @@
 		<style>
 		body{
 		background: #eeeeee;    
+		padding:15px;
 		}
 				
 	.barchart .bar {
@@ -259,53 +263,149 @@ $(document).ready(function() {
 
 </script>
 
-<h1>Total Investments {{"${:,.2f}".format(totals|sum)}}</h1>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/brandClick">
+          <img alt="Brand Meet_Logoredv" src="{{url_for('static', filename='meet_logo_1.png')}}" style="max-height: 100%;">
+        </a>
+      </div>
 
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        
+      	<ul class="nav navbar-nav navbar-left flags">
+          <!-- <div class="flags"> -->
+          <li><a href="{{url_for('changeLanguage', language = 'ar')}}">العربية</a></li>
+          <li><a href="{{url_for('changeLanguage', language = 'en')}}">English</a></li>
+          <li><a href="{{url_for('changeLanguage', language = 'he')}}">עברית</a></li>
+          <!-- </div> -->
+        </ul>
 
+        <div class="navbar-right">
+        	{% if 'id' in session %}
+	         <div class="navbar-text" id="userbox">
+	            
+	            {%if session['language'] == 'he'%}
+	                {{session['email']}} הנך כרגע רשום כ 
+	              </div>
+	              <ul class="nav navbar-nav">
+	                <li><a href = "{{url_for('logout')}}"> התנתק </a></li>
+	              </ul>
 
-<div id="holder">
-    		<div class="barchart" data-role="barchart" data-width=800 data-height=800></div><!--
-	    	<div class="barchart" data-role="barchart" data-width=400 data-height=400></div>
-	    	<div class="barchart" data-role="barchart" data-width=150 data-height=150></div>-->
+	            {%elif session['language']=='ar'%}
+	                {{session['email']}} تم تسجيل الدخول بإسم 
+	              </div>
+	              <ul class="nav navbar-nav">
+	                <li><a href = "{{url_for('logout')}}">تسجيل الخروج</a></li>
+	              </ul>
+	           
+	            {%else%}
+	                You are currently signed in as {{session['email']}}
+	              </div>
+	              <ul class="nav navbar-nav">
+	                <li><a href = "{{url_for('logout')}}">Log Out</a></li>
+	              </ul>
+	            {%endif%}           
+
+        	{%endif%}
+        </div>
+
+      </div>
+
+    </div>
+  </nav>
+
+  <br>
+
+{% if session['language'] == 'he' %}
+	<div style="text-align:right;">
+		<h1>{{"${:,.2f}".format(totals|sum)}} סך כל ההשקעות</h1>
+
+		<div id="holder">
+		    <div class="barchart" data-role="barchart" data-width=800 data-height=800></div>	    	
 		</div>
-<h1> Rankings </h1>		
-<table style="width:100%;text-align:center;">
-<tr>
-	<th>
-		Place
-	</th>
-	<th>
-		Team Name
-	</th>
-	<th>
-		Investment Total
-	</th>
-	<th>
-		Number of Investments
-	</th>
+		<h1> דירוגים </h1>		
+		<table style="width:100%;text-align:left; align-self: right">
+		<tr>
+			<th>	שם קבוצה	</th>
+			<th>סה"כ השקעה</th>
+			<th>	מספר ההשקעות	</th>
+			<th>מקום	</th>
+			
+			
+			
 
-</tr> 
-{% for product in rankings%}
-<tr>
-	<td>
-		{{loop.index}}
-	</td>
+		</tr> 
+		{% for product in rankings%}
+			<tr>
+				<td>			{{investorsdict[product[0]]}}		</td>
+				<td>			{{"${:,.2f}".format(product[1])}}		</td>
+				<td>			{{product[0]}}		</td>
+				<td>			{{loop.index}}		</td>
+			</tr>
+		{%endfor%}
+		</table>
+	</div>	
+{% elif session['language'] == 'ar' %}
+	<div style="text-align:right;">
+		<h1>{{"${:,.2f}".format(totals|sum)}} مجموع الاستثمارات</h1>
 
-	<td>
-		{{product[0]}}
+		<div id="holder">
+		    <div class="barchart" data-role="barchart" data-width=800 data-height=800></div>	    	
+		</div>
+		<h1> التصنيف العالمي </h1>		
+		<table style="width:100%;text-align:left;">
+		<tr>		
+			<th>عدد الاستثمارات</th>
+			<th>مجموع الاستثمار</th>
+			<th>اسم الفريق	</th>
+			<th>مكان	</th>
 
-	</td>
-	<td>
-		{{"${:,.2f}".format(product[1])}}
+		</tr> 
+		{% for product in rankings%}
+			<tr>
+				<td>			{{investorsdict[product[0]]}}		</td>
+				<td>			{{"${:,.2f}".format(product[1])}}		</td>
+				<td>			{{product[0]}}		</td>
+				<td>			{{loop.index}}		</td>
+			</tr>
+		{%endfor%}
+		</table>	
+	</div>
+
+{% else %}
+	<h1>Total Investments {{"${:,.2f}".format(totals|sum)}}</h1>
+
+	<div id="holder">
+	    <div class="barchart" data-role="barchart" data-width=800 data-height=800></div>	    	
+	</div>
+	<h1> Rankings </h1>		
+	<table style="width:100%;text-align:left;padding: 15px">
+	<tr>
+		<th>Place</th>
+		<th>Team Name</th>
+		<th>Investment Total</th>
+		<th>Number of Investments</th>
+
+	</tr> 
+	{% for product in rankings%}
+		<tr>
+			<td>			{{loop.index}}		</td>
+			<td>			{{product[0]}}		</td>
+			<td>			{{"${:,.2f}".format(product[1])}}		</td>
+			<td>			{{investorsdict[product[0]]}}		</td>
+		</tr>
+	{%endfor%}
+	</table>	
+
+{% endif %}
 
 
-	</td>
-	<td>
-		{{investorsdict[product[0]]}}
-	</td>
-
-	</tr>
-{%endfor%}
-
-</table>		
+	
 

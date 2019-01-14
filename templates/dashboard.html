@@ -12,7 +12,9 @@
 		
 		<style>
 		body{
-		background: #eeeeee;    
+			background: #eeeeee;  
+			color:black;  
+			padding:15px;
 		}
 				
 	.barchart .bar {
@@ -40,6 +42,15 @@
 
 	h2 {
 		color:black;
+	}
+	p {
+		color:black;
+	}
+	li {
+	color:black;
+	}
+	ul {
+	color:black;
 	}
 
 	</style>
@@ -370,6 +381,12 @@ $(document).ready(function() {
 		<input  type="text" autocomplete="off" class="team_box" name="team_name" placeholder="Team"><br>
 		<button  id="add_stud_button" type="submit"> Add Student </button>
 </form>
+
+<h2>Current Teams</h2>
+{% for product in products%}
+	<p>{{product.team.name}} - {{product.team.team_members}}</p>
+{%endfor%}
+
 
 
   <script>
