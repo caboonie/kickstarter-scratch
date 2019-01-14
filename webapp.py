@@ -176,7 +176,7 @@ def facebook_authorized(resp):
 	name = me.data['name']
 	query = get_user_by_email(email)
 	if query == None:
-                 if num_at_ip(str(request.remote_addr))>IP_THRESHOLD:
+                if num_at_ip(str(request.remote_addr))>IP_THRESHOLD:
                         if login_session['language'] == 'he':
                                 flash("כדי למנוע חשבונות מזויפים, רק "+IP_THRESHOLD+" מותר לכל כתובת IP")
                         elif login_session['language'] == 'ar':
@@ -337,7 +337,7 @@ def signup():
 				flash("A User already exists with this email address")
 			return redirect(url_for('signup'))
 		    
-		 if num_at_ip(str(request.remote_addr))>IP_THRESHOLD:
+		if num_at_ip(str(request.remote_addr))>IP_THRESHOLD:
                         if login_session['language'] == 'he':
                                 flash("כדי למנוע חשבונות מזויפים, רק "+IP_THRESHOLD+" מותר לכל כתובת IP")
                         elif login_session['language'] == 'ar':
