@@ -83,7 +83,7 @@ def authorized():
         query = get_user_by_email(email)
         if query == None:
                 dummy_password = random.randint(0,999)
-                newUser = create_user(first_name, last_name, email, dummy_password, verified=True)
+                newUser = create_user(first_name, last_name, "home", email, dummy_password, verified=True)
                 if email in goldMembers:
                         newUser.group = "gold"
                 elif email in silverMembers:
