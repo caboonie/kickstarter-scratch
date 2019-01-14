@@ -142,8 +142,8 @@ facebook = oauth.remote_app('facebook',
 @app.route('/loginWithFacebook')
 def loginWithFacebook():
 	#Toggle the comments between the two lines below if you are running the app locally.
-	callback = url_for('facebook_authorized', next = request.args.get('next') or request.referrer or None, _external=True)
-	#callback = 'https://meetcampaign18.herokuapp.com/loginWithFacebook/authorized'
+	#callback = url_for('facebook_authorized', next = request.args.get('next') or request.referrer or None, _external=True)
+	callback = 'https://meet-kickstarter.herokuapp.com/loginWithFacebook/authorized'
 	return facebook.authorize(callback=callback)
 
 @app.route('/loginWithFacebook/authorized')
