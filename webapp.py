@@ -85,6 +85,14 @@ def authorized():
         email = me.data['email']
         query = get_user_by_email(email)
         if query == None:
+                if ip_overused(str(request.remote_addr)):
+                        if login_session['language'] == 'he':
+                                flash("כדי למנוע חשבונות מזויפים, רק 6 מותר לכל כתובת IP")
+                        elif login_session['language'] == 'ar':
+                                flash("لمنع الحسابات المزيفة ، يتم السماح بـ 6 حسابات فقط لكل عنوان IP")
+                        else:
+                                flash("To prevent fake accounts, only 6 allowed per IP address")
+                        return redirect(url_for('signup'))
                 dummy_password = "cantguessthis"
                 ip_address = str(request.remote_addr)
                 newUser = create_user(first_name, last_name, "home", email, dummy_password, ip_address, verified=True)
@@ -166,6 +174,14 @@ def facebook_authorized(resp):
 	name = me.data['name']
 	query = get_user_by_email(email)
 	if query == None:
+                if ip_overused(str(request.remote_addr)):
+                        if login_session['language'] == 'he':
+                                flash("כדי למנוע חשבונות מזויפים, רק 6 מותר לכל כתובת IP")
+                        elif login_session['language'] == 'ar':
+                                flash("لمنع الحسابات المزيفة ، يتم السماح بـ 6 حسابات فقط لكل عنوان IP")
+                        else:
+                                flash("To prevent fake accounts, only 6 allowed per IP address")
+                        return redirect(url_for('signup'))
                 first_name = name.split(" ")[0]
                 last_name = name.split(" ")[1]
                 dummy_password = "cantguessthis"
@@ -318,12 +334,21 @@ def signup():
 			else:
 				flash("A User already exists with this email address")
 			return redirect(url_for('signup'))
+		    
+		if ip_overused(str(request.remote_addr)):
+                        if login_session['language'] == 'he':
+                                flash("כדי למנוע חשבונות מזויפים, רק 6 מותר לכל כתובת IP")
+                        elif login_session['language'] == 'ar':
+                                flash("لمنع الحسابات المزيفة ، يتم السماح بـ 6 حسابات فقط لكل عنوان IP")
+                        else:
+                                flash("To prevent fake accounts, only 6 allowed per IP address")
+                        return redirect(url_for('signup'))
 		
 		if True: #validate_email(email, verify=True)!=False:
                         print("client ip",request.remote_addr)
                         print("also client ip?",request.environ['REMOTE_ADDR'])
                         newUser = create_user(first_name,last_name, hometown,email,password, str(request.remote_addr), False)
-                        print("Creating a new user")
+                        print("Creating a new user",newUser.confirmation_code)
                         render_template("confirmationemail.html", user=newUser)
                         if login_session['language'] == 'ar':
                                 send_email("أكد على بريدك الإلكتروني المستخدم للحملة",EMAIL_SENDER,[newUser.email],render_template("confirmationemail_ar.html", user=newUser),

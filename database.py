@@ -11,6 +11,9 @@ Base.metadata.create_all(engine)
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+IP_THRESHOLD = 4 #how many distinct people would use one ip?
+#Could make it so that they have to wait a day before voting if the ip is overused?
+
 with open('silvermembers.txt') as f:
     silverMembers = f.read().splitlines()
 with open('goldmembers.txt') as f:
@@ -50,6 +53,11 @@ def reset_password(user,password):
 def email_available(email):
     users = session.query(User).filter_by(email=email).all()
     return users == []
+
+def ip_overused(ip_address):
+        users = session.query(User).filter_by(ip_address=ip_address).all()
+        return len(users)> IP_THRESHOLD
+
 
 def get_user_by_email(email):
     user = session.query(User).filter_by(email=email).first()
