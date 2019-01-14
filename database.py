@@ -54,9 +54,9 @@ def email_available(email):
     users = session.query(User).filter_by(email=email).all()
     return users == []
 
-def ip_overused(ip_address):
+def num_at_ip(ip_address):
         users = session.query(User).filter_by(ip_address=ip_address).all()
-        return len(users)> IP_THRESHOLD
+        return len(users)
 
 
 def get_user_by_email(email):

@@ -16,9 +16,11 @@ from flask_oauthlib.client import OAuth, OAuthException
 
 CONFIG = json.loads(open('secrets.json', 'r').read())
 
-## REAL DATES
+##REPLACE WITH REAL DATES
 LAUNCHDATE = datetime.datetime.strptime('26/03/2018', "%d/%m/%Y").date()
 DEADLINE = datetime.datetime.strptime('09/04/2019', "%d/%m/%Y").date()
+IP_THRESHOLD = 6 #how many distinct people would use one ip?
+#Could make it so that they have to wait a day before voting if the ip is overused?
 
 app = Flask(__name__)
 app.secret_key = CONFIG['SECRET_KEY']
@@ -85,13 +87,13 @@ def authorized():
         email = me.data['email']
         query = get_user_by_email(email)
         if query == None:
-                if ip_overused(str(request.remote_addr)):
+                if num_at_ip(str(request.remote_addr))>IP_THRESHOLD:
                         if login_session['language'] == 'he':
-                                flash("כדי למנוע חשבונות מזויפים, רק 6 מותר לכל כתובת IP")
+                                flash("כדי למנוע חשבונות מזויפים, רק "+IP_THRESHOLD+" מותר לכל כתובת IP")
                         elif login_session['language'] == 'ar':
-                                flash("لمنع الحسابات المزيفة ، يتم السماح بـ 6 حسابات فقط لكل عنوان IP")
+                                flash("لمنع الحسابات المزيفة ، يتم السماح بـ "+IP_THRESHOLD+" حسابات فقط لكل عنوان IP")
                         else:
-                                flash("To prevent fake accounts, only 6 allowed per IP address")
+                                flash("To prevent fake accounts, only "+IP_THRESHOLD+" allowed per IP address")
                         return redirect(url_for('signup'))
                 dummy_password = "cantguessthis"
                 ip_address = str(request.remote_addr)
@@ -174,13 +176,13 @@ def facebook_authorized(resp):
 	name = me.data['name']
 	query = get_user_by_email(email)
 	if query == None:
-                if ip_overused(str(request.remote_addr)):
+                 if num_at_ip(str(request.remote_addr))>IP_THRESHOLD:
                         if login_session['language'] == 'he':
-                                flash("כדי למנוע חשבונות מזויפים, רק 6 מותר לכל כתובת IP")
+                                flash("כדי למנוע חשבונות מזויפים, רק "+IP_THRESHOLD+" מותר לכל כתובת IP")
                         elif login_session['language'] == 'ar':
-                                flash("لمنع الحسابات المزيفة ، يتم السماح بـ 6 حسابات فقط لكل عنوان IP")
+                                flash("لمنع الحسابات المزيفة ، يتم السماح بـ "+IP_THRESHOLD+" حسابات فقط لكل عنوان IP")
                         else:
-                                flash("To prevent fake accounts, only 6 allowed per IP address")
+                                flash("To prevent fake accounts, only "+IP_THRESHOLD+" allowed per IP address")
                         return redirect(url_for('signup'))
                 first_name = name.split(" ")[0]
                 last_name = name.split(" ")[1]
@@ -335,13 +337,13 @@ def signup():
 				flash("A User already exists with this email address")
 			return redirect(url_for('signup'))
 		    
-		if ip_overused(str(request.remote_addr)):
+		 if num_at_ip(str(request.remote_addr))>IP_THRESHOLD:
                         if login_session['language'] == 'he':
-                                flash("כדי למנוע חשבונות מזויפים, רק 6 מותר לכל כתובת IP")
+                                flash("כדי למנוע חשבונות מזויפים, רק "+IP_THRESHOLD+" מותר לכל כתובת IP")
                         elif login_session['language'] == 'ar':
-                                flash("لمنع الحسابات المزيفة ، يتم السماح بـ 6 حسابات فقط لكل عنوان IP")
+                                flash("لمنع الحسابات المزيفة ، يتم السماح بـ "+IP_THRESHOLD+" حسابات فقط لكل عنوان IP")
                         else:
-                                flash("To prevent fake accounts, only 6 allowed per IP address")
+                                flash("To prevent fake accounts, only "+IP_THRESHOLD+" allowed per IP address")
                         return redirect(url_for('signup'))
 		
 		if True: #validate_email(email, verify=True)!=False:
