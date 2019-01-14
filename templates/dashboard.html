@@ -312,3 +312,10 @@ $(document).ready(function() {
 </table>		
 
 <a href='{{url_for('showTeamActivity')}}'>View All Team Activity</a> 
+
+<h2>Add new team</h2>
+<form action = "{{url_for('showDashboard')}}" method = 'post'>
+		<input  type="text" name="team_name" placeholder="Team Name"><br>
+		<input  type="text" name="members" placeholder="Members"><br>
+		<button  type="submit"> Add Team </button>
+</form>

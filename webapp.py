@@ -10,6 +10,7 @@ import datetime
 from flask import session as login_session
 from validate_email import validate_email
 from flask_mail import Mail, Message
+import operator
 
 
 CONFIG = json.loads(open('secrets.json', 'r').read())
@@ -115,7 +116,7 @@ def login():
 			if user.group == 'student':
 				return redirect(url_for('studentPortal'))
 			if user.group == 'administrator':
-				return redirect(url_for('adminPortal'))
+				return redirect(url_for('showDashboard'))
 			return redirect(url_for('showProducts'))
 			
 		else:
@@ -231,6 +232,30 @@ def verify(email):
                 else:
                         flash("Account Verified Successfully")
                 return redirect(url_for('login'))
+
+@app.route("/resendCode/<email>", methods = ['GET', 'POST'])
+def resendCode(email):
+	if 'language' not in login_session:
+		login_session['language'] = 'en'
+	user = get_user_by_email(email)
+	if request.method == 'GET':
+		return render_template('resendCode.html', email=email)
+	if request.method == 'POST':
+		reset_confirmation(user)
+		if login_session['language'] == 'he':
+			send_email("איפוס קוד חשבון קמפיין המיט שלך",EMAIL_SENDER,[user.email],render_template("confirmationemail_he.txt", user=user),
+               render_template("confirmationemail_he.html", user=user))
+			flash("קוד אישור חדש נשלח אל כתובת האימייל שלך.")
+		elif login_session['language'] == 'ar':
+			send_email("إعادة ضبط الكود الخاص بحساب الحملة",EMAIL_SENDER,[user.email],render_template("confirmationemail_ar.txt", user=user),
+               render_template("confirmationemail_ar.html", user=user))
+			flash("تم إرسال كود تفعيل جديد إلى بريدك الإلكتروني")
+		else:
+			send_email("Resetting your MEETCampaign Account Code",EMAIL_SENDER,[user.email],render_template("confirmationemail.txt", user=user),
+               render_template("confirmationemail.html", user=user))
+			flash("A new verification code has been sent to your email address")
+
+		return redirect(url_for('verify', email = email))
 		
 @app.route("/forgotPassword", methods = ['GET', 'POST'])
 def forgotPassword():
@@ -335,12 +360,83 @@ def logout():
 	flash(logout_sentence)
 	return redirect(url_for('showLandingPage'))
 
+@app.route('/notify', methods = ['POST'])
+def notifyList():
+	email = request.form['email']
+	add_to_mailing(email)
+	if login_session['language'] == 'ar':
+		flash("شكرا جزيلا ! سوف يتم إعلامك عندما تبدأ الحملة")
+	elif login_session['language'] == 'he':
+		flash("תודה רבה! ניצור אתכם קשר כשהקמפיין יתחיל.")
+	else:
+		flash("Thank You! You will be notified when the campaign begins")
+	return redirect(url_for('showLandingPage'))
+
+@app.route("/studentPortal")
+def studentPortal():
+	if 'group' not in login_session:
+		return redirect(url_for('login'))
+	if login_session['group'] != 'student':
+		if login_session['language'] == 'he':
+			flash("הדף הזה נגיש רק לתלמידים")
+		elif login_session['language'] == 'ar':
+			flash("هذه الصفحة الدخول إليها من قبل الطلاب فقط")
+		else:
+			flash("This page is only accessible to students")
+		return redirect(url_for('login'))
+	user = get_user_by_id(login_session['id'])
+	print("team id:",user.team_id)
+	team = get_team_by_id(user.team_id)
+	product = get_prod_by_team_id(team.id)
+	comments = session.query(Comment).filter_by(product_id =product.id).all()
+	total_investments = 0.0
+	for inv in product.investments:
+		total_investments += inv.amount
+	return render_template('teamPortal.html', user=user, team=team, comments = comments, total_investments = total_investments)
+
+@app.route("/updateSubmission", methods = ['POST'])
+def updateSubmission():
+	if 'language' not in login_session:
+		login_session['language'] = 'en'
+	team_name = request.form['team_name']
+	description_en = request.form['description_en']
+	description_ar = request.form['description_ar']
+	description_he = request.form['description_he']
+	website_url = request.form['website_url']
+	video_url = request.form['video_url']
+	photo_url = request.form['photo_url']
+	user = get_user_by_id(login_session['id'])
+	update_team(user.team_id, team_name, description_en, description_ar, description_he,
+                    website_url, video_url, photo_url)
+	flash("Team Info Updated Successfully!")
+
+	return redirect(url_for('studentPortal'))
+
+@app.route('/addComment/<int:team_id>', methods = ['POST'])
+def addComment(team_id):
+	if 'language' not in login_session:
+		login_session['language'] = 'en'
+	
+	comment = create_comment(request.form['commentary'], team_id)
+	
+	if login_session['language'] == 'he':
+		flash("תודה על משובך!")
+	elif login_session['language'] == 'ar':
+		flash("شكرا لك على ملاحظاتك!")
+	else:
+		flash("Thank you for your feedback!")
+	return redirect(request.referrer)
+
 @app.route('/brandClick')
 def brandClick():
 	if 'id' not in login_session:
 		return redirect(url_for('showLandingPage'))
 	else:
 		return redirect(url_for('showProducts'))
+
+@app.route("/policies")
+def showPoliciesPage():
+	return render_template("policies.html")
 
 @app.route("/products")
 def showProducts():
@@ -357,6 +453,111 @@ def showProducts():
 	products = get_products()
 	wallet = get_user_wallet(login_session['id']) 
 	return render_template('productsPage.html', products = products, wallet = wallet)
+
+@app.route("/product/<int:product_id>")
+def showProduct(product_id):
+	if 'language' not in login_session:
+		login_session['language'] = 'en'
+	if 'id' not in login_session:
+		return redirect(url_for('login'))
+	product = get_prod_by_id(product_id)
+	wallet = get_user_wallet(login_session['id'])
+	return render_template('productPage.html', product = product, wallet = wallet)
+
+@app.route("/makeAnInvestment/<int:product_id>", methods = ['POST'])
+def makeAnInvestment(product_id):
+	now = datetime.datetime.now().date()
+	if now > DEADLINE:
+		flash("The competition has ended, no more investments are being accepted.")
+		return redirect(request.referrer)
+	if 'language' not in login_session:
+		login_session['language'] = 'en'
+	try:
+		amount = float(request.form['amount'])
+	except ValueError:
+		flash("Invalid Amount. Please only use numbers")
+		return redirect(url_for('showProduct', product_id = product_id))
+	if amount < 0:
+		flash("No negative values please")
+		return redirect(url_for('showProduct', product_id = product_id))
+	wallet = get_user_wallet(login_session['id'])
+	product = get_prod_by_id(product_id)
+	if wallet.current_value >= amount:
+		make_investment(wallet.id, product.id, amount)
+		if 'language' not in login_session:
+			login_session['language'] = 'en'
+		if login_session['language'] == 'he':
+			flash("הושקעו %s ל%s בהצלחה. תודה רבה על ההשקעה!"% (str(amount), product.team.name))
+		elif login_session['language'] == 'ar':
+			flash("تمت عملية الإستثمار بنجاح %s في فكرة %s شكرا جزيلا لقيامك بالإستثمار" % (str(amount), product.team.name))
+		else:
+			flash("Successfully invested %s for %s. Thank you for your investment!" % (str(amount), product.team.name))
+		return redirect(url_for('showProducts'))
+	else:
+		if login_session['language'] == 'he':
+			flash("אין לך מספיק כסף בכדי לבצע השקעה זו")
+		elif login_session['language'] == 'ar':
+			flash("ليس لديك نقود لعمل هذا الإستثمار")
+		else:
+			flash("You do not have enough money to make this investment")
+		return redirect(url_for('showProduct', product_id = product_id))
+
+@app.route("/viewResults")
+def viewResults():
+	products = get_products()
+	totals = []
+	rankdict = dict()
+	investorsdict = dict()
+	for product in products:
+		total_investments = 0.0
+		for inv in product.investments:
+			total_investments += inv.amount
+		totals.append(total_investments)
+		rankdict[product.team.name] = total_investments
+		investorsdict[product.team.name] = len(product.investments)
+	rankings = sorted(rankdict.items(), key=operator.itemgetter(1),reverse=True)
+	return render_template('publicdashboard.html', totals = totals, products = products, rankings = rankings, investorsdict = investorsdict)
+
+@app.route("/showDashboard", methods = ['GET','POST'])
+def showDashboard():
+	if 'language' not in login_session:
+		login_session['language'] = 'en'
+	if 'id' not in login_session:
+		flash("You do not have access to this page")
+		return redirect(url_for('showLandingPage'))
+	elif get_user_by_id(login_session['id']).email not in admins:
+		flash("You do not have access to this page")
+		return redirect(url_for('showLandingPage'))
+	if request.method == 'POST':
+            create_team(request.form["team_name"],request.form["members"])
+            
+	products = get_products()
+	bronze_investors, silver_investors, gold_investors = get_users_ranked()
+	totals = []
+	rankdict = dict()
+	investorsdict = dict()
+	for product in products:
+		total_investments = 0.0
+		for inv in product.investments:
+			total_investments += inv.amount
+		totals.append(total_investments)
+		rankdict[product.team.name] = total_investments
+		investorsdict[product.team.name] = len(product.investments)
+	rankings = sorted(rankdict.items(), key=operator.itemgetter(1),reverse=True)
+	return render_template('dashboard.html', totals = totals, products = products, bronze_investors = bronze_investors, silver_investors = silver_investors, gold_investors = gold_investors, rankings = rankings, investorsdict = investorsdict)
+
+@app.route("/teamActivity")
+def showTeamActivity():
+	if 'language' not in login_session:
+		login_session['language'] = 'en'
+	if 'id' not in login_session:
+		flash("You do not have access to this page")
+		return redirect(url_for('showLandingPage'))
+	elif get_user_by_id(login_session['id']).email not in admins:
+		flash("You do not have access to this page")
+		return redirect(url_for('showLandingPage'))
+	investments = get_investments()
+	return render_template('teamActivity.html', investments = investments)
 
 def send_email(subject, sender, recipients, text_body, html_body):
     msg = Message(subject, sender=sender, recipients=recipients)
