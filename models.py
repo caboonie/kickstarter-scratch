@@ -23,6 +23,7 @@ class User(Base):
 	username = Column(String(255))
 	group = Column(String(255))
 	email = Column(String(255))
+	ip_address = Column(String(255))
 	password_hash = Column(String(255))
 	team = relationship("Team", back_populates = "students")
 	team_id = Column(Integer, ForeignKey('team.id'))

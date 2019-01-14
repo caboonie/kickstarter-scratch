@@ -9,6 +9,7 @@
 	<form action = "{{url_for('verify', email = user.email|string)}}", method = 'post'>
 		<input class="form-control" type="text" name="code"><br>
 		<input class="btn btn-success" type="submit" value="שלח">
+		<a href = '{{url_for("resendCode", email = user.email|string)}}'><span class ="btn btn-success">שלח קוד שוב</span></a>
 	</form>
 
 {% elif session['language'] == 'ar' %}
@@ -16,6 +17,7 @@
 	<form action = "{{url_for('verify', email = user.email|string)}}", method = 'post'>
 		<input class="form-control" type="text" name="code"><br>
 		<input class="btn btn-success" type="submit" value="أرسل">
+		<a href = '{{url_for("resendCode", email = user.email|string)}}'><span class ="btn btn-success">أعد إرسال الرمز</span></a>
 	</form>
 
 {% else %}

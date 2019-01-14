@@ -86,7 +86,8 @@ def authorized():
         query = get_user_by_email(email)
         if query == None:
                 dummy_password = "cantguessthis"
-                newUser = create_user(first_name, last_name, "home", email, dummy_password, verified=True)
+                ip_address = str(request.remote_addr)
+                newUser = create_user(first_name, last_name, "home", email, dummy_password, ip_address, verified=True)
                 if email in goldMembers:
                         newUser.group = "gold"
                 elif email in silverMembers:
@@ -168,7 +169,7 @@ def facebook_authorized(resp):
                 first_name = name.split(" ")[0]
                 last_name = name.split(" ")[1]
                 dummy_password = "cantguessthis"
-                newUser = create_user(first_name, last_name, "home", email, dummy_password, verified=True)
+                newUser = create_user(first_name, last_name, "home", email, dummy_password, str(request.remote_addr), verified=True)
                 if email in goldMembers:
                         newUser.group = "gold"
                 elif email in silverMembers:
@@ -319,7 +320,9 @@ def signup():
 			return redirect(url_for('signup'))
 		
 		if True: #validate_email(email, verify=True)!=False:
-                        newUser = create_user(first_name,last_name, hometown,email,password,False)
+                        print("client ip",request.remote_addr)
+                        print("also client ip?",request.environ['REMOTE_ADDR'])
+                        newUser = create_user(first_name,last_name, hometown,email,password, str(request.remote_addr), False)
                         print("Creating a new user")
                         render_template("confirmationemail.html", user=newUser)
                         if login_session['language'] == 'ar':
@@ -722,7 +725,8 @@ def showTeamActivity():
 		flash("You do not have access to this page")
 		return redirect(url_for('showLandingPage'))
 	investments = get_investments()
-	return render_template('teamActivity.html', investments = investments)
+	teams = get_teams()
+	return render_template('teamActivity.html', investments = investments, teams = teams)
 
 def send_email(subject, sender, recipients, text_body, html_body):
     msg = Message(subject, sender=sender, recipients=recipients)

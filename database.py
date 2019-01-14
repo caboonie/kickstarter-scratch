@@ -21,8 +21,8 @@ with open('admins.txt') as f:
 def generateConfCode():
 	return str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))
 
-def create_user(first_name,last_name,hometown,email,password,verified=False):
-    user = User(first_name=first_name, last_name=last_name, hometown = hometown,email=email, verified=verified)
+def create_user(first_name,last_name,hometown,email,password,ip_address,verified=False):
+    user = User(first_name=first_name, last_name=last_name, hometown = hometown,email=email, ip_address=ip_address, verified=verified)
     user.confirmation_code = generateConfCode()
     user.confirmation_code_expiration = datetime.datetime.now() + datetime.timedelta(minutes = 10)
     user.hash_password(password)
@@ -87,6 +87,9 @@ def get_user_by_id(user_id):
 
 def get_team_by_id(team_id):
         return session.query(Team).filter_by(id=team_id).first()
+
+def get_teams():
+        return session.query(Team).all()
 
 def get_prod_by_team_id(team_id):
         return session.query(Product).filter_by(team_id = team_id).one()
@@ -189,17 +192,17 @@ print("products",[prod.team for prod in get_products()])
 #print("user name",a.email,a.verified)
 
 
-user = create_user("stud","ent","home","student","student",True)
+user = create_user("stud","ent","home","student","student","student_ip",True)
 user.group = "student"
 user.team_id = 1
 session.add(user)
 session.commit()
 
-user = create_user("admin","admin","home","admin","admin",True)
+user = create_user("admin","admin","home","admin","admin","admin_ip",True)
 user.group = "administrator"
 user.team_id = 1
 session.add(user)
 session.commit()
 
 
-#print([(a.email) for a in get_users()])
+print([(a.ip_address) for a in get_users()])
