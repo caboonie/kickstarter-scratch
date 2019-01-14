@@ -118,7 +118,9 @@ def authorized():
         # 	flash("Login Successful. Welcome, %s!" % newUser.first_name)
         return redirect(url_for('showProducts'))
 
-    
+@google.tokengetter
+def get_google_oauth_token():
+    return login_session.get('google_token')
 
 @app.route('/loginWithFacebook')
 def loginWithFacebook():
