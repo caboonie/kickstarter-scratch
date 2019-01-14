@@ -724,7 +724,11 @@ def showDashboard():
 		flash("You do not have access to this page")
 		return redirect(url_for('showLandingPage'))
 	if request.method == 'POST':
-            create_team(request.form["team_name"],request.form["members"])
+            if "members" in request.form: #create new team!
+                create_team(request.form["team_name"],request.form["members"])
+            else: #create new student
+                create_user(request.form["first_name"],request.form["last_name"],"home",request.form["email"],request.form["password"],
+                            None,True,"student",request.form["team_name"])
             
 	products = get_products()
 	bronze_investors, silver_investors, gold_investors = get_users_ranked()
@@ -739,7 +743,11 @@ def showDashboard():
 		rankdict[product.team.name] = total_investments
 		investorsdict[product.team.name] = len(product.investments)
 	rankings = sorted(rankdict.items(), key=operator.itemgetter(1),reverse=True)
-	return render_template('dashboard.html', totals = totals, products = products, bronze_investors = bronze_investors, silver_investors = silver_investors, gold_investors = gold_investors, rankings = rankings, investorsdict = investorsdict)
+	teams=get_teams()
+	team_list = [team.name for team in teams]
+	return render_template('dashboard.html', totals = totals, products = products, bronze_investors = bronze_investors,
+                               silver_investors = silver_investors, gold_investors = gold_investors, rankings = rankings,
+                               investorsdict = investorsdict, team_list=team_list)
 
 @app.route("/teamActivity")
 def showTeamActivity():

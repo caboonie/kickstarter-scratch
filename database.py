@@ -24,12 +24,16 @@ with open('admins.txt') as f:
 def generateConfCode():
 	return str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))
 
-def create_user(first_name,last_name,hometown,email,password,ip_address,verified=False):
+def create_user(first_name,last_name,hometown,email,password,ip_address,verified=False,group=None,team_name=None):
     user = User(first_name=first_name, last_name=last_name, hometown = hometown,email=email, ip_address=ip_address, verified=verified)
     user.confirmation_code = generateConfCode()
     user.confirmation_code_expiration = datetime.datetime.now() + datetime.timedelta(minutes = 10)
     user.hash_password(password)
-    if email in goldMembers:
+    if group != None:
+        user.group = group
+        if group == "student":
+                user.team = get_team_by_name(team_name)
+    elif email in goldMembers:
         user.group = "gold"
     elif email in silverMembers:
         user.group = "silver"
@@ -55,6 +59,8 @@ def email_available(email):
     return users == []
 
 def num_at_ip(ip_address):
+        if ip_address == None:
+                return 0
         users = session.query(User).filter_by(ip_address=ip_address).all()
         return len(users)
 
@@ -96,11 +102,15 @@ def get_user_by_id(user_id):
 def get_team_by_id(team_id):
         return session.query(Team).filter_by(id=team_id).first()
 
+def get_team_by_name(name):
+        return session.query(Team).filter_by(name=name).first()
+
 def get_teams():
         return session.query(Team).all()
 
 def get_prod_by_team_id(team_id):
         return session.query(Product).filter_by(team_id = team_id).one()
+
 
 def get_prod_by_id(product_id):
         return session.query(Product).filter_by(id = product_id).one()
@@ -192,8 +202,8 @@ for i in range(1, 2):
                 print("team",i,"already added")
 '''
 
-print("teams",[(a.id) for a in session.query(Team).all()])
-print("products",[prod.team for prod in get_products()])
+#print("teams",[(a.id) for a in session.query(Team).all()])
+#print("products",[prod.team for prod in get_products()])
     
 #create_user("a","a","a","a","a",True)
 #a = get_user_by_email("a")
@@ -213,4 +223,4 @@ session.add(user)
 session.commit()
 
 
-print([(a.ip_address) for a in get_users()])
+#print([(a.ip_address) for a in get_users()])
