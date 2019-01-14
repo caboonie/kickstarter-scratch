@@ -72,51 +72,53 @@ def loginWithGoogle():
 def authorized():
         resp = google.authorized_response()
         if resp is None:
-		return 'Access denied: reason=%s error=%s' % (request.args['error_reason'], request.args['error_description'])
-	login_session['google_token'] = (resp['access_token'], '')
-	me = google.get('userinfo')
-	print(me)
-	# print(me.data)
-	first_name = me.data['given_name']
-	last_name = me.data['family_name']
-	email = me.data['email']
-	query = get_user_by_email(email)
-	if query == None:
+                return 'Access denied: reason=%s error=%s' % (request.args['error_reason'], request.args['error_description'])
+        login_session['google_token'] = (resp['access_token'], '')
+        me = google.get('userinfo')
+        print(me)
+        # print(me.data)
+        first_name = me.data['given_name']
+        last_name = me.data['family_name']
+        email = me.data['email']
+        query = get_user_by_email(email)
+        if query == None:
                 dummy_password = random.randint(0,999)
-		newUser = create_user(first_name, last_name, email, dummy_password, verified=True)
-		if email in goldMembers:
-			newUser.group = "gold"
-		elif email in silverMembers:
-			newUser.group = "silver"
-		else:
-			newUser.group = "bronze"
+                newUser = create_user(first_name, last_name, email, dummy_password, verified=True)
+                if email in goldMembers:
+                        newUser.group = "gold"
+                elif email in silverMembers:
+                        newUser.group = "silver"
+                else:
+                        newUser.group = "bronze"
 
-		## Make a Wallet for  newUser
-		if email in goldMembers:
-			initial_value = '1000000.00'
-		elif email in silverMembers:
+                ## Make a Wallet for  newUser
+                if email in goldMembers:
+                        initial_value = '1000000.00'
+                elif email in silverMembers:
                         initial_value = '100000.00'
-    		else:
+                else:
                         initial_value = '10000.00'
                 create_wallet(initial_value,newUser)
 
-	else:
-		newUser = query
+        else:
+                newUser = query
 
-	login_session.clear()
-	login_session['first_name'] = newUser.first_name
-	login_session['id'] = newUser.id
-	login_session['last_name'] = newUser.last_name
-	login_session['group'] = newUser.group
-	login_session['email'] = newUser.email
-	# if 'language' in login_session:
-	# 	if login_session['language'] == 'ar':
-	# 		flash("تم تسجيل الدخول بنجاح ! أهلا و سهلا،  %s!" % newUser.first_name)
-	# 	elif login_session['language']== 'he':
-	# 		flash("התחברות מוצלחת. ברוכים הבאים, %s!" % newUser.first_name)
-	# else:
-	# 	flash("Login Successful. Welcome, %s!" % newUser.first_name)
-	return redirect(url_for('showProducts'))
+        login_session.clear()
+        login_session['first_name'] = newUser.first_name
+        login_session['id'] = newUser.id
+        login_session['last_name'] = newUser.last_name
+        login_session['group'] = newUser.group
+        login_session['email'] = newUser.email
+        # if 'language' in login_session:
+        # 	if login_session['language'] == 'ar':
+        # 		flash("تم تسجيل الدخول بنجاح ! أهلا و سهلا،  %s!" % newUser.first_name)
+        # 	elif login_session['language']== 'he':
+        # 		flash("התחברות מוצלחת. ברוכים הבאים, %s!" % newUser.first_name)
+        # else:
+        # 	flash("Login Successful. Welcome, %s!" % newUser.first_name)
+        return redirect(url_for('showProducts'))
+
+    
 
 @app.route('/loginWithFacebook')
 def loginWithFacebook():
