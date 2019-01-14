@@ -11,6 +11,7 @@ from flask import session as login_session
 from validate_email import validate_email
 from flask_mail import Mail, Message
 import operator
+from flask_oauthlib.client import OAuth, OAuthException 
 
 
 CONFIG = json.loads(open('secrets.json', 'r').read())
@@ -22,6 +23,9 @@ DEADLINE = datetime.datetime.strptime('09/04/2019', "%d/%m/%Y").date()
 app = Flask(__name__)
 mail = Mail(app)
 app.secret_key = CONFIG['SECRET_KEY']
+app.config['GOOGLE_ID'] = CONFIG['GOOGLE_ID']
+app.config['GOOGLE_SECRET'] = CONFIG['GOOGLE_SECRET']
+oauth = OAuth(app)
 
 app.config.update(
 MAIL_SERVER=CONFIG['MAIL_SERVER'],
@@ -34,17 +38,39 @@ MAIL_USE_SSL = True)
 EMAIL_SENDER = CONFIG['MAIL_USERNAME']
 mail = Mail(app)
 
+
+
 def verify_password(email, password):
     user = session.query(User).filter_by(email=email).first()
     if not user or not user.verify_password(password):
         return False
     return True
 
+##################################
+#### LOGIN WITH GOOGLE ROUTES ####
+##################################
+
+google = oauth.remote_app(
+    'google',
+    consumer_key=app.config.get('GOOGLE_ID'),
+    consumer_secret=app.config.get('GOOGLE_SECRET'),
+    request_token_params={
+        'scope': 'https://www.googleapis.com/auth/userinfo.email'
+    },
+    base_url='https://www.googleapis.com/oauth2/v1/',
+    request_token_url=None,
+    access_token_method='POST',
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+)
+
 @app.route('/loginWithGoogle')
 def loginWithGoogle():
-	#callback = 'https://meetcampaign.herokuapp.com/loginWithGoogle/authorized'
-	#return google.authorize(callback=callback)
-    return "Not implemented"
+    return google.authorize(callback=url_for('authorized', _external=True))
+
+@app.route('/loginWithGoogle/authorized')
+def authorized():
+    return "Google authorized"
 
 @app.route('/loginWithFacebook')
 def loginWithFacebook():
