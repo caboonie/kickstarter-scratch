@@ -1,1 +1,2 @@
 Add the email addresses of silver members here, each one on a new line
+test-silver

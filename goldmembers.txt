@@ -1,1 +1,2 @@
 Add the email addresses of gold members here, each one on a new line
+test-gold

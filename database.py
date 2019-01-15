@@ -119,7 +119,7 @@ def get_comments_by_team_id(team_id):
         return session.query(Comment).filter_by(product_id =product.id).all()
 
 def update_team(team_id, team_name, team_members, description_en, description_ar, description_he,website_url, video_url, photo_url):
-        team = session.query(Team).filter_by(id=user.team_id).one()
+        team = session.query(Team).filter_by(id=team_id).one()
         team.name = team_name
         team.product.team_members = team_members
         team.product.description_en = description_en
@@ -211,12 +211,21 @@ for i in range(1, 2):
 '''
 
 
+def db_setup():
+        user = create_user("admin","admin","home","admin","admin-meet","admin_ip",True)
+        user.group = "administrator"
+        session.add(user)
 
-user = create_user("admin","admin","home","admin","admin-meet","admin_ip",True)
-user.group = "administrator"
-user.team_id = 1
-session.add(user)
-session.commit()
+        user = create_user("silver","test","home","test-silver","silver","silver_ip",True)
+        create_wallet("100000.00",user)
+        session.add(user)
 
+        user = create_user("gold","test","home","test-gold","gold","gold_ip",True)
+        create_wallet("1000000.00",user)
+        session.add(user)
+        session.commit()
 
-#print([(a.ip_address) for a in get_users()])
+if get_user_by_email("admin")==None:
+        db_setup()
+
+print("groups",[(a.group) for a in get_users()])

@@ -251,24 +251,26 @@ def changeLanguage(language):
 
 @app.route("/login", methods = ['GET', 'POST'])
 def login():
-	if 'language' not in login_session:
-		login_session['language'] = 'en'
-	if request.method == 'GET':
-		return render_template('login.html')
-	else:
-		email = request.form['email']
-		password = request.form['password']
-		if email is None or password is None:
-			if login_session['language'] == 'he':
-				flash("צירוף שם משתמש או סיסמא לא נכון")
-			elif login_session['language'] == 'ar':
-				flash("إسم المستخدم خطأ \ كلمة السر خطأ")
-			else:
-				flash("Missing Values")
-			return redirect(url_for('login'))
-		if verify_password(email, password):
-			user = get_user_by_email(email)
-			if user.verified == False:
+        if 'language' not in login_session:
+                login_session['language'] = 'en'
+        if 'id' in login_session:
+                return redirect(url_for("showProducts"))
+        if request.method == 'GET':
+                return render_template('login.html')
+        else:
+                email = request.form['email']
+                password = request.form['password']
+                if email is None or password is None:
+                        if login_session['language'] == 'he':
+                                flash("צירוף שם משתמש או סיסמא לא נכון")
+                        elif login_session['language'] == 'ar':
+                                flash("إسم المستخدم خطأ \ كلمة السر خطأ")
+                        else:
+                                flash("Missing Values")
+                        return redirect(url_for('login'))
+                if verify_password(email, password):
+                        user = get_user_by_email(email)
+                        if user.verified == False:
                             print("not verified")
                             if login_session['language'] == 'he':
                                     flash("עליך לאשר את חשבונך לפני שאתה ממשיך")
@@ -277,31 +279,31 @@ def login():
                             else:
                                     flash("You must verify your account before continuing")
                             return redirect(url_for('verify', email = email))
-			# if login_session['language'] == 'he':
-			# 	flash("התחברות מוצלחת. ברוכים הבאים,%s!" % user.first_name)
-			# elif login_session['language'] == 'ar':
-			# 	flash("تم تسجيل الدخول بنجاح ! أهلا و سهلا %s!" % user.first_name)
-			# else:
-			# 	flash("Login Successful. Welcome, %s!" % user.first_name)
-			login_session['first_name'] = user.first_name
-			login_session['last_name'] = user.last_name	
-			login_session['email'] = email
-			login_session['id'] = user.id
-			login_session['group'] = user.group
-			if user.group == 'student':
-				return redirect(url_for('studentPortal'))
-			if user.group == 'administrator':
-				return redirect(url_for('showDashboard'))
-			return redirect(url_for('showProducts'))
-			
-		else:
-			if login_session['language'] == 'he':
-				flash("צירוף שם משתמש או סיסמא לא נכון")
-			elif login_session['language'] == 'ar':
-				flash("إسم المستخدم خطأ \ كلمة السر خطأ")
-			else:
-				flash("Incorrect email/password combination")
-			return redirect(url_for('login'))
+                        # if login_session['language'] == 'he':
+                        # 	flash("התחברות מוצלחת. ברוכים הבאים,%s!" % user.first_name)
+                        # elif login_session['language'] == 'ar':
+                        # 	flash("تم تسجيل الدخول بنجاح ! أهلا و سهلا %s!" % user.first_name)
+                        # else:
+                        # 	flash("Login Successful. Welcome, %s!" % user.first_name)
+                        login_session['first_name'] = user.first_name
+                        login_session['last_name'] = user.last_name	
+                        login_session['email'] = email
+                        login_session['id'] = user.id
+                        login_session['group'] = user.group
+                        if user.group == 'student':
+                                return redirect(url_for('studentPortal'))
+                        if user.group == 'administrator':
+                                return redirect(url_for('showDashboard'))
+                        return redirect(url_for('showProducts'))
+                        
+                else:
+                        if login_session['language'] == 'he':
+                                flash("צירוף שם משתמש או סיסמא לא נכון")
+                        elif login_session['language'] == 'ar':
+                                flash("إسم المستخدم خطأ \ كلمة السر خطأ")
+                        else:
+                                flash("Incorrect email/password combination")
+                        return redirect(url_for('login'))
 
 
 @app.route("/signup", methods = ['GET', 'POST'])
@@ -743,7 +745,7 @@ def showDashboard():
 	totals = []
 	rankdict = dict()
 	investorsdict = dict()
-	print("products",[(a.team.name,a.investments) for a in products])
+	#print("products",[(a.team.name,a.investments) for a in products])
 	for product in products:
 		total_investments = 0.0
 		for inv in product.investments:
@@ -751,10 +753,10 @@ def showDashboard():
 		totals.append(total_investments)
 		rankdict[product.team.name] = total_investments
 		investorsdict[product.team.name] = len(product.investments)
-	print("rankdict",rankdict)
+	#print("rankdict",rankdict)
 	rankings = sorted(rankdict.items(), key=operator.itemgetter(1),reverse=True)
-	print("rankings",rankings)
-	print("totals",totals)
+	#print("rankings",rankings)
+	#print("totals",totals)
 	teams=get_teams()
 	team_list = [team.name for team in teams]
 	return render_template('dashboard.html', totals = totals, products = products, bronze_investors = bronze_investors,
