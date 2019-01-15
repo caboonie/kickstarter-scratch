@@ -58,7 +58,7 @@
 <br>
 
 <h2> Welcome {{user.first_name}}</h2>
-<h3> {{team.name}}</h3>
+<h3>Here you can edit the profile for your team: {{team.name}}</h3>
 
 
 
@@ -70,28 +70,41 @@
 
 <p> Your Team Name </p>
 <input type = "text", name = "team_name", value = '{{team.name}}'>
+<br><br>
 
-<p> Team Logo </p> 
+<p> Your Team Members </p>
+<input type = "text", name = "team_members", value = '{{team.product.team_members}}'>
+<br><br>
+
+<p> Team Logo: </p> 
 <img src = "{{team.product.photo}}" width = 300px >
-<p>Logo URL</p>
-<input type='text', name='photo_url', value = '{{team.product.photo}}'>
+<br><br>
 
-<p> English MVP Description </p>
+<p>New Team Logo</p>
+<input type='file', name='photo', value = '{{team.product.photo}}'>
+<br>
+
+<p> Product Description - English </p>
 <textarea name='description_en'>{{team.product.description_en}}</textarea>
+<br>
 
-<p> Arabic MVP Description </p>
+<p> Product Description - Arabic </p>
 <textarea name='description_ar'>{{team.product.description_ar}}</textarea>
+<br>
 
 
-<p> Hebrew MVP Description </p>
+<p> Product Description - Hebrew </p>
 <textarea name='description_he'>{{team.product.description_he}}</textarea>
+<br>
 
 
-<p>MVP URL</p>
+<p>Product Website URL</p>
 <input type = 'text', name='website_url', value = '{{team.product.website_url}}'>
+<br>
 
-<p> MVP Commercial</p>
-	<input type='text', name='video_url', value = '{{team.product.video}}'>
+<p>URL for Product Video on Youtube</p>
+<input type='text', name='video_url', value = '{{team.product.video}}'>
+<br>
 
 
 	<input type="submit" name="Save Changes" id="submit">

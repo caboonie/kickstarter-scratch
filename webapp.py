@@ -591,21 +591,28 @@ def studentPortal():
 
 @app.route("/updateSubmission", methods = ['POST'])
 def updateSubmission():
-	if 'language' not in login_session:
-		login_session['language'] = 'en'
-	team_name = request.form['team_name']
-	description_en = request.form['description_en']
-	description_ar = request.form['description_ar']
-	description_he = request.form['description_he']
-	website_url = request.form['website_url']
-	video_url = request.form['video_url']
-	photo_url = request.form['photo_url']
-	user = get_user_by_id(login_session['id'])
-	update_team(user.team_id, team_name, description_en, description_ar, description_he,
+        if 'language' not in login_session:
+                login_session['language'] = 'en'
+        user = get_user_by_id(login_session['id'])
+        team_name = request.form['team_name']
+        team_members = request.form['team_members']
+        description_en = request.form['description_en']
+        description_ar = request.form['description_ar']
+        description_he = request.form['description_he']
+        website_url = request.form['website_url']
+        video_url = request.form['video_url']
+        if 'photo' in request.files:
+            photo = request.files["photo"]
+            photo_url = "static/team_mockups19/"+photo.filename
+            photo.save(photo_url)
+        else:
+            photo_url = get_prod_by_team_id(user.team_id).photo
+        
+        update_team(user.team_id, team_name, team_members, description_en, description_ar, description_he,
                     website_url, video_url, photo_url)
-	flash("Team Info Updated Successfully!")
+        flash("Team Info Updated Successfully!")
 
-	return redirect(url_for('studentPortal'))
+        return redirect(url_for('studentPortal'))
 
 @app.route('/addComment/<int:team_id>', methods = ['POST'])
 def addComment(team_id):

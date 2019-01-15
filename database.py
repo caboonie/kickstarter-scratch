@@ -118,9 +118,10 @@ def get_prod_by_id(product_id):
 def get_comments_by_team_id(team_id):
         return session.query(Comment).filter_by(product_id =product.id).all()
 
-def update_team(team_id, team_name, description_en, description_ar, description_he,website_url, video_url, photo_url):
+def update_team(team_id, team_name, team_members, description_en, description_ar, description_he,website_url, video_url, photo_url):
         team = session.query(Team).filter_by(id=user.team_id).one()
         team.name = team_name
+        team.product.team_members = team_members
         team.product.description_en = description_en
         team.product.description_ar = description_ar
         team.product.description_he = description_he
