@@ -775,6 +775,12 @@ def showTeamActivity():
 	teams = get_teams()
 	return render_template('teamActivity.html', investments = investments, teams = teams)
 
+@app.route("/remove_team/<team_id>")
+def remove_team(team_id):
+    delete_team(int(team_id))
+    print("deleting")
+    return redirect(url_for('showDashboard'))
+
 def send_email(subject, sender, recipients, text_body, html_body):
     msg = Message(subject, sender=sender, recipients=recipients)
     msg.body = text_body

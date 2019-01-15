@@ -131,6 +131,13 @@ def update_team(team_id, team_name, team_members, description_en, description_ar
         session.add(team)
         session.commit()
 
+def delete_team(team_id):
+        team = session.query(Team).filter_by(id=team_id).one()
+        product = team.product
+        session.delete(team)
+        session.delete(product)
+        session.commit()      
+        
 def create_comment(text,team_id):
         product = session.query(Product).filter_by(team_id=team_id).one()
         comment = Comment(text = text, product=product)
@@ -203,21 +210,9 @@ for i in range(1, 2):
                 print("team",i,"already added")
 '''
 
-#print("teams",[(a.id) for a in session.query(Team).all()])
-#print("products",[prod.team for prod in get_products()])
-    
-#create_user("a","a","a","a","a",True)
-#a = get_user_by_email("a")
-#print("user name",a.email,a.verified)
 
 
-user = create_user("stud","ent","home","student","student","student_ip",True)
-user.group = "student"
-user.team_id = 1
-session.add(user)
-session.commit()
-
-user = create_user("admin","admin","home","admin","admin","admin_ip",True)
+user = create_user("admin","admin","home","admin","admin-meet","admin_ip",True)
 user.group = "administrator"
 user.team_id = 1
 session.add(user)

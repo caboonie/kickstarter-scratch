@@ -278,39 +278,41 @@ $(document).ready(function() {
 });
 
 </script>
+<div>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+	    <div class="container">
+	      <div class="navbar-header">
+	        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+	          <span class="sr-only">Toggle navigation</span>
+	          <span class="icon-bar"></span>
+	          <span class="icon-bar"></span>
+	          <span class="icon-bar"></span>
+	        </button>
+	        <a class="navbar-brand" href="/brandClick">
+	          <img alt="Brand Meet_Logoredv" src="{{url_for('static', filename='meet_logo_1.png')}}" style="max-height: 100%;">
+	        </a>
+	      </div>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/brandClick">
-          <img alt="Brand Meet_Logoredv" src="{{url_for('static', filename='meet_logo_1.png')}}" style="max-height: 100%;">
-        </a>
-      </div>
+	      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+	        
 
-      <div class="collapse navbar-collapse" id="navbar-collapse-1">
-        
+	        <div class="navbar-right">
+	        	<div class="navbar-text" id="userbox">
+	                You are currently signed in as {{session['email']}}. 
+	            </div>
+	            <ul class="nav navbar-nav">
+	              <li><a href = "{{url_for('logout')}}">Log Out</a></li>
+	              <li><a href = "{{url_for('showDashboard')}}">Dashboard</a></li>
+	            </ul>
+	        </div>
 
-        <div class="navbar-right">
-        	<div class="navbar-text" id="userbox">
-                You are currently signed in as {{session['email']}}. 
-            </div>
-            <ul class="nav navbar-nav">
-              <li><a href = "{{url_for('logout')}}">Log Out</a></li>
-              <li><a href = "{{url_for('showDashboard')}}">Dashboard</a></li>
-            </ul>
-        </div>
+	      </div>
 
-      </div>
+	    </div>
+	  </nav>
+	</div>
 
-    </div>
-  </nav>
-
+<br>
 <h1>Total Investments {{"${:,.2f}".format(totals|sum)}}</h1>
 <h2>Bronze Investors: {{bronze_investors|length}}</h2>
 <h2>Silver Investors: {{silver_investors|length}}</h2>
@@ -323,7 +325,7 @@ $(document).ready(function() {
 	    	<div class="barchart" data-role="barchart" data-width=150 data-height=150></div>-->
 		</div>
 <h1> Rankings </h1>		
-<table style="width:100%;text-align:center;">
+<table style="width:100%;text-align:left;">
 <tr>
 	<th>
 		Place
@@ -383,10 +385,15 @@ $(document).ready(function() {
 </form>
 
 <h2>Current Teams</h2>
-{% for product in products%}
-	<p>{{product.team.name}} - {{product.team.team_members}}</p>
-{%endfor%}
-
+<table style="width: 100%">
+	{% for product in products%}
+		<tr>
+			<td> {{product.team.name}} </td>
+			<td> {{product.team_members}} </td>
+			<td> <a href="{{url_for('remove_team', team_id = product.team.id|string)}}">Remove Team</a> </td>
+		</tr>
+	{%endfor%}
+</table>
 
 
   <script>
