@@ -734,7 +734,7 @@ def showDashboard():
 	if 'id' not in login_session:
 		flash("You do not have access to this page")
 		return redirect(url_for('showLandingPage'))
-	elif get_user_by_id(login_session['id']).email not in admins:
+	if login_session['group'] != "administrator":
 		flash("You do not have access to this page")
 		return redirect(url_for('showLandingPage'))
 	if request.method == 'POST':
@@ -775,7 +775,7 @@ def showTeamActivity():
 	if 'id' not in login_session:
 		flash("You do not have access to this page")
 		return redirect(url_for('showLandingPage'))
-	elif get_user_by_id(login_session['id']).email not in admins:
+	if login_session['group'] != "administrator":
 		flash("You do not have access to this page")
 		return redirect(url_for('showLandingPage'))
 	investments = get_investments()
@@ -787,6 +787,20 @@ def remove_team(team_id):
     delete_team(int(team_id))
     print("deleting")
     return redirect(url_for('showDashboard'))
+
+@app.route("/database")
+def showDatabase():
+	if 'language' not in login_session:
+		login_session['language'] = 'en'
+	if 'id' not in login_session:
+		flash("You do not have access to this page")
+		return redirect(url_for('showLandingPage'))
+	if login_session['group'] != "administrator":
+		flash("You do not have access to this page")
+		return redirect(url_for('showLandingPage'))
+	users = get_users()
+	return render_template('database.html', users = users)
+
 
 def send_email(subject, sender, recipients, text_body, html_body):
     msg = Message(subject, sender=sender, recipients=recipients)

@@ -1,0 +1,78 @@
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- <link rel="stylesheet" href="{{url_for('static', filename='w3.css')}}"> -->
+	<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+	<style type="text/css">
+		body{
+			background: #eeeeee;    
+		}
+	</style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/brandClick">
+          <img alt="Brand Meet_Logoredv" src="{{url_for('static', filename='meet_logo_1.png')}}" style="max-height: 100%;">
+        </a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        
+
+        <div class="navbar-right">
+        	<div class="navbar-text" id="userbox">
+                You are currently signed in as {{session['email']}}. 
+            </div>
+            <ul class="nav navbar-nav">
+              <li><a href = "{{url_for('logout')}}">Log Out</a></li>
+              <li><a href = "{{url_for('showDashboard')}}">Dashboard</a></li>
+            </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </nav>
+
+<h1> User Activity</h1>
+
+
+
+<table style="width:100%;text-align:left;border:2px;"
+<tr>
+	<th>Name</th>
+	<th>IP</th>
+	<th>Email</th>
+	<th>Hometown</th>
+	<th>Group</th>
+	<th>Coins</th>
+</tr>
+	{% for user in users %}
+		<tr>
+		
+			<td>{{user.first_name}} {{user.last_name}}</td>
+			<td>{{user.ip_address}}</td>
+			<td>{{user.email}}</td>
+			<td>{{user.hometown}}</td>
+			<td>{{user.group}}</td>
+			<td>{{user.wallet.current_value}}</td>
+
+		</tr>
+
+	{%endfor%}
+
+
+</table> 
+<br>
+<br>
+</body>
+
+
