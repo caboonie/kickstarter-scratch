@@ -225,7 +225,7 @@ def db_setup():
         session.add(user)
         session.commit()
 
-if get_user_by_email("admin")==None:
-        db_setup()
+#if get_user_by_email("admin")==None:
+#        db_setup()
 
 print("groups",[(a.group) for a in get_users()])
