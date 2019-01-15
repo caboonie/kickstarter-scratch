@@ -573,7 +573,7 @@ def notifyList():
 def studentPortal():
 	if 'group' not in login_session:
 		return redirect(url_for('login'))
-	if login_session['group'] != 'student':
+	if login_session['group'] not in['student']:
 		if login_session['language'] == 'he':
 			flash("הדף הזה נגיש רק לתלמידים")
 		elif login_session['language'] == 'ar':
@@ -603,6 +603,11 @@ def updateSubmission():
         description_he = request.form['description_he']
         website_url = request.form['website_url']
         video_url = request.form['video_url']
+        if 'embed' not in video_url:
+            try:
+                video_url = video_url.split("watch?v=")[0]+"embed/"+video_url.split("watch?v=")[1]
+            except:
+                flash("The video URL is not a YouTube **EMBED** URL.")
         if 'photo' in request.files:
             photo = request.files["photo"]
             photo_url = "static/team_mockups19/"+photo.filename
