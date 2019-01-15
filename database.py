@@ -95,6 +95,9 @@ def add_to_mailing(email):
         newEmail = MailingList(email=email)
         session.add(newEmail)
         session.commit()
+        
+def get_mailing_list():
+        return session.query(MailingList).all()
 
 def get_user_by_id(user_id):
         return session.query(User).filter_by(id=user_id).first()
@@ -225,7 +228,10 @@ def db_setup():
         session.add(user)
         session.commit()
 
-#if get_user_by_email("admin")==None:
-#        db_setup()
+        add_to_mailing("caboonie@gmail.com")
+        
+
+if get_user_by_email("admin")==None:
+        db_setup()
 
 print("groups",[(a.group) for a in get_users()])

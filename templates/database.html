@@ -71,6 +71,23 @@
 
 
 </table> 
+
+<h1> Mailing List </h1>
+
+<table style="width:100%;text-align:left;border:2px;"
+<tr>
+	<th>Email</th>
+
+</tr>
+	{% for account in mailing_list %}
+		<tr>
+			<td>{{account.email}} </td>
+		</tr>
+
+	{%endfor%}
+
+
+</table> 
 <br>
 <br>
 </body>

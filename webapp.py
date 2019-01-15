@@ -786,6 +786,7 @@ def showTeamActivity():
 def remove_team(team_id):
     delete_team(int(team_id))
     print("deleting")
+    flash("Team number "+str(team_id)+" deleted")
     return redirect(url_for('showDashboard'))
 
 @app.route("/database")
@@ -799,7 +800,8 @@ def showDatabase():
 		flash("You do not have access to this page")
 		return redirect(url_for('showLandingPage'))
 	users = get_users()
-	return render_template('database.html', users = users)
+	mailing_list = get_mailing_list()
+	return render_template('database.html', users = users, mailing_list = mailing_list)
 
 
 def send_email(subject, sender, recipients, text_body, html_body):
@@ -808,6 +810,27 @@ def send_email(subject, sender, recipients, text_body, html_body):
     msg.html = html_body
     with app.app_context():
     	mail.send(msg)
+
+@app.route("/send_notifications")
+def sendNotifications():
+    if 'language' not in login_session:
+            login_session['language'] = 'en'
+    if 'id' not in login_session:
+            flash("You do not have access to this page")
+            return redirect(url_for('showLandingPage'))
+    if login_session['group'] != "administrator":
+            flash("You do not have access to this page")
+            return redirect(url_for('showLandingPage'))
+    if datetime.datetime.now().date()<LAUNCHDATE:
+        flash("Campaing hasn't started yet!")
+    elif datetime.datetime.now().date()>DEADLINE:
+        flash("Campaing is over!")
+    else:
+        accounts = get_mailing_list()
+        for account in accounts:
+            send_email("The MEETCampaign is Open!",EMAIL_SENDER,[account.email],render_template("notification_email.html"),render_template("notification_email.html"))
+        flash("Notification emails sent!")
+    return redirect(url_for('showDashboard'))
 
 if __name__ == '__main__':
 	app.run(debug=True)

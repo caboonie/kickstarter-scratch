@@ -312,7 +312,22 @@ $(document).ready(function() {
 	  </nav>
 	</div>
 
-<br>
+<br> <br>
+<!--Flash Messaging --> 
+{% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <div class="alert alert-info alert-dismissible message" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="text-align: right"><span aria-hidden="true">&times;</span></button>
+
+          {% for message in messages %}
+            <strong> {{ message }} </strong><br>
+          {% endfor %}
+        </ul>
+
+      </div>
+      {% endif %}
+{% endwith %}  
+
 <h1>Total Investments {{"${:,.2f}".format(totals|sum)}}</h1>
 <h2>Bronze Investors: {{bronze_investors|length}}</h2>
 <h2>Silver Investors: {{silver_investors|length}}</h2>
@@ -366,7 +381,8 @@ $(document).ready(function() {
 </table>		
 
 <a href='{{url_for("showTeamActivity")}}'>View All Team Activity</a> <br>
-<a href='{{url_for("showDatabase")}}'>View User Database</a> 
+<a href='{{url_for("showDatabase")}}'>View User Database</a> <br>
+<a href='{{url_for("sendNotifications")}}'>Send Notification Emails</a> 
 
 <h2>Add a new team</h2>
 <form action = "{{url_for('showDashboard')}}" method = 'post'>
