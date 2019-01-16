@@ -38,7 +38,9 @@ MAIL_PORT = CONFIG['MAIL_PORT'],
 MAIL_USERNAME = CONFIG['MAIL_USERNAME'],
 MAIL_PASSWORD= CONFIG['MAIL_PASSWORD'],
 MAIL_USE_TLS = False,
-MAIL_USE_SSL = True)
+MAIL_USE_SSL = True,
+MAIL_SUPPRESS_SEND = False,
+TESTING=False)
 
 EMAIL_SENDER = CONFIG['MAIL_USERNAME']
 mail = Mail(app)
@@ -98,17 +100,11 @@ def authorized():
                 dummy_password = "cantguessthis"
                 ip_address = str(request.remote_addr)
                 newUser = create_user(first_name, last_name, "home", email, dummy_password, ip_address, verified=True)
-                if email in goldMembers:
-                        newUser.group = "gold"
-                elif email in silverMembers:
-                        newUser.group = "silver"
-                else:
-                        newUser.group = "bronze"
-
+                 
                 ## Make a Wallet for  newUser
-                if email in goldMembers:
+                if user.group=="gold":
                         initial_value = '1000000.00'
-                elif email in silverMembers:
+                elif user.group=="silver":
                         initial_value = '100000.00'
                 else:
                         initial_value = '10000.00'
@@ -188,18 +184,11 @@ def facebook_authorized(resp):
                 last_name = name.split(" ")[1]
                 dummy_password = "cantguessthis"
                 newUser = create_user(first_name, last_name, "home", email, dummy_password, str(request.remote_addr), verified=True)
-                if email in goldMembers:
-                        newUser.group = "gold"
-                elif email in silverMembers:
-                        newUser.group = "silver"
-                else:
-                        newUser.group = "bronze"
-                session.add(newUser)
-                session.commit()
+                
                 ## Make a Wallet for  newUser
-                if email in goldMembers:
+                if user.group=="gold":
                         initial_value = '1000000.00'
-                elif email in silverMembers:
+                elif user.group=="silver":
                         initial_value = '100000.00'
                 else:
                         initial_value = '10000.00'
@@ -805,6 +794,7 @@ def showDatabase():
 
 
 def send_email(subject, sender, recipients, text_body, html_body):
+    print("sending email to",recipients)
     msg = Message(subject, sender=sender, recipients=recipients)
     msg.body = text_body
     msg.html = html_body
