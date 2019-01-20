@@ -19,7 +19,7 @@ CONFIG = json.loads(open('secrets.json', 'r').read())
 ##REPLACE WITH REAL DATES
 LAUNCHDATE = datetime.datetime.strptime('26/03/2018', "%d/%m/%Y").date()
 DEADLINE = datetime.datetime.strptime('09/04/2019', "%d/%m/%Y").date()
-IP_THRESHOLD = 6 #how many distinct people would use one ip?
+IP_THRESHOLD = 10 #how many distinct people would use one ip?
 #Could make it so that they have to wait a day before voting if the ip is overused?
 
 app = Flask(__name__)
