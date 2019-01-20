@@ -102,9 +102,9 @@ def authorized():
                 newUser = create_user(first_name, last_name, "home", email, dummy_password, ip_address, verified=True)
                  
                 ## Make a Wallet for  newUser
-                if user.group=="gold":
+                if newUser.group=="gold":
                         initial_value = '1000000.00'
-                elif user.group=="silver":
+                elif newUser.group=="silver":
                         initial_value = '100000.00'
                 else:
                         initial_value = '10000.00'
@@ -186,9 +186,9 @@ def facebook_authorized(resp):
                 newUser = create_user(first_name, last_name, "home", email, dummy_password, str(request.remote_addr), verified=True)
                 
                 ## Make a Wallet for  newUser
-                if user.group=="gold":
+                if newUser.group=="gold":
                         initial_value = '1000000.00'
-                elif user.group=="silver":
+                elif newUser.group=="silver":
                         initial_value = '100000.00'
                 else:
                         initial_value = '10000.00'
