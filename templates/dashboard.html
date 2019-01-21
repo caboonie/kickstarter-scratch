@@ -386,14 +386,19 @@ $(document).ready(function() {
 		</div>
 		
 	</div>
-	<div class="roundbox" style="width: calc(100% - 400px); height: 225px;"> 
+	<div id="barchart_box" class="roundbox" style="width: calc(100% - 400px); height: 225px;"> 
 		<div class = "box_body">
 			<div id="holder">
-    		<div class="barchart" data-role="barchart" data-width=800 data-height=200></div>
+    			<div id="barchart" class="barchart" data-role="barchart" data-width=800 data-height=200></div>
+    			<script type="text/javascript">
+    				document.getElementById("barchart").setAttribute("data-width", $(window).width()-400)
+    				console.log(document.getElementById("barchart").getAttribute("data-width"))
+    			</script>
 			</div>
 		</div>
 	</div>
 </div>
+
 
 
 <div class="row">
