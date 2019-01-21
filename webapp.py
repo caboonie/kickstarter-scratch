@@ -548,15 +548,17 @@ def logout():
 
 @app.route('/notify', methods = ['POST'])
 def notifyList():
-	email = request.form['email']
-	add_to_mailing(email)
-	if login_session['language'] == 'ar':
-		flash("شكرا جزيلا ! سوف يتم إعلامك عندما تبدأ الحملة")
-	elif login_session['language'] == 'he':
-		flash("תודה רבה! ניצור אתכם קשר כשהקמפיין יתחיל.")
-	else:
-		flash("Thank You! You will be notified when the campaign begins")
-	return redirect(url_for('showLandingPage'))
+        if 'language' not in login_session:
+                login_session['language'] = 'en'
+        email = request.form['email']
+        add_to_mailing(email,login_session['language'])
+        if login_session['language'] == 'ar':
+                flash("شكرا جزيلا ! سوف يتم إعلامك عندما تبدأ الحملة")
+        elif login_session['language'] == 'he':
+                flash("תודה רבה! ניצור אתכם קשר כשהקמפיין יתחיל.")
+        else:
+                flash("Thank You! You will be notified when the campaign begins")
+        return redirect(url_for('showLandingPage'))
 
 @app.route("/studentPortal")
 def studentPortal():
@@ -818,7 +820,12 @@ def sendNotifications():
     else:
         accounts = get_mailing_list()
         for account in accounts:
-            send_email("The MEETCampaign is Open!",EMAIL_SENDER,[account.email],render_template("notification_email.html"),render_template("notification_email.html"))
+            if account.langauge=="he":
+                send_email("ה- MEETCampaign פתוח!",EMAIL_SENDER,[account.email],render_template("notification_email_he.html"),render_template("notification_email_he.html"))
+            elif account.language=="ar":
+                send_email("MEETCampaign مفتوح!",EMAIL_SENDER,[account.email],render_template("notification_email_ar.html"),render_template("notification_email_ar.html"))
+            else:
+                send_email("The MEETCampaign is Open!",EMAIL_SENDER,[account.email],render_template("notification_email.html"),render_template("notification_email.html"))
         flash("Notification emails sent!")
     return redirect(url_for('showDashboard'))
 

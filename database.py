@@ -91,8 +91,8 @@ def get_products():
 def get_user_wallet(user_id):
     return session.query(Wallet).filter_by(user_id = user_id).one_or_none()
 
-def add_to_mailing(email):
-        newEmail = MailingList(email=email)
+def add_to_mailing(email,language):
+        newEmail = MailingList(email=email, language=language)
         session.add(newEmail)
         session.commit()
         
@@ -228,7 +228,7 @@ def db_setup():
         session.add(user)
         session.commit()
 
-        add_to_mailing("caboonie@gmail.com")
+        add_to_mailing("caboonie@gmail.com","en")
         
 
 if get_user_by_email("admin")==None:

@@ -13,6 +13,7 @@ class MailingList(Base):
 	__tablename__ = 'mailinglist'
 	id = Column(Integer, primary_key=True)
 	email = Column(String)
+	langauge = Column(String)
 
 class User(Base):
 	#Everyone in the system is a type of user, Authorization of Student Users, Administrators, and high profile investors will be specified in the 'group' field

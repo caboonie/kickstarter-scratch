@@ -1,60 +1,104 @@
 
 
-		 <head>
-		 	<meta http-equiv="refresh" content="60">
-		 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-			<!-- <link rel="stylesheet" href="{{url_for('static', filename='w3.css')}}"> -->
-			<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
-		 </head>
+	<head>
+	 	<meta http-equiv="refresh" content="60">
+	 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<!-- <link rel="stylesheet" href="{{url_for('static', filename='w3.css')}}"> -->
+		<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+	</head>
 
-		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script src="https://d3js.org/d3.v3.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v3.min.js"></script>
 		
-		<style>
+	<style>
 		body{
-			background: #eeeeee;  
-			color:black;  
-			padding:15px;
+			background: white;  
+			color:black; 
 		}
 				
-	.barchart .bar {
-		xfill: steelblue;
-	}
+		.barchart .bar {
+			xfill: steelblue;
+		}
 
-	.barchart .bar:hover {
-		fill: brown;
-	}
+		.barchart .bar:hover {
+			fill: brown;
+		}
 
-	.barchart .axis {
-		font: 10px sans-serif;
-	}
+		.barchart .axis {
+			font: 10px sans-serif;
+		}
 
-	.barchart .axis path,
-	.barchart .axis line {
-		fill: none;
-		stroke: #000;
-		shape-rendering: crispEdges;
-	}
+		.barchart .axis path,
+		.barchart .axis line {
+			fill: none;
+			stroke: #000;
+			shape-rendering: crispEdges;
+		}
 
-	.barchart .x.axis path {
-		display: none;
-	}	
+		.barchart .x.axis path {
+			display: none;
+		}	
 
-	h2 {
+		h2 {
+			color:black;
+		}
+		p {
+			color:black;
+		}
+		li {
 		color:black;
-	}
-	p {
+		}
+		ul {
 		color:black;
-	}
-	li {
-	color:black;
-	}
-	ul {
-	color:black;
-	}
+		}
+
+		.roundbox {
+			border: 2px solid #73AD21;
+			border-radius: 25px;
+			margin: 10px;
+			margin-right: 0px;
+			margin-bottom: 0px;
+			float: left;
+		}
+
+		.box_header {
+			border-radius: 22px 22px 0px 0px; 
+			font-size: 25px;
+			height: 45px; 
+			background:#73AD21;
+			padding: 5px;
+			padding-left: 15px;
+			padding-right: 15px;
+			padding-top: 5px;
+		}
+
+		.box_body {
+			padding: 5px;
+			padding-left: 15px;
+			padding-right: 15px;
+
+		}
+
+		.box_button {
+			text-align: center; 
+			color: black; 
+			background:#73AD21; 
+			width: calc(25%);
+			font-size: 25px;
+			margin-left: 4%;
+			margin-right: 4%;
+		}
+
+		.row {
+			margin-left: 10px;
+			margin-top: 10px
+		}
+
+
 
 	</style>
 
+<!-- Bar Graph --> 
 <script type='text/javascript'>
 $(document).ready(function() {
 					
@@ -276,8 +320,8 @@ $(document).ready(function() {
 
 			});	
 });
-
 </script>
+<!-- Navbar --> 
 <div>
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 	    <div class="container">
@@ -312,7 +356,7 @@ $(document).ready(function() {
 	  </nav>
 	</div>
 
-<br> <br>
+
 <!--Flash Messaging --> 
 {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -326,91 +370,128 @@ $(document).ready(function() {
 
       </div>
       {% endif %}
-{% endwith %}  
-
-<h1>Total Investments {{"${:,.2f}".format(totals|sum)}}</h1>
-<h2>Bronze Investors: {{bronze_investors|length}}</h2>
-<h2>Silver Investors: {{silver_investors|length}}</h2>
-<h2>Gold Investors: {{gold_investors|length}}</h2>
+{% endwith %} 
 
 
-<div id="holder">
-    		<div class="barchart" data-role="barchart" data-width=800 data-height=800></div><!--
-	    	<div class="barchart" data-role="barchart" data-width=400 data-height=400></div>
-	    	<div class="barchart" data-role="barchart" data-width=150 data-height=150></div>-->
+
+<div class="row" style="">
+	<div class="roundbox" style="width: 350px; height: 225px;">
+		<div class = "box_header">
+			Total Invested {{"${:,.0f}".format(totals|sum)}}
 		</div>
-<h1> Rankings </h1>		
-<table style="width:100%;text-align:left;">
-<tr>
-	<th>
-		Place
-	</th>
-	<th>
-		Team Name
-	</th>
-	<th>
-		Investment Total
-	</th>
-	<th>
-		Number of Investments
-	</th>
-
-</tr> 
-{% for product in rankings%}
-<tr>
-	<td>
-		{{loop.index}}
-	</td>
-
-	<td>
-		{{product[0]}}
-
-	</td>
-	<td>
-		{{"${:,.2f}".format(product[1])}}
+		<div class = "box_body">
+			<h3>Gold Investors: {{gold_investors|length}}</h3>
+			<h3>Silver Investors: {{silver_investors|length}}</h3>
+			<h3>Bronze Investors: {{bronze_investors|length}}</h3>
+		</div>
+		
+	</div>
+	<div class="roundbox" style="width: calc(100% - 400px); height: 225px;"> 
+		<div class = "box_body">
+			<div id="holder">
+    		<div class="barchart" data-role="barchart" data-width=800 data-height=200></div>
+			</div>
+		</div>
+	</div>
+</div>
 
 
-	</td>
-	<td>
-		{{investorsdict[product[0]]}}
-	</td>
+<div class="row">
+		<a href='{{url_for("showTeamActivity")}}'>
+			<div class="roundbox box_button" >
+				Team Activity
+				
+			</div>
+		</a>
+		<a href='{{url_for("showDatabase")}}'>
+			<div class="roundbox box_button" >
+				User Database
+				
+			</div>
+		</a>
+		<a href='{{url_for("sendNotifications")}}'>
+			<div class="roundbox box_button" >
+				Send Notifications
+				
+			</div>
+		</a>
+</div>
 
-	</tr>
-{%endfor%}
 
-</table>		
 
-<a href='{{url_for("showTeamActivity")}}'>View All Team Activity</a> <br>
-<a href='{{url_for("showDatabase")}}'>View User Database</a> <br>
-<a href='{{url_for("sendNotifications")}}'>Send Notification Emails</a> 
+<div class="row" style="">
+	<div class="roundbox" style="width: calc(100% - 40px); height: 225px;">
+		<div class = "box_header">
+			Rankings
+		</div>
+		<div class = "box_body">
+			<table style="width:100%;text-align:left;">
+				<tr>
+					<th>		Place	</th>
+					<th>		Team Name	</th>
+					<th>	Investment Total		</th>
+					<th>	Number of Investments	</th>
+				</tr> 
 
-<h2>Add a new team</h2>
-<form action = "{{url_for('showDashboard')}}" method = 'post'>
-		<input  type="text" name="team_name" placeholder="Team Name"><br>
-		<input  type="text" name="members" placeholder="Members - Caleb, Hope..."><br>
-		<button  type="submit"> Add Team </button>
-</form>
+				{% for product in rankings%}
+				<tr>
+					<td> {{loop.index}}	</td>
+					<td>{{product[0]}}	</td>
+					<td>	{{"${:,.2f}".format(product[1])}}	</td>
+					<td>	{{investorsdict[product[0]]}}	</td>
+				</tr>
+				{%endfor%}
+			</table>		
+		</div>
+	</div>
+</div>
 
-<h2>Add a new student</h2>
-<form action = "{{url_for('showDashboard')}}" method = 'post'>
-		<input  type="text" name="first_name" placeholder="First Name"><br>
-		<input  type="text" name="last_name" placeholder="Last Name"><br>
-		<input  type="text" name="email" placeholder="Email"><br>
-		<input  type="text" autocomplete="off" name="password" placeholder="Password"><br>
-		<input  type="text" autocomplete="off" class="team_box" name="team_name" placeholder="Team"><br>
-		<button  id="add_stud_button" type="submit"> Add Student </button>
-</form>
+<div class="row" style="">
+	<div class="roundbox" style="width: calc(25% - 20px); height: 300px;">
+		<div class = "box_header">
+			add new team
+		</div>
+		<div class = "box_body">
+			<form action = "{{url_for('showDashboard')}}" method = 'post'>
+					<input  type="text" name="team_name" placeholder="Team Name"><br>
+					<input  type="text" name="members" placeholder="Members - Caleb, Hope..."><br>
+					<button  type="submit"> Add Team </button>
+			</form>
+		</div>
+	</div>
+	<div class="roundbox" style="width: calc(25% - 20px); height: 300px;">
+		<div class = "box_header">
+			add new student
+		</div>
+		<div class = "box_body">
+			<form action = "{{url_for('showDashboard')}}" method = 'post'>
+					<input  type="text" name="first_name" placeholder="First Name"><br>
+					<input  type="text" name="last_name" placeholder="Last Name"><br>
+					<input  type="text" name="email" placeholder="Email"><br>
+					<input  type="text" autocomplete="off" name="password" placeholder="Password"><br>
+					<input  type="text" autocomplete="off" class="team_box" name="team_name" placeholder="Team"><br>
+					<button  id="add_stud_button" type="submit"> Add Student </button>
+			</form>
+		</div>
+	</div>
+	<div class="roundbox" style="width: calc(50% - 20px); height: 300px;">
+		<div class = "box_header">
+			current teams
+		</div>
+		<div class = "box_body">
+			<table style="width: 100%">
+				{% for product in products%}
+					<tr>
+						<td> {{product.team.name}} </td>
+						<td> {{product.team_members}} </td>
+						<td> <a href="{{url_for('remove_team', team_id = product.team.id|string)}}">Remove Team</a> </td>
+					</tr>
+				{%endfor%}
+			</table>
+		</div>
+	</div>
+</div>
 
-<h2>Current Teams</h2>
-<table style="width: 100%">
-	{% for product in products%}
-		<tr>
-			<td> {{product.team.name}} </td>
-			<td> {{product.team_members}} </td>
-			<td> <a href="{{url_for('remove_team', team_id = product.team.id|string)}}">Remove Team</a> </td>
-		</tr>
-	{%endfor%}
-</table>
 
 
   <script>
