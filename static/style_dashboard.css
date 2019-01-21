@@ -7,7 +7,7 @@ Teal 34AFB0
 Navy 0E445C*/
 
 body{
-  background: white;  
+  background: lightgray;  
   color:black; 
 }
     
@@ -49,6 +49,7 @@ color:black;
 
 .roundbox {
   border: 2px solid #D9484F;
+  background: white;
   border-radius: 25px;
   margin: 10px;
   margin-right: 0px;
