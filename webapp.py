@@ -580,7 +580,7 @@ def studentPortal():
 	total_investments = 0.0
 	for inv in product.investments:
 		total_investments += inv.amount
-	return render_template('teamPortal.html', user=user, team=team, comments = comments, total_investments = total_investments)
+	return render_template('teamPortal.html', user=user, team=team, comments = comments, total_investments = total_investments, num_investments=len(product.investments))
 
 @app.route("/updateSubmission", methods = ['POST'])
 def updateSubmission():

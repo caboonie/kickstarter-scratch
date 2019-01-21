@@ -5,23 +5,13 @@
 		 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 			<!-- <link rel="stylesheet" href="{{url_for('static', filename='w3.css')}}"> -->
 			<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+			<link rel="stylesheet" href="{{url_for('static', filename='style_dashboard.css')}}">
 		 
 
 		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="https://d3js.org/d3.v3.min.js"></script>
 		
-		<style>
-		body{
-		background: #eeeeee;    
-		padding:15px;
-		}
-		p{
-			color:black;
-		}
-		h2{
-			color:black;
-		}
-	</style>
+	
 </head>
 
 <body>
@@ -52,11 +42,9 @@
         </div>
 
       </div>
-
     </div>
   </nav>
-  <br>
-  <br>
+
 
 <!--Flash Messaging --> 
 {% with messages = get_flashed_messages() %}
@@ -74,68 +62,161 @@
 {% endwith %}  
 
 
-<h2> Welcome {{user.first_name}}</h2>
-<h3>Here you can edit the profile for your team: {{team.name}}</h3>
+
+
+<div class="row" style="">
+	<div class="roundbox" style="width: 330px; height: 480px;">
+		<div class = "box_header">
+			Current Product Ad
+		</div>
+		<div class = "box_body">
+			<div class="panel panel-gray panel-product" style="margin-top: 10px">
+                  <div class="panel-overlay">
+                    <h3 class="panel-text">See more</h3>
+                  </div>
+                  <div class="panel-heading">
+                    <h3 class="panel-title">{{team.name}}</h3>
+                  </div>
+                  <div class="panel-body">
+                    <img class="products" src="{{team.product.photo}}">
+                  </div>
+                </div>
+		</div>
+		
+	</div>
+	<div  class="roundbox" style="width: calc(100% - 400px); height: 480px; min-width: 500px; "> 
+		<div class = "box_header">
+			Current Product Page
+		</div>
+		<div class = "box_body" style=" height: 410px; overflow: auto;">
+			<div class="two" style="padding: 0px 10px 10px 10px; margin-top: 10px; word-wrap: break-word; ">
+				<p style="font-size: 25px;">{{team.name}}</p>
+
+				{%if team.product.team_members != None %}
+					<div id="team-members">
+						<p>{{team.product.team_members}}</p><br>
+					</div>
+				{%endif%}
+
+				{%if team.product.website_url != None %}
+					<div id="product-url">
+						<p>Website: <a href={{team.product.website_url}} target="_blank">{{team.product.website_url}}</a></p><br>
+					</div>
+				{%endif%}
+
+				<iframe id="video_box" class="video_desktop" width="300"  src="{{team.product.video}}" allowfullscreen></iframe>
+				<script type="text/javascript">
+    				document.getElementById("video_box").setAttribute("width", Math.min(($(window).width()-400)*.9-57, 400))
+    				document.getElementById("video_box").setAttribute("height", .6*document.getElementById("video_box").getAttribute("width"))
+    				console.log(document.getElementById("video_box").getAttribute("width"))
+    			</script>
+				<br>
+		
 
 
 
+				<div class=" mainco">
+					<p>	{{team.product.description_en}}	</p>
+				</div> 
+			</div>
+		</div>
+	</div>
+</div>
 
 
-<!-- Before Competition --> 
-<h1> Your Team Profile </h1>
-<form action="{{ url_for('updateSubmission') }}" method = 'post'  enctype="multipart/form-data">
+<div class="row" >
+	<div class="roundbox" style="width: calc(70% - 20px); height: 400px; min-width: 500px">
+		<div class = "box_header">
+			Update Team Info
+		</div>
+		<div class = "box_body">
+			<form action="{{ url_for('updateSubmission') }}" method = 'post'  enctype="multipart/form-data">
+				<div style="float:left; width: 250px;">
+					<p>Your Team Name </p>
+					<input type = "text", name = "team_name", value = '{{team.name}}'> <br><br>
+					<p>Your Team Members </p>
+					<input type = "text", name = "team_members", value = '{{team.product.team_members}}'> <br><br>
+					<p>New Team Logo </p>
+					<input style="display: inline;" type='file', name='photo', value = '{{team.product.photo}}'> <br><br>
 
-<p> Your Team Name </p>
-<input type = "text", name = "team_name", value = '{{team.name}}'>
-<br><br>
+					<p>Product Website URL</p>
+					<input type = 'text', name='website_url', value = '{{team.product.website_url}}'>
+					<br><br>
 
-<p> Your Team Members </p>
-<input type = "text", name = "team_members", value = '{{team.product.team_members}}'>
-<br><br>
+					<p>Youtube URL for Product Video</p>
+					<input type='text', name='video_url', value = '{{team.product.video}}' placeholder="https://www.youtube.com/embed/jLNrvmXboj8">
+					<br>
+				</div>
+				<div style="float:left; width: calc(100% - 250px);">
+					Product Description - English <br> 
+					<textarea name='description_en' style="width: 90%; height: 18%;">{{team.product.description_en}}</textarea>
+					<br>
 
-<p> Team Logo: </p> 
-<img src = "{{team.product.photo}}" width = 300px >
-<br><br>
+					<p> Product Description - Arabic </p>
+					<textarea name='description_ar' style="width: 90%; height: 18%;">{{team.product.description_ar}}</textarea>
+					<br>
 
-<p>New Team Logo</p>
-<input type='file', name='photo', value = '{{team.product.photo}}'>
-<br>
-
-<p> Product Description - English </p>
-<textarea name='description_en'>{{team.product.description_en}}</textarea>
-<br>
-
-<p> Product Description - Arabic </p>
-<textarea name='description_ar'>{{team.product.description_ar}}</textarea>
-<br>
-
-
-<p> Product Description - Hebrew </p>
-<textarea name='description_he'>{{team.product.description_he}}</textarea>
-<br>
-
-
-<p>Product Website URL</p>
-<input type = 'text', name='website_url', value = '{{team.product.website_url}}'>
-<br>
-
-<p>Youtube URL for Product Video</p>
-<input type='text', name='video_url', value = '{{team.product.video}}' placeholder="https://www.youtube.com/embed/jLNrvmXboj8">
-<br>
+					<p> Product Description - Hebrew </p>
+					<textarea name='description_he' style="width: 90%; height: 18%;">{{team.product.description_he}}</textarea>
+					<br>
 
 
-	<input type="submit" name="Save Changes" id="submit">
-</form>
+					
+
+					<input style="float: right; margin-right: calc(10% ) " type="submit" name="Save Changes" id="submit">
+				</div>
+			</form>
+		</div>	
+	</div>
+
+	<div class="roundbox" style="width: calc(30% - 20px); height: 126px; min-width: 200px">
+		<div class = "box_header">
+			Total Invested
+		</div>
+		<div class = "box_body">
+			<h3>{{"${:,.2f}".format(total_investments)}}</h3>
+		</div>	
+	</div>
+
+	<div class="roundbox" style="width: calc(30% - 20px); height: 126px; min-width: 200px">
+		<div class = "box_header">
+			Number Investments
+		</div>
+		<div class = "box_body">
+			<h3>{{num_investments}} Investors</h3>
+		</div>	
+	</div>
+
+	<div class="roundbox" style="width: calc(30% - 20px); height: 126px; min-width: 200px">
+		<div class = "box_header">
+			Average Investment
+		</div>
+		<div class = "box_body">
+			{%if num_investments==0%}
+				<h3>No investments yet</h3>
+			{%else%}
+				<h3>{{"${:,.2f}".format(total_investments/num_investments)}}</h3>
+			{%endif%}
+		</div>	
+	</div>
+</div>
 
 
+<div class="row" >
+	<div class="roundbox" style="width: calc(100% - 40px); min-width: 500px">
+		<div class = "box_header">
+			Comments
+		</div>
+		<div class = "box_body">
+			{%for comment in comments %}
+			<h3>{{comment.user.first_name}} {{comment.user.last_name}}</h3>
+			<p>{{comment.text}}</p> 
+			{%endfor%}
+		</div>	
+	</div>
+</div>
 
-<h1>Total Investments {{total_investments}}</h1>
 
-<p>Comments</p> 
-{%for comment in comments %}
-<h3>{{comment.user.first_name}} {{comment.user.last_name}}</h3>
-<p>{{comment.text}}</p> 
-{%endfor%}
 
 </body>
 
