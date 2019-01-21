@@ -27,10 +27,10 @@
 		<div id="notify">
 			{% if timeline == "before" %}
 				<div class="before-notify">
-					<p>Add your email address below to be notified when the campaign begins.</p></br>
+					<p>أضف عنوان بريدك الإلكتروني أدناه ليتم إخطارك عندما تبدأ الحملة.</p></br>
 					<form action="{{url_for('notifyList')}}" method = 'post' value="Type your Email Address Here">
 						<input  class="emailindex" type="email" name="email"  placeholder="email">
-						<button class="btn btn-success" type = "submit" name="Notify me">Notify Me</button><br>
+						<button class="btn btn-success" type = "submit" name="Notify me">اعلمني</button><br>
 					</form>
 				</div>
 			{% elif timeline == "after" %}
