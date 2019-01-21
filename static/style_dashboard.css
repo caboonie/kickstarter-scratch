@@ -48,7 +48,7 @@ color:black;
 }
 
 .roundbox {
-  border: 2px solid #73AD21;
+  border: 2px solid #D9484F;
   border-radius: 25px;
   margin: 10px;
   margin-right: 0px;
@@ -56,16 +56,26 @@ color:black;
   float: left;
 }
 
+.box_teal {
+  border: 2px solid #34AFB0;
+}
+
+.box_navy {
+  border: 2px solid #0E445C;
+}
+
 .box_header {
   border-radius: 22px 22px 0px 0px; 
   font-size: 25px;
   height: 45px; 
-  background:#73AD21;
+  background:#D9484F;
   padding: 5px;
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 5px;
 }
+
+
 
 .box_body {
   padding: 5px;
@@ -78,14 +88,25 @@ color:black;
 .box_button {
   text-align: center; 
   color: black; 
-  background:#73AD21; 
+  background:#D9484F; 
   width: calc(25%);
   font-size: 25px;
   margin-left: 4%;
   margin-right: 4%;
 }
 
+.bkgnd_teal {
+  background:  #34AFB0;
+
+}
+
+.bkgnd_navy {
+  background:  #0E445C;
+  color: white;
+}
+
 .row {
   margin-left: 10px;
-  margin-top: 10px
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
