@@ -293,6 +293,7 @@ $(document).ready(function() {
 
 
 
+
 <div class="row" style="">
 	<div class="roundbox box_teal" style="width: 350px; height: 225px;">
 		<div class = "box_header bkgnd_teal">
@@ -305,13 +306,15 @@ $(document).ready(function() {
 		</div>
 		
 	</div>
-	<div id="barchart_box" class="roundbox box_teal" style="width: calc(100% - 400px); min-width:500px;  height: 225px;"> 
+	<div id="barchart_box"  class="roundbox box_teal" style="width: calc(100% - 400px); min-width:500px;  height: 225px;"> 
 		<div class = "box_body">
 			<div id="holder">
-    			<div id="barchart" class="barchart" data-role="barchart" data-width=800 data-height=200></div>
+    			<div id="barchart"  class="barchart" data-role="barchart" data-width=800 data-height=200></div>
     			<script type="text/javascript">
-    				document.getElementById("barchart").setAttribute("data-width", Math.max($(window).width()-400,500))
-    				console.log(document.getElementById("barchart").getAttribute("data-width"))
+    				
+	    				document.getElementById("barchart").setAttribute("data-width", Math.max($(window).width()-400,500))
+	    				console.log(document.getElementById("barchart").getAttribute("data-width"))
+	    			
     			</script>
 			</div>
 		</div>

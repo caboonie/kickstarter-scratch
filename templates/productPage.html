@@ -31,7 +31,7 @@
 					<form action = "{{url_for('addComment', team_id = product.team_id)}}" method = 'post'>
 						<div class="form-group">
 							<!-- <h4>Please leave commentary or feedback for this team here.</h4> -->
-							<textarea name='commentary' class="form-control" rows="3">אנא השאר תגובה או ביקורת לקבוצה כאן.</textarea>
+							<textarea name='commentary' class="form-control" rows="3" placeholder="אנא השאר תגובה או ביקורת לקבוצה כאן."></textarea>
 						</div>
 
 						<button type="submit" class="submitproduct btn btn-success">שלח</button>
@@ -99,7 +99,7 @@
 					<form action = "{{url_for('addComment', team_id = product.team_id)}}" method = 'post'>
 						<div class="form-group">
 							<!-- <h4>Please leave commentary or feedback for this team here.</h4> -->
-							<textarea name='commentary' class="form-control" rows="3">من فضلك قم بترك ملاحظاتك و تعليقاتك لهذا الفريق هنا</textarea>
+							<textarea name='commentary' class="form-control" rows="3" placeholder="من فضلك قم بترك ملاحظاتك و تعليقاتك لهذا الفريق هنا" ></textarea>
 						</div>
 
 						<button type="submit" class="submitproduct btn btn-success">أرسل</button>
@@ -168,7 +168,7 @@
 					<form action = "{{url_for('addComment', team_id = product.team_id)}}" method = 'post'>
 						<div class="form-group">
 							<!-- <h4>Please leave commentary or feedback for this team here.</h4> -->
-							<textarea name='commentary' class="form-control" rows="3">Please leave commentary or feedback for this team here.</textarea>
+							<textarea name='commentary' class="form-control" rows="3" placeholder="Please leave commentary or feedback for this team here."></textarea>
 						</div>
 
 						<button type="submit" class="submitproduct btn btn-success">Submit</button>
