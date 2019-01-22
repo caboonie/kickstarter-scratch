@@ -233,7 +233,7 @@ def db_setup():
         user = create_user("admin","admin","home","admin","admin-meet","admin_ip",True)
         user.group = "administrator"
         session.add(user)
-
+        '''
         user = create_user("silver","test","home","test-silver","silver","silver_ip",True)
         create_wallet("100000.00",user)
         session.add(user)
@@ -242,10 +242,11 @@ def db_setup():
         create_wallet("1000000.00",user)
         session.add(user)
         session.commit()
-
+        add_to_mailing("caboonie@gmail.com","en")
+        '''
         
 
-        add_to_mailing("caboonie@gmail.com","en")
+        
         
 
 if get_user_by_email("admin")==None:
