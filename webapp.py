@@ -688,7 +688,7 @@ def showProduct(product_id):
 @app.route("/makeAnInvestment/<int:product_id>", methods = ['POST'])
 def makeAnInvestment(product_id):
 	now = datetime.datetime.now().date()
-	if now > DEADLINE:
+	if now > get_end_date():
 		flash("The competition has ended, no more investments are being accepted.")
 		return redirect(request.referrer)
 	if 'language' not in login_session:
@@ -726,7 +726,7 @@ def makeAnInvestment(product_id):
 @app.route("/viewResults")
 def viewResults():
     now = datetime.datetime.now().date()
-    if now < DEADLINE:
+    if now < get_end_date():
             flash(Markup("This page is not available until the campaign has ended."))
             return redirect(request.referrer)
     products = get_products()
