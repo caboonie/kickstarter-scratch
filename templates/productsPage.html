@@ -23,7 +23,13 @@
               <a href={{url_for('showProduct', product_id = product.id)}}>
                 <div class="panel panel-gray panel-product">
                   <div class="panel-overlay">
-                    <h3 class="panel-text">See more</h3>
+                    {% if session['language'] == 'ar' %}
+                      <h3 class="panel-text">شاهد المزيد</h3>
+                    {% elif session['language'] == 'he' %}
+                      <h3 class="panel-text">ראה עוד</h3>
+                    {% else %}
+                      <h3 class="panel-text">See more</h3>
+                    {%endif%}
                   </div>
                   <div class="panel-heading">
                     <h3 class="panel-title">{{product.team.name}}</h3>

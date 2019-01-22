@@ -64,7 +64,7 @@
           <div class="navbar-text" id="userbox">
             
             {%if session['language'] == 'he'%}
-                {{session['email']}} הנך כרגע רשום כ 
+                {{session['email']}}  הנך כרגע מחובר כ
               </div>
               <ul class="nav navbar-nav">
                 <li><a href = "{{url_for('logout')}}"> התנתק </a></li>
@@ -108,7 +108,13 @@
   <!-- Title Container -->
   <div class="logo">
     <!-- <img src = "{{url_for('static', filename='meet_logo_1.png')}}" alt="Meet_Logoredv" style="max-height: 50px;"> -->
-    <h2>Y3 Accelerator Crowd Funding Campaign</h2>
+    {% if session['language'] == 'ar' %}
+      <h2>Meet Y3 - حملة التسريع الجماعي </h2>
+    {% elif session['language'] == 'he' %}
+      <h2>Meet Y3 - מאיץ קהל מימון</h2>
+    {% else %}
+      <h2>MEET Y3 Accelerator Crowd Funding Campaign</h2>
+    {%endif%}
   </div>
   <!-- End Title Container -->
 

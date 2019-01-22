@@ -217,6 +217,22 @@ def get_facebook_oauth_token():
 
 
 
+def check_valid_time():
+    '''
+    returns the string "valid" if user should have access, else returns a redirect
+    '''
+    if 'group' not in login_session:
+            return redirect(url_for('/'))
+    if login_session['group'] in['student','admin']: #students and admins can access pages before hand.
+            return 'valid'
+    now = datetime.datetime.now().date()
+    if now < LAUNCHDATE:
+            flash(Markup("The campaign has not started. Sign up to be notified when it does."))
+            return redirect("/")
+    elif now > DEADLINE:
+            return redirect("/")
+    return 'valid'
+
 @app.route("/")
 @app.route("/main")
 def showLandingPage():
@@ -640,29 +656,33 @@ def showPoliciesPage():
 
 @app.route("/products")
 def showProducts():
-	if 'language' not in login_session:
-		login_session['language'] = 'en'
-	if 'id' not in login_session:
-		if login_session['language'] == 'he':
-			flash("עליך להיות מחובר על מנת לצפות בדף זה.")
-		elif login_session['language'] == 'ar':
-			flash("يجب عليك تسجيل الدخول من أجل عرض هذه الصفحة")
-		else:
-			flash("You must be logged in to view this page.")
-		return redirect(url_for('login'))
-	products = get_products()
-	wallet = get_user_wallet(login_session['id']) 
-	return render_template('productsPage.html', products = products, wallet = wallet)
+        if check_valid_time() != "valid":
+                return check_valid_time()
+        if 'language' not in login_session:
+                login_session['language'] = 'en'
+        if 'id' not in login_session:
+                if login_session['language'] == 'he':
+                        flash("עליך להיות מחובר על מנת לצפות בדף זה.")
+                elif login_session['language'] == 'ar':
+                        flash("يجب عليك تسجيل الدخول من أجل عرض هذه الصفحة")
+                else:
+                        flash("You must be logged in to view this page.")
+                return redirect(url_for('login'))
+        products = get_products()
+        wallet = get_user_wallet(login_session['id']) 
+        return render_template('productsPage.html', products = products, wallet = wallet)
 
 @app.route("/product/<int:product_id>")
 def showProduct(product_id):
-	if 'language' not in login_session:
-		login_session['language'] = 'en'
-	if 'id' not in login_session:
-		return redirect(url_for('login'))
-	product = get_prod_by_id(product_id)
-	wallet = get_user_wallet(login_session['id'])
-	return render_template('productPage.html', product = product, wallet = wallet)
+    if check_valid_time() != "valid":
+            return check_valid_time()
+    if 'language' not in login_session:
+            login_session['language'] = 'en'
+    if 'id' not in login_session:
+            return redirect(url_for('login'))
+    product = get_prod_by_id(product_id)
+    wallet = get_user_wallet(login_session['id'])
+    return render_template('productPage.html', product = product, wallet = wallet)
 
 @app.route("/makeAnInvestment/<int:product_id>", methods = ['POST'])
 def makeAnInvestment(product_id):
@@ -704,19 +724,23 @@ def makeAnInvestment(product_id):
 
 @app.route("/viewResults")
 def viewResults():
-	products = get_products()
-	totals = []
-	rankdict = dict()
-	investorsdict = dict()
-	for product in products:
-		total_investments = 0.0
-		for inv in product.investments:
-			total_investments += inv.amount
-		totals.append(total_investments)
-		rankdict[product.team.name] = total_investments
-		investorsdict[product.team.name] = len(product.investments)
-	rankings = sorted(rankdict.items(), key=operator.itemgetter(1),reverse=True)
-	return render_template('publicdashboard.html', totals = totals, products = products, rankings = rankings, investorsdict = investorsdict)
+    now = datetime.datetime.now().date()
+    if now < DEADLINE:
+            flash(Markup("This page is not available until the campaign has ended."))
+            return redirect(request.referrer)
+    products = get_products()
+    totals = []
+    rankdict = dict()
+    investorsdict = dict()
+    for product in products:
+            total_investments = 0.0
+            for inv in product.investments:
+                    total_investments += inv.amount
+            totals.append(total_investments)
+            rankdict[product.team.name] = total_investments
+            investorsdict[product.team.name] = len(product.investments)
+    rankings = sorted(rankdict.items(), key=operator.itemgetter(1),reverse=True)
+    return render_template('publicdashboard.html', totals = totals, products = products, rankings = rankings, investorsdict = investorsdict)
 
 @app.route("/showDashboard", methods = ['GET','POST'])
 def showDashboard():
@@ -775,6 +799,9 @@ def showTeamActivity():
 
 @app.route("/remove_team/<team_id>")
 def remove_team(team_id):
+    if 'id' not in login_session or login_session['group'] != "administrator":
+            flash("You do not have access to this page")
+            return redirect(request.referrer)
     delete_team(int(team_id))
     print("deleting")
     flash("Team number "+str(team_id)+" deleted")
