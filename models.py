@@ -9,11 +9,19 @@ import json
 import os
 
 Base = declarative_base()
+
+class Timeline(Base):
+	__tablename__ = 'timeline'
+	id = Column(Integer, primary_key=True)
+	start_date = Column(DateTime)
+	end_date = Column(DateTime)
+
 class MailingList(Base):
 	__tablename__ = 'mailinglist'
 	id = Column(Integer, primary_key=True)
-	email = Column(String)
-	langauge = Column(String)
+	language = Column(String(255))
+	email = Column(String(255))
+	
 
 class User(Base):
 	#Everyone in the system is a type of user, Authorization of Student Users, Administrators, and high profile investors will be specified in the 'group' field
@@ -40,15 +48,17 @@ class User(Base):
 	    return pwd_context.verify(password, self.password_hash)
 
 class Team(Base):
-	#Users of the 'Student' group are part of a Team.  Each team can create a profile page.
-	__tablename__ = 'team'
-	id = Column(Integer, primary_key=True)
-	name = Column(String(255))
-	photo = Column(String(255), unique=True)
-	students = relationship("User", back_populates = "team")
-	product = relationship("Product",uselist=False, back_populates = "team")
-	def set_photo(self, photo):
-		self.photo = photo
+        #Users of the 'Student' group are part of a Team.  Each team can create a profile page.
+        __tablename__ = 'team'
+        id = Column(Integer, primary_key=True)
+        name = Column(String(255))
+        photo = Column(String(255), unique=True)
+        students = relationship("User", back_populates = "team")
+        product = relationship("Product",uselist=False, back_populates = "team")
+        email = Column(String(255))
+        password = Column(String(255))
+        def set_photo(self, photo):
+                self.photo = photo
 
 class Wallet(Base):
 	# Every User is assigned a wallet for investing in the products. The initial value of the wallet is determined based upon their group

@@ -1,3 +1,15 @@
+.counter {
+  background: #2C2C2C;
+  width: 100%;
+  min-height: 20px;
+  color: #E5E5E5;
+}
+
+#countdown {
+  color: #FFFFFF;
+  font-size: 20px;
+}
+
 .flash_messages li {
   color: #000000;
 }
@@ -350,7 +362,7 @@ img.products {
 }
 
 .panel-product:hover > .panel-overlay {
-  position: absolute;
+  position: absolute; 
   /*position: relative;*/
   margin-left: auto;
   margin-right: auto;

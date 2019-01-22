@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from models import *
 import datetime
 import random
@@ -158,8 +159,8 @@ def get_investments():
         return session.query(Investment).all()
       
         
-def create_team(team_name,members):
-        newTeam = Team(name=team_name)
+def create_team(team_name,members,email,password):
+        newTeam = Team(name=team_name,email=email,password=password)
         session.add(newTeam)
         newProduct = Product(team_id=newTeam.id, team_members=members)
         print("has team check?",newProduct.team,newTeam.id)
@@ -168,6 +169,10 @@ def create_team(team_name,members):
         session.commit()
         print("has team check now?",newProduct.team)
         
+def delete_everything():
+    for data_object in [MailingList,User,Team,Wallet,Comment,Product,Investment]:
+        session.query(data_object).delete()
+    db_setup()
 
 
 class TeamObject:
@@ -213,6 +218,16 @@ for i in range(1, 2):
                 print("team",i,"already added")
 '''
 
+def get_start_date():
+    return session.query(Timeline).first().start_date.date()
+def get_end_date():
+    return session.query(Timeline).first().end_date.date()
+def reset_timeline(start,end):
+    timeline = session.query(Timeline).first()
+    timeline.start_date = start
+    timeline.end_date = end
+    session.add(timeline)
+    session.commit()
 
 def db_setup():
         user = create_user("admin","admin","home","admin","admin-meet","admin_ip",True)
@@ -228,10 +243,18 @@ def db_setup():
         session.add(user)
         session.commit()
 
+        
+
         add_to_mailing("caboonie@gmail.com","en")
         
 
 if get_user_by_email("admin")==None:
         db_setup()
 
+if  session.query(Timeline).first()==None:
+    timeline = Timeline(start_date=datetime.datetime(day=28,month=3,year=2019),end_date=datetime.datetime(day=9,month=4,year=2019))
+    session.add(timeline)
+    session.commit()
+
 print("groups",[(a.group) for a in get_users()])
+print("notify mails",[a.language for a in get_mailing_list()])

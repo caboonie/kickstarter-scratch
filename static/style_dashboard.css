@@ -90,10 +90,11 @@ color:black;
   text-align: center; 
   color: black; 
   background:#D9484F; 
-  width: calc(25%);
+  width: calc(20%);
+  min-width: 200px ;
   font-size: 25px;
-  margin-left: 4%;
-  margin-right: 4%;
+  margin-left: 2.2%;
+  margin-right: 2.2%;
 }
 
 .bkgnd_teal {

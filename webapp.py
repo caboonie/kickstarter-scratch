@@ -16,9 +16,8 @@ from flask_oauthlib.client import OAuth, OAuthException
 
 CONFIG = json.loads(open('secrets.json', 'r').read())
 
-##REPLACE WITH REAL DATES
-LAUNCHDATE = datetime.datetime.strptime('26/03/2018', "%d/%m/%Y").date()
-DEADLINE = datetime.datetime.strptime('09/04/2019', "%d/%m/%Y").date()
+
+
 IP_THRESHOLD = 10 #how many distinct people would use one ip?
 #Could make it so that they have to wait a day before voting if the ip is overused?
 
@@ -226,10 +225,10 @@ def check_valid_time():
     if login_session['group'] in['student','admin']: #students and admins can access pages before hand.
             return 'valid'
     now = datetime.datetime.now().date()
-    if now < LAUNCHDATE:
+    if now < get_start_date():
             flash(Markup("The campaign has not started. Sign up to be notified when it does."))
             return redirect("/")
-    elif now > DEADLINE:
+    elif now > get_end_date():
             return redirect("/")
     return 'valid'
 
@@ -239,15 +238,16 @@ def showLandingPage():
 	if 'language' not in login_session:
 		login_session['language'] = 'en'
 	now = datetime.datetime.now().date()
-	if now < LAUNCHDATE:
+	if now < get_start_date():
 		timeline = "before"
-	elif now > DEADLINE:
+	elif now > get_end_date():
 		flash(Markup("The competition has ended. Thank you for your participation! <a href='/viewResults'>Click Here to See Results</a>"))
 		timeline = "after"
 	else:
 		#during the competition
 		timeline = "during"
-	return render_template("prelaunchlanding.html", timeline=timeline)
+	return render_template("prelaunchlanding.html", timeline=timeline, start_date=get_start_date().strftime("%d-%m-%Y"), end_date=get_end_date().strftime("%d-%m-%Y"), 
+        target_date=get_end_date().strftime("%b, %d, %Y"))
 
 @app.route("/language/<language>")
 def changeLanguage(language):
@@ -669,6 +669,7 @@ def showProducts():
                         flash("You must be logged in to view this page.")
                 return redirect(url_for('login'))
         products = get_products()
+        random.shuffle(products)
         wallet = get_user_wallet(login_session['id']) 
         return render_template('productsPage.html', products = products, wallet = wallet)
 
@@ -753,11 +754,9 @@ def showDashboard():
 		flash("You do not have access to this page")
 		return redirect(url_for('showLandingPage'))
 	if request.method == 'POST':
-            if "members" in request.form: #create new team!
-                if get_team_by_name(request.form["team_name"])==None:
-                    create_team(request.form["team_name"],request.form["members"])
-            else: #create new student
-                create_user(request.form["first_name"],request.form["last_name"],"home",request.form["email"],request.form["password"],
+            if get_team_by_name(request.form["team_name"])==None:
+                create_team(request.form["team_name"],request.form["members"],request.form["email"],request.form["password"])
+                create_user("first_name","last_name","home",request.form["email"],request.form["password"],
                             None,True,"student",request.form["team_name"])
             
 	products = get_products()
@@ -781,7 +780,8 @@ def showDashboard():
 	team_list = [team.name for team in teams]
 	return render_template('dashboard.html', totals = totals, products = products, bronze_investors = bronze_investors,
                                silver_investors = silver_investors, gold_investors = gold_investors, rankings = rankings,
-                               investorsdict = investorsdict, team_list=team_list)
+                               investorsdict = investorsdict, team_list=team_list, start_date=get_start_date().strftime("%Y-%m-%d"), 
+                               end_date=get_end_date().strftime("%Y-%m-%d"))
 
 @app.route("/teamActivity")
 def showTeamActivity():
@@ -840,9 +840,9 @@ def sendNotifications():
     if login_session['group'] != "administrator":
             flash("You do not have access to this page")
             return redirect(url_for('showLandingPage'))
-    if datetime.datetime.now().date()<LAUNCHDATE:
+    if datetime.datetime.now().date()<get_start_date():
         flash("Campaing hasn't started yet!")
-    elif datetime.datetime.now().date()>DEADLINE:
+    elif datetime.datetime.now().date()>get_end_date():
         flash("Campaing is over!")
     else:
         accounts = get_mailing_list()
@@ -855,6 +855,55 @@ def sendNotifications():
                 send_email("The MEETCampaign is Open!",EMAIL_SENDER,[account.email],render_template("notification_email.html"),render_template("notification_email.html"))
         flash("Notification emails sent!")
     return redirect(url_for('showDashboard'))
+
+@app.route("/clearDatabasePre")
+def clear_database_pre():
+    if 'id' not in login_session:
+            flash("You do not have access to this page")
+            return redirect(url_for('showLandingPage'))
+    if login_session['group'] != "administrator":
+            flash("You do not have access to this page")
+            return redirect(url_for('showLandingPage'))
+    flash(Markup("Are you sure you want to clear the database? <a href='/clearDatabase'> Yes </a>"))
+    return redirect(url_for('showDashboard'))
+
+@app.route("/setDates", methods = ['GET','POST'])
+def set_dates():
+    if 'id' not in login_session:
+            flash("You do not have access to this page")
+            return redirect(url_for('showLandingPage'))
+    if login_session['group'] != "administrator":
+            flash("You do not have access to this page")
+            return redirect(url_for('showLandingPage'))
+    if request.method == 'POST':
+        #print(request.form)
+        if request.form["start_date"]=='':
+            start = get_start_date()
+        else:
+            start = datetime.datetime.strptime(request.form["start_date"],"%Y-%m-%d")
+        if request.form["end_date"]=='':
+            end = get_end_date()
+        else:
+            end = datetime.datetime.strptime(request.form["end_date"],"%Y-%m-%d")
+        reset_timeline(start,end)
+    
+    return redirect(url_for('showDashboard'))
+
+
+
+@app.route("/clearDatabase")
+def clear_database():
+    if 'id' not in login_session:
+            flash("You do not have access to this page")
+            return redirect(url_for('showLandingPage'))
+    if login_session['group'] != "administrator":
+            flash("You do not have access to this page")
+            return redirect(url_for('showLandingPage'))
+    delete_everything()
+    flash(Markup("Datbase cleared"))
+    return redirect(url_for('showDashboard'))
+
+
 
 if __name__ == '__main__':
 	app.run(debug=True)

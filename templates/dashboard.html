@@ -10,6 +10,8 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="https://d3js.org/d3.v3.min.js"></script>
+	<script src="//code.jquery.com/jquery-latest.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<style type="text/css">
 		body{
 			background: #eeeeee;    
@@ -137,6 +139,12 @@ $(document).ready(function() {
 				
 			</div>
 		</a>
+		<a href='{{url_for("clear_database_pre")}}'>
+			<div class="roundbox box_button bkgnd_navy box_navy" >
+				Clear Database
+				
+			</div>
+		</a>
 </div>
 
 
@@ -169,7 +177,7 @@ $(document).ready(function() {
 </div>
 
 <div class="row" style="">
-	<div class="roundbox box_navy" style="width: calc(25% - 20px); min-width: 215px; height: 300px;">
+	<div class="roundbox box_navy" style="width: calc(18% - 20px); min-width: 215px; height: 300px;">
 		<div class = "box_header bkgnd_navy">
 			add new team
 		</div>
@@ -177,158 +185,57 @@ $(document).ready(function() {
 			<form action = "{{url_for('showDashboard')}}" method = 'post'>
 					<input  type="text" name="team_name" placeholder="Team Name"><br>
 					<input  type="text" name="members" placeholder="Members - Caleb, Hope..."><br>
+					<input  type="text" name="email" placeholder="Username"><br>
+					<input  type="text" autocomplete="off" name="password" placeholder="Password"><br>
 					<button  type="submit"> Add Team </button>
 			</form>
 		</div>
 	</div>
-	<div class="roundbox box_navy" style="width: calc(25% - 20px); min-width: 215px; height: 300px;">
-		<div class = "box_header bkgnd_navy">
-			add new student
-		</div>
-		<div class = "box_body">
-			<form action = "{{url_for('showDashboard')}}" method = 'post'>
-					<input  type="text" name="first_name" placeholder="First Name"><br>
-					<input  type="text" name="last_name" placeholder="Last Name"><br>
-					<input  type="text" name="email" placeholder="Email"><br>
-					<input  type="text" autocomplete="off" name="password" placeholder="Password"><br>
-					Team: <select name="team_name" placeholder="Team">
-						{% for product in products%}
-							<option value="{{product.team.name}}">{{product.team.name}}</option>
-						{%endfor%}
-					</select><br>
-					<button  id="add_stud_button" type="submit"> Add Student </button>
-			</form>
-		</div>
-	</div>
-	<div class="roundbox box_navy" style="width: calc(50% - 20px); min-width: 440px; height: 300px;">
+	
+	<div class="roundbox box_navy" style="width: calc(64% - 30px); min-width: 500px; height: 300px;">
 		<div class = "box_header bkgnd_navy">
 			current teams
 		</div>
 		<div class = "box_body">
 			<table style="width: 100%">
+				<tr>
+					<th>Name</th>
+					<th>Members</th>
+					<th>Username</th>
+					<th>Password</th>
+				</tr>
 				{% for product in products%}
 					<tr>
 						<td> {{product.team.name}} </td>
+
 						<td> {{product.team_members}} </td>
+						<td> {{product.team.email}} </td>
+						<td> {{product.team.password}} </td>
 						<td> <a href="{{url_for('remove_team', team_id = product.team.id|string)}}">Remove Team</a> </td>
 					</tr>
 				{%endfor%}
 			</table>
 		</div>
 	</div>
+	<div class="roundbox box_navy" style="width: calc(18% - 20px); min-width: 215px; height: 300px;">
+		<div class = "box_header bkgnd_navy">
+			set timeline
+		</div>
+		<div class = "box_body">
+			<form action = "{{url_for('set_dates')}}" method = 'post'>
+					<p> Current Campaign Timeline:</p>
+					<p> {{start_date}}:{{end_date}} </p>
+					<br>
+					<p>New Start Date:</p>
+					<input  type="date" name="start_date"><br>
+					<p>New End Date:</p>
+					<input  type="date" name="end_date" ><br><br>
+					<button  type="submit"> Set Dates </button>
+			</form>
+		</div>
+	</div>
 </div>
 
 
 
-  <script>
-    function autocomplete(inp, arr,offset) {
-  /*the autocomplete function takes two arguments,
-  the text field element and an array of possible autocompleted values:*/
-  var currentFocus;
-  /*execute a function when someone writes in the text field:*/
-  inp.addEventListener("input", function(e) {
-      var a, b, i, val = this.value;
-      /*close any already open lists of autocompleted values*/
-      closeAllLists();
-      if (!val) { return false;}
-      currentFocus = -1;
-      /*create a DIV element that will contain the items (values):*/
-      a = document.createElement("DIV");
-      a.setAttribute("id", this.id + "autocomplete-list");
-      a.setAttribute("class", "autocomplete-items");
-      a.style.backgroundColor = "lightblue";
-      a.style.position = "absolute";
-      a.style.left = offset;
-      a.style.border = "5px blue"
-      /*append the DIV element as a child of the autocomplete container:*/
-      this.parentNode.insertBefore(a,document.getElementById("add_stud_button"));
-      ///this.parentNode.appendChild(a);
-      /*for each item in the array...*/
-      for (i = 0; i < arr.length; i++) {
-        /*check if the item starts with the same letters as the text field value:*/
-        if (arr[i].toLowerCase().includes(val.toLowerCase())){
-          /*create a DIV element for each matching element:*/
-          b = document.createElement("DIV");
-          /*make the matching letters bold:*/
-          //b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-          b.innerHTML += arr[i]//.substr(val.length);
-          /*insert a input field that will hold the current array item's value:*/
-          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-          /*execute a function when someone clicks on the item value (DIV element):*/
-          b.addEventListener("click", function(e) {
-              /*insert the value for the autocomplete text field:*/
-              inp.value = this.getElementsByTagName("input")[0].value;
-              /*close the list of autocompleted values,
-              (or any other open lists of autocompleted values:*/
-              closeAllLists();
-          });
-          a.appendChild(b);
-        }
-      }
-  });
-  /*execute a function presses a key on the keyboard:*/
-  inp.addEventListener("keydown", function(e) {
-      var x = document.getElementById(this.id + "autocomplete-list");
-      if (x) x = x.getElementsByTagName("div");
-      if (e.keyCode == 40) {
-        /*If the arrow DOWN key is pressed,
-        increase the currentFocus variable:*/
-        currentFocus++;
-        /*and and make the current item more visible:*/
-        addActive(x);
-      } else if (e.keyCode == 38) { //up
-        /*If the arrow UP key is pressed,
-        decrease the currentFocus variable:*/
-        currentFocus--;
-        /*and and make the current item more visible:*/
-        addActive(x);
-      } else if (e.keyCode == 13) {
-        /*If the ENTER key is pressed, prevent the form from being submitted,*/
-        e.preventDefault();
-        if (currentFocus > -1) {
-          /*and simulate a click on the "active" item:*/
-          if (x) x[currentFocus].click();
-        }
-      }
-  });
-  function addActive(x) {
-    /*a function to classify an item as "active":*/
-    if (!x) return false;
-    /*start by removing the "active" class on all items:*/
-    removeActive(x);
-    if (currentFocus >= x.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = (x.length - 1);
-    /*add class "autocomplete-active":*/
-    x[currentFocus].classList.add("autocomplete-active");
-  }
-  function removeActive(x) {
-    /*a function to remove the "active" class from all autocomplete items:*/
-    for (var i = 0; i < x.length; i++) {
-      x[i].classList.remove("autocomplete-active");
-    }
-  }
-  function closeAllLists(elmnt) {
-    /*close all autocomplete lists in the document,
-    except the one passed as an argument:*/
-    var x = document.getElementsByClassName("autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != inp) {
-        x[i].parentNode.removeChild(x[i]);
-      }
-    }
-  }
-  /*execute a function when someone clicks in the document:*/
-  document.addEventListener("click", function (e) {
-      closeAllLists(e.target);
-  });
-}
-
-
-
-/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
-
-$(".team_box").click(function() {
-  autocomplete(this,{{team_list|tojson}},'8px')
-});
-
-</script>
+  

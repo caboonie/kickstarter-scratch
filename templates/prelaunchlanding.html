@@ -2,6 +2,49 @@
 {% extends "layout.html" %}
 {% block body %}
 
+<script>
+		console.log("running 1")
+		$(document).ready(function() {
+			console.log("running 1")
+			// set the date we're counting down to
+			var target_date = new Date('{{target_date}}').getTime();
+			 
+			// variables for time units
+			var days, hours, minutes, seconds;
+			 
+			// get tag element
+			var countdown = document.getElementById('countdown');
+			 
+			// update the tag with id "countdown" every 1 second
+			setInterval(function () {
+			 
+			    // find the amount of "seconds" between now and target
+			    var current_date = new Date().getTime();
+			    var seconds_left = (target_date - current_date) / 1000;
+			 
+			    // do some time calculations
+			    days = parseInt(seconds_left / 86400);
+			    seconds_left = seconds_left % 86400;
+			     
+			    hours = parseInt(seconds_left / 3600);
+			    seconds_left = seconds_left % 3600;
+			     
+			    minutes = parseInt(seconds_left / 60);
+			    seconds = parseInt(seconds_left % 60);
+			     
+			    {% if session['language'] == 'he' %}
+				    // format countdown string + set tag value
+				    countdown.innerHTML = days + '<b> ימים </b>' + hours + '<b> שעות </b>' + minutes + '<b> דקות </b>' + seconds + '<b> שניות</b>'
+			    {% elif session['language'] == 'ar' %}
+			  		countdown.innerHTML = days + '<b> أيام </b>' + hours + '<b> ساعات </b>' + minutes + '<b> الدقائق </b>' + seconds + '<b> ثواني </b>'
+			    {% else %}
+				    // format countdown string + set tag value
+				    countdown.innerHTML = '<span class="days">' + days +  ' <b>Days</b></span> <span class="hours">' + hours + ' <b>Hours</b></span> <span class="minutes">' + minutes + ' <b>Minutes</b></span> <span class="seconds">' + seconds + ' <b>Seconds</b></span>';  
+			    {%endif%}
+			 
+			}, 1000);
+		})
+	 </script>
 
 {% if session['language'] == 'ar' %}
 	<style>
@@ -12,6 +55,8 @@
 
 	</style>
 
+	
+
 	<div class="body">
 		<h2>:آلية العمل </h2>
 		<div class="right-align" style="padding:20px;">
@@ -20,7 +65,7 @@
 				<li>إاستخدم النقود من أجل الإستثمار في أفكار المشاريع التي عمل عليها الطلاب</li>
 				<li>تجول في هذا الموقع و شاهد مقاطع فيديو عن أفكار هذه المشاريع , شاهد الدعايات التجارية و الموقع الإلكتروني أيضا  </li>
 				<li>المشاريع التي تحصل على أكبر قدر من الإستثمار سوف تدخل في برنامج مسرعة الأعمال الناشئة و سوف تكون واضحة للعيان هذا الصيف </li>
-				<li>الحملة تبدأ في 2018\3\26 وتنتهي في<b style="font-size: 17px">2018\4\8</b> لا تضيع فرصة التصويت قبل نهاية الحملة</li>
+				<li>الحملة تبدأ في {{start_date}} وتنتهي في<b style="font-size: 17px">{{end_date}}</b> لا تضيع فرصة التصويت قبل نهاية الحملة</li>
 			</ul>
 		</div>
 
@@ -33,11 +78,17 @@
 						<button class="btn btn-success" type = "submit" name="Notify me">اعلمني</button><br>
 					</form>
 				</div>
-			{% elif timeline == "after" %}
+				
 				<a href="/login"><button class="btn btn-success btn-lg" type = "submit" name="Notify me" disabled>فل نستثمر!</button></a>
 			{% else %}
 				<!-- during the competition -->
+				<div class="counter">
+					<h3>الوقت المتبقي في الحملة</h3>
+					<div id="countdown">Countdown</div><!-- /#Countdown Div -->
+				</div>
+				<br>
 				<a href="/login"><button class="btn btn-success btn-lg" type = "submit" name="Notify me">فل نستثمر!</button></a>
+				
 			{% endif %}
 		</div>
 	</div>
@@ -60,7 +111,7 @@
 				<li>השתמשו במטבעות שלכם על מנת להשקיע ברעיונות לסטארט-אפים שאהבתם שהועלו על ידי התלמידים שלנו.</li>
 				<li>דפדפו באתר על מנת לראות רעיונות לסטארט-אפים, צפו בפרסומות ועיינו בדגם הראשוני שלהם.</li>
 				<li>הרעיונות שיקבלו את ההשקעות המירביות יכנסו למאיץ הסטארט-אפים שלנו ויהיו זמינים לקהל הרחב כבר בקיץ הקרוב!</li>
-				<li>הקמפיין יתחיל ב-26 במרץ ויסתיים <b style="font-size: 17px">ב-8 באַפּרִיל, 2018</b> - אל תפספסו את ההזדמנות להצביע</li>
+				<li>הקמפיין יתחיל ב{{start_date}} ויסתיים <b style="font-size: 17px">{{end_date}} </b> - אל תפספסו את ההזדמנות להצביע</li>
 			</ul>
 		</div>
 
@@ -76,6 +127,11 @@
 			{% elif timeline == "after" %}
 				<a href="/login"><button class="btn btn-success btn-lg" type="submit" name="Notify me" disabled>יאללה משקיעים!</button></a>
 			{% else %}
+				<div class="counter">
+					<h3>הזמן שנותר במסע הפרסום</h3>
+					<div id="countdown">Countdown</div><!-- /#Countdown Div -->
+				</div>
+				<br>
 				<a href="/login"><button class="btn btn-success btn-lg" type="submit" name="Notify me">יאללה משקיעים!</button></a>
 			{% endif %}
 		</div>
@@ -90,7 +146,7 @@
 			<li>Use your <span><img class="meet-inline-logo" src="{{url_for('static', filename='meet_logo_1.png')}}" height=30px></span> coins to invest in the student-created startup ideas you like most.</li>
 			<li>Look around this site to see videos of the startup ideas, watch their commercials and view their preliminary mockups.</li>
 			<li>The startup ideas with the most investments will enter our Y3 Accelerator program and be available to the public this summer!</li>
-			<li>The campaign begins March 26th and closes on <b style="font-size: 17px">April 8th, 2019</b> - don't miss your chance to vote!</li>
+			<li>The campaign begins {{start_date}} and closes on <b style="font-size: 17px">{{end_date}}</b> - don't miss your chance to vote!</li>
 		</ul>
 
 		<div id="notify">
@@ -102,9 +158,15 @@
 						<button class="btn btn-success" type = "submit" name="Notify me">Notify Me</button><br>
 					</form>
 				</div>
+		
 			{% elif timeline == "after" %}
 				<a href="/login"><button class="btn btn-success btn-lg" type="submit" name="Notify me" disabled>Let's invest! </button></a>
 			{% else %}
+				<div class="counter">
+					<h3>Time Left in Campaign:</h3>
+					<div id="countdown">Countdown</div><!-- /#Countdown Div -->
+				</div>
+				<br>
 				<a href="/login"><button class="btn btn-success btn-lg" type="submit" name="Notify me">Let's invest!</button></a>
 			{% endif %}
 		</div>
