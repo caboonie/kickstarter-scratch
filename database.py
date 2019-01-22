@@ -233,7 +233,7 @@ def db_setup():
         user = create_user("admin","admin","home","admin","admin-meet","admin_ip",True)
         user.group = "administrator"
         session.add(user)
-        session.commit(user)
+        session.commit()
         '''
         user = create_user("silver","test","home","test-silver","silver","silver_ip",True)
         create_wallet("100000.00",user)
