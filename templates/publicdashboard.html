@@ -3,15 +3,17 @@
 		 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 			<!-- <link rel="stylesheet" href="{{url_for('static', filename='w3.css')}}"> -->
 			<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+			<link rel="stylesheet" href="{{url_for('static', filename='style_dashboard.css')}}">
+			
 		 </head>
 
 		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="https://d3js.org/d3.v3.min.js"></script>
 		
 		<style>
-		body{
-		background: #eeeeee;    
-		padding:15px;
+		body {
+			background: url(../static/background2.jpg) no-repeat center center fixed;
+			background-size: 1300px 800px;
 		}
 				
 	.barchart .bar {
@@ -135,82 +137,133 @@ $(document).ready(function() {
 
 {% if session['language'] == 'he' %}
 	<div style="text-align:right;">
-		<h1>{{"${:,.2f}".format(totals|sum)}} סך כל ההשקעות</h1>
 
-		<div id="chartContainer" style="margin:auto; height: calc(100% - 20px); max-height: 400; width: calc(100% - 20px); max-width: 1000px"></div>
-			<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-		<h1> דירוגים </h1>		
-		<table style="width:100%;text-align:left; align-self: right">
-		<tr>
-			<th>	מספר ההשקעות	</th>
-			<th>סה"כ השקעה</th>
-			<th>	שם קבוצה	</th>
-			<th>מקום	</th>
-			
-			
-			
+		<div class="row" style="">
+			<div class="roundbox box_teal" style="width: calc(100% - 40px); height: 400px;">
+				<div class = "box_header bkgnd_teal">
+					{{"${:,.2f}".format(totals|sum)}} סך כל ההשקעות
+				</div>
+				<div class = "box_body" style="width: calc(100% - 50px); height: calc(100% - 55px)">
+					<div id="chartContainer" style="margin:auto; height: calc(100% - 20px); max-height: 400; width: calc(100% - 20px); min-width: 1200;"></div>
+					<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+				</div>
+				
+			</div>
+		</div>
+		<div class="row" style="">
+			<div class="roundbox box_teal" style="width: calc(100% - 40px);">
+				<div class = "box_header bkgnd_teal">
+					 דירוגים 
+				</div>
+				<div class = "box_body" style="width: calc(100% - 50px);">
+					<table style="width:100%;text-align:left; align-self: right">
+						<tr>
+							<th>	מספר ההשקעות	</th>
+							<th>סה"כ השקעה</th>
+							<th>	שם קבוצה	</th>
+							<th>מקום	</th>
+							
+							
+							
 
-		</tr> 
-		{% for product in rankings%}
-			<tr>
-				<td>			{{investorsdict[product[0]]}}		</td>
-				<td>			{{"${:,.2f}".format(product[1])}}		</td>
-				<td>			{{product[0]}}		</td>
-				<td>			{{loop.index}}		</td>
-			</tr>
-		{%endfor%}
-		</table>
+						</tr> 
+						{% for product in rankings%}
+							<tr>
+								<td>			{{investorsdict[product[0]]}}		</td>
+								<td>			{{"${:,.2f}".format(product[1])}}		</td>
+								<td>			{{product[0]}}		</td>
+								<td>			{{loop.index}}		</td>
+							</tr>
+						{%endfor%}
+						</table>
+				</div>
+				
+			</div>
+		</div>
 	</div>	
 {% elif session['language'] == 'ar' %}
 	<div style="text-align:right;">
-		<h1>{{"${:,.2f}".format(totals|sum)}} مجموع الاستثمارات</h1>
+		<div class="row" style="">
+			<div class="roundbox box_teal" style="width: calc(100% - 40px); height: 400px;">
+				<div class = "box_header bkgnd_teal">
+					{{"${:,.2f}".format(totals|sum)}} مجموع الاستثمارات
+				</div>
+				<div class = "box_body" style="width: calc(100% - 50px); height: calc(100% - 55px)">
+					<div id="chartContainer" style="margin:auto; height: calc(100% - 20px); max-height: 400; width: calc(100% - 20px); min-width: 1200;"></div>
+					<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+				</div>
+				
+			</div>
+		</div>
+		<div class="row" style="">
+			<div class="roundbox box_teal" style="width: calc(100% - 40px);">
+				<div class = "box_header bkgnd_teal">
+					  التصنيف العالمي 
+				</div>
+				<div class = "box_body" style="width: calc(100% - 50px);">
+					<table style="width:100%;text-align:left;">
+					<tr>		
+						<th>عدد الاستثمارات</th>
+						<th>مجموع الاستثمار</th>
+						<th>اسم الفريق	</th>
+						<th>مكان	</th>
 
-		<div id="chartContainer" style="margin:auto; height: calc(100% - 20px); max-height: 400; width: calc(100% - 20px); max-width: 1000px"></div>
-			<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-		<h1> التصنيف العالمي </h1>		
-		<table style="width:100%;text-align:left;">
-		<tr>		
-			<th>عدد الاستثمارات</th>
-			<th>مجموع الاستثمار</th>
-			<th>اسم الفريق	</th>
-			<th>مكان	</th>
-
-		</tr> 
-		{% for product in rankings%}
-			<tr>
-				<td>			{{investorsdict[product[0]]}}		</td>
-				<td>			{{"${:,.2f}".format(product[1])}}		</td>
-				<td>			{{product[0]}}		</td>
-				<td>			{{loop.index}}		</td>
-			</tr>
-		{%endfor%}
-		</table>	
+					</tr> 
+					{% for product in rankings%}
+						<tr>
+							<td>			{{investorsdict[product[0]]}}		</td>
+							<td>			{{"${:,.2f}".format(product[1])}}		</td>
+							<td>			{{product[0]}}		</td>
+							<td>			{{loop.index}}		</td>
+						</tr>
+					{%endfor%}
+					</table>	
+				</div>
+			</div>
+		</div>
 	</div>
 
 {% else %}
-	<h1>Total Investments {{"${:,.2f}".format(totals|sum)}}</h1>
+	<div >
+		<div class="row" style="">
+			<div class="roundbox box_teal" style="width: calc(100% - 40px); height: 400px;">
+				<div class = "box_header bkgnd_teal">
+					Total Investments {{"${:,.2f}".format(totals|sum)}}
+				</div>
+				<div class = "box_body" style="width: calc(100% - 50px); height: calc(100% - 55px)">
+					<div id="chartContainer" style="margin:auto; height: calc(100% - 20px); max-height: 400; width: calc(100% - 20px); min-width: 1200;"></div>
+					<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+				</div>
+				
+			</div>
+		</div>
+		<div class="row" style="">
+			<div class="roundbox box_teal" style="width: calc(100% - 40px);">
+				<div class = "box_header bkgnd_teal">
+					  Rankings
+				</div>
+				<div class = "box_body" style="width: calc(100% - 50px);">
+					<table style="width:100%;text-align:left;padding: 15px">
+					<tr>
+						<th>Place</th>
+						<th>Team Name</th>
+						<th>Investment Total</th>
+						<th>Number of Investments</th>
 
-	<div id="chartContainer" style="margin:auto; height: calc(100% - 20px); max-height: 400; width: calc(100% - 20px); max-width: 1000px"></div>
-			<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-	<h1> Rankings </h1>		
-	<table style="width:100%;text-align:left;padding: 15px">
-	<tr>
-		<th>Place</th>
-		<th>Team Name</th>
-		<th>Investment Total</th>
-		<th>Number of Investments</th>
-
-	</tr> 
-	{% for product in rankings%}
-		<tr>
-			<td>			{{loop.index}}		</td>
-			<td>			{{product[0]}}		</td>
-			<td>			{{"${:,.2f}".format(product[1])}}		</td>
-			<td>			{{investorsdict[product[0]]}}		</td>
-		</tr>
-	{%endfor%}
-	</table>	
-
+					</tr> 
+					{% for product in rankings%}
+						<tr>
+							<td>			{{loop.index}}		</td>
+							<td>			{{product[0]}}		</td>
+							<td>			{{"${:,.2f}".format(product[1])}}		</td>
+							<td>			{{investorsdict[product[0]]}}		</td>
+						</tr>
+					{%endfor%}
+					</table>	
+				</div>
+			</div>
+		</div>
+	
 {% endif %}
 
 
