@@ -222,7 +222,7 @@ def check_valid_time():
     '''
     if 'group' not in login_session:
             return redirect(url_for('/'))
-    if login_session['group'] in['student','admin']: #students and admins can access pages before hand.
+    if login_session['group'] in ['student','administrator']: #students and admins can access pages before hand.
             return 'valid'
     now = datetime.datetime.now().date()
     if now < get_start_date():
@@ -657,6 +657,7 @@ def showPoliciesPage():
 @app.route("/products")
 def showProducts():
         if check_valid_time() != "valid":
+                print("not valid time for this page")
                 return check_valid_time()
         if 'language' not in login_session:
                 login_session['language'] = 'en'

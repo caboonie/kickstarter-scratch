@@ -42,6 +42,8 @@ $(document).ready(function() {
 		}]
 	});
 	chart.render();
+
+
 });
 </script>
 <!-- Navbar --> 
@@ -64,6 +66,9 @@ $(document).ready(function() {
 	        
 
 	        <div class="navbar-right">
+	        	<ul class="nav navbar-nav">
+	        		<li><a href = "{{url_for('showProducts')}}">Products</a></li>
+	        	</ul>
 	        	<div class="navbar-text" id="userbox">
 	                You are currently signed in as {{session['email']}}. 
 	            </div>
@@ -110,51 +115,11 @@ $(document).ready(function() {
 		</div>
 		
 	</div>
-	<div id="barchart_box"  class="roundbox box_teal" style="width: calc(100% - 400px); min-width:500px;  height: 225px;"> 
-		<div class = "box_body">
-			<div id="chartContainer" style="height: calc(100% - 20px); width: calc(100% - 20px);"></div>
-			<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-		</div>
-	</div>
-</div>
-
-
-
-<div class="row">
-		<a href='{{url_for("showTeamActivity")}}'>
-			<div class="roundbox box_button bkgnd_navy box_navy" >
-				Team Activity
-				
-			</div>
-		</a>
-		<a href='{{url_for("showDatabase")}}'>
-			<div class="roundbox box_button bkgnd_teal box_teal" >
-				User Database
-				
-			</div>
-		</a>
-		<a href='{{url_for("sendNotifications")}}'>
-			<div class="roundbox box_button" >
-				Send Notifications
-				
-			</div>
-		</a>
-		<a href='{{url_for("clear_database_pre")}}'>
-			<div class="roundbox box_button bkgnd_navy box_navy" >
-				Clear Database
-				
-			</div>
-		</a>
-</div>
-
-
-
-<div class="row" style="">
-	<div class="roundbox" style="width: calc(100% - 40px); height: 225px;">
-		<div class = "box_header">
+	<div class="roundbox box_teal" style="width: calc(100% - 400px); min-width:500px;  min-height: 225px;"> 
+		<div class = "box_header bkgnd_teal">
 			Rankings
 		</div>
-		<div class = "box_body">
+		<div class = "box_body" style="height: 170px">
 			<table style="width:100%;text-align:left;">
 				<tr>
 					<th>		Place	</th>
@@ -176,10 +141,71 @@ $(document).ready(function() {
 	</div>
 </div>
 
+
+
+
+
+
+
 <div class="row" style="">
+
+	<div class="roundbox box_teal" style="width: calc(100% - 40px); height: 225px;">
+		<div class = "box_body" style="width: calc(100% - 50px)">
+			<div id="chartContainer" style="height: calc(100% - 20px); width: calc(100% - 20px); min-width: 1200px;"></div>
+			<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+		</div>
+		
+	</div>
+</div>
+
+<div class="row">
+		<a href='{{url_for("showTeamActivity")}}'>
+			<div class="roundbox box_button bkgnd_navy box_navy" >
+				Team Activity
+				
+			</div>
+		</a>
+		<a href='{{url_for("showDatabase")}}'>
+			<div class="roundbox box_button bkgnd_teal box_teal" >
+				User Database
+				
+			</div>
+		</a>
+		<a href='{{url_for("sendNotifications")}}'>
+			<div class="roundbox box_button" >
+				Notify Users
+				
+			</div>
+		</a>
+		<a href='{{url_for("clear_database_pre")}}'>
+			<div class="roundbox box_button bkgnd_navy box_navy" >
+				Clear Database
+				
+			</div>
+		</a>
+</div>
+
+<div class="row" style="">
+	<div class="roundbox" style="width: calc(18% - 20px); min-width: 215px; height: 300px;">
+		<div class = "box_header ">
+			Set Timeline
+		</div>
+		<div class = "box_body">
+			<form action = "{{url_for('set_dates')}}" method = 'post'>
+					<p> Current Campaign Timeline:</p>
+					<p> {{start_date}}:{{end_date}} </p>
+					<br>
+					<p>New Start Date:</p>
+					<input  type="date" name="start_date"><br>
+					<p>New End Date:</p>
+					<input  type="date" name="end_date" ><br><br>
+					<button  type="submit"> Set Dates </button>
+			</form>
+		</div>
+	</div>
 	<div class="roundbox box_navy" style="width: calc(18% - 20px); min-width: 215px; height: 300px;">
 		<div class = "box_header bkgnd_navy">
-			add new team
+			Add New Team
 		</div>
 		<div class = "box_body">
 			<form action = "{{url_for('showDashboard')}}" method = 'post'>
@@ -194,10 +220,10 @@ $(document).ready(function() {
 	
 	<div class="roundbox box_navy" style="width: calc(64% - 30px); min-width: 500px; height: 300px;">
 		<div class = "box_header bkgnd_navy">
-			current teams
+			Current Teams
 		</div>
-		<div class = "box_body">
-			<table style="width: 100%">
+		<div class = "box_body" style="height: 245px; min-width: 480px">
+			<table style="width: 100%; min-width:900px;">
 				<tr>
 					<th>Name</th>
 					<th>Members</th>
@@ -217,23 +243,7 @@ $(document).ready(function() {
 			</table>
 		</div>
 	</div>
-	<div class="roundbox box_navy" style="width: calc(18% - 20px); min-width: 215px; height: 300px;">
-		<div class = "box_header bkgnd_navy">
-			set timeline
-		</div>
-		<div class = "box_body">
-			<form action = "{{url_for('set_dates')}}" method = 'post'>
-					<p> Current Campaign Timeline:</p>
-					<p> {{start_date}}:{{end_date}} </p>
-					<br>
-					<p>New Start Date:</p>
-					<input  type="date" name="start_date"><br>
-					<p>New End Date:</p>
-					<input  type="date" name="end_date" ><br><br>
-					<button  type="submit"> Set Dates </button>
-			</form>
-		</div>
-	</div>
+	
 </div>
 
 
