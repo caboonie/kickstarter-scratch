@@ -848,12 +848,13 @@ def sendNotifications():
     else:
         accounts = get_mailing_list()
         for account in accounts:
+            year = datetime.now().year()
             if account.langauge=="he":
-                send_email("ה- MEETCampaign פתוח!",EMAIL_SENDER,[account.email],render_template("notification_email_he.html"),render_template("notification_email_he.html"))
+                send_email("ה- MEETCampaign פתוח!",EMAIL_SENDER,[account.email],render_template("notification_email_he.html",year=year),render_template("notification_email_he.html",year=year))
             elif account.language=="ar":
-                send_email("MEETCampaign مفتوح!",EMAIL_SENDER,[account.email],render_template("notification_email_ar.html"),render_template("notification_email_ar.html"))
+                send_email("MEETCampaign مفتوح!",EMAIL_SENDER,[account.email],render_template("notification_email_ar.html",year=year),render_template("notification_email_ar.html",year=year))
             else:
-                send_email("The MEETCampaign is Open!",EMAIL_SENDER,[account.email],render_template("notification_email.html"),render_template("notification_email.html"))
+                send_email("The MEETCampaign is Open!",EMAIL_SENDER,[account.email],render_template("notification_email.html",year=year),render_template("notification_email.html",year=year))
         flash("Notification emails sent!")
     return redirect(url_for('showDashboard'))
 
