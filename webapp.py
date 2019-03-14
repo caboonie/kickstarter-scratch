@@ -14,6 +14,7 @@ import operator
 from flask_oauthlib.client import OAuth, OAuthException 
 
 
+
 CONFIG = json.loads(open('secrets.json', 'r').read())
 
 
