@@ -233,6 +233,8 @@ def db_setup():
         user = create_user("admin","admin","home","admin","admin-meet","admin_ip",True)
         user.group = "administrator"
         session.add(user)
+        timeline = Timeline(start_date=datetime.datetime(day=28,month=3,year=2019),end_date=datetime.datetime(day=9,month=4,year=2019))
+        session.add(timeline)
         session.commit()
         '''
         user = create_user("silver","test","home","test-silver","silver","silver_ip",True)
@@ -253,10 +255,6 @@ def db_setup():
 if get_user_by_email("admin")==None:
         db_setup()
 
-if  session.query(Timeline).first()==None:
-    timeline = Timeline(start_date=datetime.datetime(day=28,month=3,year=2019),end_date=datetime.datetime(day=9,month=4,year=2019))
-    session.add(timeline)
-    session.commit()
 
 print("groups",[(a.group) for a in get_users()])
 print("notify mails",[a.language for a in get_mailing_list()])
