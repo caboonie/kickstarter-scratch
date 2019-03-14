@@ -15,12 +15,7 @@ session = DBSession()
 IP_THRESHOLD = 4 #how many distinct people would use one ip?
 #Could make it so that they have to wait a day before voting if the ip is overused?
 
-with open('silvermembers.txt') as f:
-    silverMembers = f.read().splitlines()
-with open('goldmembers.txt') as f:
-    goldMembers = f.read().splitlines()
-with open('admins.txt') as f:
-    admins = f.read().splitlines()
+
 
 def generateConfCode():
 	return str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))
@@ -34,10 +29,8 @@ def create_user(first_name,last_name,hometown,email,password,ip_address,verified
         user.group = group
         if group == "student":
                 user.team = get_team_by_name(team_name)
-    elif email in goldMembers:
-        user.group = "gold"
-    elif email in silverMembers:
-        user.group = "silver"
+    elif session.query(SpecialUser).filter_by(email=email).first() != None:
+        user.group = session.query(SpecialUser).filter_by(email=email).first().group
     else:
         user.group = "bronze"
     session.add(user)
@@ -209,6 +202,14 @@ def reset_timeline(start,end):
     session.add(timeline)
     session.commit()
 
+def add_special_user_database(email,group):
+    specialUser = SpecialUser(email=email,group=group)
+    session.add(specialUser)
+    session.commit()
+
+def get_special_users():
+    return session.query(SpecialUser).all()
+
 def db_setup():
         user = create_user("admin","admin","home","admin","admin-meet","admin_ip",True)
         user.group = "administrator"
@@ -217,7 +218,7 @@ def db_setup():
         session.add(timeline)
         session.commit()     
 
-        
+
         
 
 if get_user_by_email("admin")==None:

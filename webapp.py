@@ -412,9 +412,9 @@ def verify(email):
                         return redirect(url_for('verify', email = email))
                 ## Make a Wallet for verified user
                 ## Make a Wallet for  newUser
-                if email in goldMembers:
+                if user.group=="gold":
                     usersWallet = create_wallet('1000000.00',user)
-                elif email in silverMembers:
+                elif user.group=="silver":
                     usersWallet = create_wallet('50000.00',user)
                 else:
                     usersWallet = create_wallet('10000.00',user)
@@ -811,17 +811,18 @@ def remove_team(team_id):
 
 @app.route("/database")
 def showDatabase():
-	if 'language' not in login_session:
-		login_session['language'] = 'en'
-	if 'id' not in login_session:
-		flash("You do not have access to this page")
-		return redirect(url_for('showLandingPage'))
-	if login_session['group'] != "administrator":
-		flash("You do not have access to this page")
-		return redirect(url_for('showLandingPage'))
-	users = get_users()
-	mailing_list = get_mailing_list()
-	return render_template('database.html', users = users, mailing_list = mailing_list)
+    if 'language' not in login_session:
+    	login_session['language'] = 'en'
+    if 'id' not in login_session:
+    	flash("You do not have access to this page")
+    	return redirect(url_for('showLandingPage'))
+    if login_session['group'] != "administrator":
+    	flash("You do not have access to this page")
+    	return redirect(url_for('showLandingPage'))
+    users = get_users()
+    mailing_list = get_mailing_list()
+    special_users = get_special_users()
+    return render_template('database.html', users = users, mailing_list = mailing_list, special_users=special_users)
 
 
 def send_email(subject, sender, recipients, text_body, html_body):
@@ -906,6 +907,18 @@ def clear_database():
     flash(Markup("Datbase cleared"))
     return redirect(url_for('showDashboard'))
 
+@app.route("/add_special_user", methods = ['GET','POST'])
+def add_special_user():
+    if 'id' not in login_session:
+            flash("You do not have access to this page")
+            return redirect(url_for('showLandingPage'))
+    if login_session['group'] != "administrator":
+            flash("You do not have access to this page")
+            return redirect(url_for('showLandingPage'))
+    if request.method == 'POST':
+        add_special_user_database(request.form["email"],request.form["group"])
+    flash(Markup("User Added"))
+    return redirect(url_for('showDashboard'))
 
 
 if __name__ == '__main__':

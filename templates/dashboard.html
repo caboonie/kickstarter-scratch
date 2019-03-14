@@ -243,6 +243,22 @@ $(document).ready(function() {
 			</table>
 		</div>
 	</div>
+	<div class="row" style="">
+		<div class="roundbox" style="width: calc(25% - 20px); min-width: 315px; height: 300px;">
+			<div class = "box_header ">
+				Add Special User
+			</div>
+			<div class = "box_body">
+				<form action = "{{url_for('add_special_user')}}" method = 'post'>
+						<p> Add a gold or silver user:</p>
+						<input  type="text" name="email" placeholder="email"><br>
+						<input type="radio" name="group" value="silver"> Silver<br>
+						<input type="radio" name="group" value="gold"> Gold<br>
+						<button  type="submit"> Add User </button>
+				</form>
+			</div>
+		</div>
+	</div>
 	
 </div>
 

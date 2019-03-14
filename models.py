@@ -47,6 +47,14 @@ class User(Base):
 	def verify_password(self, password):
 	    return pwd_context.verify(password, self.password_hash)
 
+class SpecialUser(Base):
+	#For special users this keeps track of which group they are.
+	__tablename__ = 'specialUser'
+	id = Column(Integer, primary_key=True)
+	email = Column(String(255))
+	group = Column(String(255))
+
+
 class Team(Base):
         #Users of the 'Student' group are part of a Team.  Each team can create a profile page.
         __tablename__ = 'team'
