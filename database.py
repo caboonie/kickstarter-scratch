@@ -223,6 +223,6 @@ def db_setup():
 if get_user_by_email("admin")==None:
         db_setup()
 
-
+#print(get_user_by_email("admin"),get_user_by_email("admin").group)
 print("groups",[(a.group) for a in get_users()])
 print("notify mails",[a.language for a in get_mailing_list()])
