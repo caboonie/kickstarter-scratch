@@ -15,7 +15,12 @@ session = DBSession()
 IP_THRESHOLD = 4 #how many distinct people would use one ip?
 #Could make it so that they have to wait a day before voting if the ip is overused?
 
-
+# with open('silvermembers.txt') as f:
+#     silverMembers = f.read().splitlines()
+# with open('goldmembers.txt') as f:
+#     goldMembers = f.read().splitlines()
+# with open('admins.txt') as f:
+#     admins = f.read().splitlines()
 
 def generateConfCode():
 	return str(randint(0,9))+str(randint(0,9))+str(randint(0,9))+str(randint(0,9))
@@ -25,14 +30,16 @@ def create_user(first_name,last_name,hometown,email,password,ip_address,verified
     user.confirmation_code = generateConfCode()
     user.confirmation_code_expiration = datetime.datetime.now() + datetime.timedelta(minutes = 10)
     user.hash_password(password)
+    specialEmail = get_mailing_email(email)
+
     if group != None:
         user.group = group
         if group == "student":
                 user.team = get_team_by_name(team_name)
-    elif session.query(SpecialUser).filter_by(email=email).first() != None:
-        user.group = session.query(SpecialUser).filter_by(email=email).first().group
-    else:
+    elif specialEmail == None:
         user.group = "bronze"
+    else:
+        user.group = specialEmail.group 
     session.add(user)
     session.commit()
     return user
@@ -85,11 +92,15 @@ def get_products():
 def get_user_wallet(user_id):
     return session.query(Wallet).filter_by(user_id = user_id).one_or_none()
 
-def add_to_mailing(email,language):
-        newEmail = MailingList(email=email, language=language)
-        session.add(newEmail)
-        session.commit()
+def add_to_mailing(email,language,group="bronze"):
+        if session.query(MailingList).filter_by(email=email).first()==None:
+            newEmail = MailingList(email=email, language=language, group=group)
+            session.add(newEmail)
+            session.commit()
         
+def get_mailing_email(email):
+    return session.query(MailingList).filter_by(email=email).first()
+
 def get_mailing_list():
         return session.query(MailingList).all()
 
@@ -167,6 +178,15 @@ def delete_everything():
         session.query(data_object).delete()
     db_setup()
 
+'''
+def add_special_email(email,group):
+    newEmail = SpecialEmail(email=email,group=group)
+    session.add(newEmail)
+    session.commit()
+
+def get_special_email(email):
+    return session.query(SpecialEmail).filter_by(email=email).first()
+'''
 
 class TeamObject:
 	def __init__(self, name, members, video, description_he, description_ar, description_en, image):
@@ -188,13 +208,33 @@ teams = {
 	)
 }
 
+'''
+for i in range(1, 2):
+                current_team = teams[i]
+                newTeam = Team(id=i, name=current_team.name)
+                session.add(newTeam)
+
+                newProduct = Product(
+                        team_id=i,
+                        #product_name=current_team.name,
+                        team_members=current_team.members,
+                        description_en=current_team.description_en,
+                        description_he=current_team.description_he,
+                        description_ar=current_team.description_ar,
+                        photo=current_team.image,
+                        video=current_team.video
+                )
+                print("has team?",newProduct.team)
+                session.add(newProduct)
+                session.commit()
+                print("has team now?",newProduct.team)
+                print("team",i,"already added")
+'''
 
 def get_start_date():
     return session.query(Timeline).first().start_date.date()
-
 def get_end_date():
     return session.query(Timeline).first().end_date.date()
-
 def reset_timeline(start,end):
     timeline = session.query(Timeline).first()
     timeline.start_date = start
@@ -202,28 +242,33 @@ def reset_timeline(start,end):
     session.add(timeline)
     session.commit()
 
-def add_special_user_database(email,group):
-    specialUser = SpecialUser(email=email,group=group)
-    session.add(specialUser)
-    session.commit()
-
-def get_special_users():
-    return session.query(SpecialUser).all()
-
 def db_setup():
         user = create_user("admin","admin","home","admin","admin-meet","admin_ip",True)
         user.group = "administrator"
         session.add(user)
-        timeline = Timeline(start_date=datetime.datetime(day=28,month=3,year=2019),end_date=datetime.datetime(day=9,month=4,year=2019))
-        session.add(timeline)
-        session.commit()     
+        if  session.query(Timeline).first()==None:
+            timeline = Timeline(start_date=datetime.datetime(day=28,month=3,year=2019),end_date=datetime.datetime(day=9,month=4,year=2019))
+            session.add(timeline)
+        session.commit()
+        '''
+        user = create_user("silver","test","home","test-silver","silver","silver_ip",True)
+        create_wallet("100000.00",user)
+        session.add(user)
 
+        user = create_user("gold","test","home","test-gold","gold","gold_ip",True)
+        create_wallet("1000000.00",user)
+        session.add(user)
+        session.commit()
+        add_to_mailing("caboonie@gmail.com","en")
+        '''
+        
 
+        
         
 
 if get_user_by_email("admin")==None:
         db_setup()
 
-#print(get_user_by_email("admin"),get_user_by_email("admin").group)
+
 print("groups",[(a.group) for a in get_users()])
 print("notify mails",[a.language for a in get_mailing_list()])

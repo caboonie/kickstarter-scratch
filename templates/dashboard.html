@@ -186,23 +186,7 @@ $(document).ready(function() {
 </div>
 
 <div class="row" style="">
-	<div class="roundbox" style="width: calc(18% - 20px); min-width: 215px; height: 300px;">
-		<div class = "box_header ">
-			Set Timeline
-		</div>
-		<div class = "box_body">
-			<form action = "{{url_for('set_dates')}}" method = 'post'>
-					<p> Current Campaign Timeline:</p>
-					<p> {{start_date}}:{{end_date}} </p>
-					<br>
-					<p>New Start Date:</p>
-					<input  type="date" name="start_date"><br>
-					<p>New End Date:</p>
-					<input  type="date" name="end_date" ><br><br>
-					<button  type="submit"> Set Dates </button>
-			</form>
-		</div>
-	</div>
+	
 	<div class="roundbox box_navy" style="width: calc(18% - 20px); min-width: 215px; height: 300px;">
 		<div class = "box_header bkgnd_navy">
 			Add New Team
@@ -243,25 +227,47 @@ $(document).ready(function() {
 			</table>
 		</div>
 	</div>
-	<div class="row" style="">
-		<div class="roundbox" style="width: calc(25% - 20px); min-width: 315px; height: 300px;">
-			<div class = "box_header ">
-				Add Special User
-			</div>
-			<div class = "box_body">
-				<form action = "{{url_for('add_special_user')}}" method = 'post'>
-						<p> Add a gold or silver user:</p>
-						<input  type="text" name="email" placeholder="email"><br>
-						<input type="radio" name="group" value="silver"> Silver<br>
-						<input type="radio" name="group" value="gold"> Gold<br>
-						<button  type="submit"> Add User </button>
-				</form>
-			</div>
-		</div>
-	</div>
 	
 </div>
 
+<div class="row" style="">
+	<div class="roundbox" style="width: calc(18% - 20px); min-width: 215px; height: 300px;">
+		<div class = "box_header ">
+			Set Timeline
+		</div>
+		<div class = "box_body">
+			<form action = "{{url_for('set_dates')}}" method = 'post'>
+					<p> Current Campaign Timeline:</p>
+					<p> {{start_date}}:{{end_date}} </p>
+					<br>
+					<p>New Start Date:</p>
+					<input  type="date" name="start_date"><br>
+					<p>New End Date:</p>
+					<input  type="date" name="end_date" ><br><br>
+					<button  type="submit"> Set Dates </button>
+			</form>
+		</div>
+	</div>
+	<div class="roundbox" style="width: calc(18% - 20px); min-width: 290px; height: 300px;">
+		<div class = "box_header ">
+			Add a Gold/Silver User
+		</div>
+		<div class = "box_body">
+			<form action = "{{url_for('add_special_user')}}" method = 'post'>
+					<input type="radio" name="status" value="gold" checked> Gold<br>
+ 					<input type="radio" name="status" value="silver"> Silver<br>
+					<input  type="test" name="email" placeholder="Email" ><br>
+					<button  type="submit"> Add User </button>
+			</form>
+		</div>
+	</div>
+	<a href='{{url_for("downloadDB")}}'>
+		<div class="roundbox box_button bkgnd_navy box_navy" >
+			Download Database
+			
+		</div>
+	</a>
+</div>
 
 
   

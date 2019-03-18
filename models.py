@@ -16,11 +16,18 @@ class Timeline(Base):
 	start_date = Column(DateTime)
 	end_date = Column(DateTime)
 
+class SpecialEmail(Base):
+	__tablename__ = 'specialemail'
+	id = Column(Integer, primary_key=True)
+	email = Column(String(255))
+	group = Column(String(255))
+
 class MailingList(Base):
 	__tablename__ = 'mailinglist'
 	id = Column(Integer, primary_key=True)
 	language = Column(String(255))
 	email = Column(String(255))
+	group = Column(String(255))
 	
 
 class User(Base):
@@ -46,14 +53,6 @@ class User(Base):
 	    self.password_hash = pwd_context.encrypt(password)
 	def verify_password(self, password):
 	    return pwd_context.verify(password, self.password_hash)
-
-class SpecialUser(Base):
-	#For special users this keeps track of which group they are.
-	__tablename__ = 'specialUser'
-	id = Column(Integer, primary_key=True)
-	email = Column(String(255))
-	group = Column(String(255))
-
 
 class Team(Base):
         #Users of the 'Student' group are part of a Team.  Each team can create a profile page.

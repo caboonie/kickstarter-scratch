@@ -74,40 +74,24 @@
 
 <h1> Mailing List </h1>
 
-<table style="width:100%;text-align:left;border:2px;"
-<tr>
-	<th>Email</th>
+<table style="width:50%;text-align:left;border:2px;"
+	<tr>
+		<th>Email</th>
+		<th>Group</th>
 
-</tr>
+	</tr>
 	{% for account in mailing_list %}
 		<tr>
 			<td>{{account.email}} </td>
+			{%if account.group != None%}
+			<td>{{account.group}}</td>
+			{%endif%}
 		</tr>
-
 	{%endfor%}
-
 
 </table> 
 <br>
 <br>
-<h1> Special Users </h1>
-
-<table style="width:100%;text-align:left;border:2px;"
-<tr>
-	<th>Email</th>
-	<th>Group</th>
-
-</tr>
-	{% for account in special_users %}
-		<tr>
-			<td>{{account.email}} </td>
-			<td>{{account.group}} </td>
-		</tr>
-
-	{%endfor%}
-
-
-</table> 
 </body>
 
 

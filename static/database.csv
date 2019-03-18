@@ -1,0 +1,11 @@
+language,email
+USERS
+first_name,last_name,username,group,hometown,email
+admin,admin,,administrator,home,admin
+c,c,,gold,c,caboonie@gmail.com
+first_name,last_name,,student,home,a@a
+INVESTMENTS
+user,product,amount
+TEAMS
+name,members
+a,a

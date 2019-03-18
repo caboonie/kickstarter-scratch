@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, request, flash, url_for, redirect, send_from_directory, jsonify, current_app, Markup, make_response
+from flask import Flask, render_template, request, flash, url_for, redirect, send_from_directory, jsonify, current_app, Markup
 from database import *
 import random
 from flask import session as login_session
@@ -12,14 +12,14 @@ from validate_email import validate_email
 from flask_mail import Mail, Message
 import operator
 from flask_oauthlib.client import OAuth, OAuthException 
-import csv
+
 
 
 CONFIG = json.loads(open('secrets.json', 'r').read())
 
 
 
-IP_THRESHOLD = 1 #how many distinct people would use one ip?
+IP_THRESHOLD = 2 #how many distinct people would use one ip?
 #Could make it so that they have to wait a day before voting if the ip is overused?
 
 app = Flask(__name__)
@@ -45,9 +45,6 @@ TESTING=False)
 EMAIL_SENDER = CONFIG['MAIL_USERNAME']
 mail = Mail(app)
 
-GOLD_AMOUNT = '1000000.00'
-SILVER_AMOUNT = '50000.00'
-BRONZE_AMOUNT = '10000.00'
 
 
 def verify_password(email, password):
@@ -105,16 +102,13 @@ def authorized():
                 newUser = create_user(first_name, last_name, "home", email, dummy_password, ip_address, verified=True)
                  
                 ## Make a Wallet for  newUser
-                group = get_mailing_email(email).group
-                if group == None:
-                    initial_value = BRONZE_AMOUNT
-                elif group=="gold":
-                    initial_value = GOLD_AMOUNT
-                elif group=="silver":
-                    initial_value = SILVER_AMOUNT
+                if newUser.group=="gold":
+                        initial_value = '1000000.00'
+                elif newUser.group=="silver":
+                        initial_value = '100000.00'
                 else:
-                    initial_value = BRONZE_AMOUNT
-                create_wallet(initial_value,user)
+                        initial_value = '10000.00'
+                create_wallet(initial_value,newUser)
 
         else:
                 newUser = query
@@ -192,16 +186,13 @@ def facebook_authorized(resp):
                 newUser = create_user(first_name, last_name, "home", email, dummy_password, str(request.remote_addr), verified=True)
                 
                 ## Make a Wallet for  newUser
-                group = get_mailing_email(email).group
-                if group == None:
-                    initial_value = BRONZE_AMOUNT
-                elif group=="gold":
-                    initial_value = GOLD_AMOUNT
-                elif group=="silver":
-                    initial_value = SILVER_AMOUNT
+                if newUser.group=="gold":
+                        initial_value = '1000000.00'
+                elif newUser.group=="silver":
+                        initial_value = '100000.00'
                 else:
-                    initial_value = BRONZE_AMOUNT
-                create_wallet(initial_value,user)
+                        initial_value = '10000.00'
+                create_wallet(initial_value,newUser)
 	else:
 		newUser = query
 
@@ -320,46 +311,41 @@ def login():
                                 flash("Incorrect email/password combination")
                         return redirect(url_for('login'))
 
-@app.route("/signup/<email>")
-def signup_special(email):
-    return signup(email=email)
 
 @app.route("/signup", methods = ['GET', 'POST'])
-def signup(email=None):
-    print("email",email)
-    if 'language' not in login_session:
-    	login_session['language'] = 'en'
-    if request.method == 'GET':
-    	return render_template('signup.html',email=email)
-    elif request.method == 'POST':
-    	first_name = request.form['first_name']
-    	print("Creating a new user")
-    	last_name = request.form['last_name']
-    	hometown = request.form['hometown']
-    	email = request.form['email']
-    	password = request.form['password']
-    	verify_password = request.form['verify_password']
-    	if password != verify_password:
-    		if login_session['language'] == 'he':
-    			flash("הסיסמאות אינן תואמות")
-    		elif login_session['language'] == 'ar':
-    			flash("كلمة السر غير متطابقة")
-    		else:
-    			flash("Passwords do not match")
-    		return redirect(url_for('signup'))
-    	
-    	
-    	if not email_available(email):
-    		if login_session['language'] == 'he':
-    			flash("משתמש עם כתובת האימייל הנוכחית כבר קיים.")
-    		elif login_session['language'] == 'ar':
-    			flash("هناك مستخدم آخر بنفس هذا البريد الإلكتروني")
-    		else:
-    			flash("A User already exists with this email address")
-    		return redirect(url_for('signup'))
-
-    	    
-    	if num_at_ip(str(request.remote_addr))>IP_THRESHOLD:
+def signup():
+	if 'language' not in login_session:
+		login_session['language'] = 'en'
+	if request.method == 'GET':
+		return render_template('signup.html')
+	elif request.method == 'POST':
+		first_name = request.form['first_name']
+		print("Creating a new user")
+		last_name = request.form['last_name']
+		hometown = request.form['hometown']
+		email = request.form['email']
+		password = request.form['password']
+		verify_password = request.form['verify_password']
+		if password != verify_password:
+			if login_session['language'] == 'he':
+				flash("הסיסמאות אינן תואמות")
+			elif login_session['language'] == 'ar':
+				flash("كلمة السر غير متطابقة")
+			else:
+				flash("Passwords do not match")
+			return redirect(url_for('signup'))
+		
+		
+		if not email_available(email):
+			if login_session['language'] == 'he':
+				flash("משתמש עם כתובת האימייל הנוכחית כבר קיים.")
+			elif login_session['language'] == 'ar':
+				flash("هناك مستخدم آخر بنفس هذا البريد الإلكتروني")
+			else:
+				flash("A User already exists with this email address")
+			return redirect(url_for('signup'))
+		    
+		if num_at_ip(str(request.remote_addr))>IP_THRESHOLD:
                         if login_session['language'] == 'he':
                                 flash("כדי למנוע חשבונות מזויפים, רק "+IP_THRESHOLD+" מותר לכל כתובת IP")
                         elif login_session['language'] == 'ar':
@@ -367,27 +353,10 @@ def signup(email=None):
                         else:
                                 flash("To prevent fake accounts, only "+IP_THRESHOLD+" allowed per IP address")
                         return redirect(url_for('signup'))
-    	
-    	if True: #validate_email(email, verify=True)!=False:
+		
+		if True: #validate_email(email, verify=True)!=False:
                         print("client ip",request.remote_addr)
                         print("also client ip?",request.environ['REMOTE_ADDR'])
-                        group = group = get_mailing_email(email).group
-            
-                        if group != None:
-                            user = create_user(first_name,last_name, hometown,email,password, str(request.remote_addr), verified=True)
-                            login_session['first_name'] = user.first_name
-                            login_session['last_name'] = user.last_name 
-                            login_session['email'] = email
-                            login_session['id'] = user.id
-                            login_session['group'] = user.group
-                            if group=="gold":
-                                initial_value = GOLD_AMOUNT
-                            elif group=="silver":
-                                initial_value = SILVER_AMOUNT
-                            else:
-                                initial_value = BRONZE_AMOUNT
-                            create_wallet(initial_value,user)
-                            return redirect(url_for("showLandingPage"))
                         newUser = create_user(first_name,last_name, hometown,email,password, str(request.remote_addr), False)
                         print("Creating a new user",newUser.confirmation_code)
                         render_template("confirmationemail.html", user=newUser)
@@ -404,15 +373,15 @@ def signup(email=None):
                                 render_template("confirmationemail.html", user=newUser))
                                 flash("Please check your email to verify your confirmation code")
                         return redirect(url_for('verify', email = email))
-    		
-    	else:
-    		if login_session['language'] == 'he':
-    			flash("כתובת האימייל שגויה. אנא נסו שנית.")
-    		elif login_session['language'] == 'ar':
-    			flash("البريد الإلكتروني خطأ . من فضلك حاول مرة أخرى")
-    		else:
-    			flash("This email is invalid. Please try again")
-    		return redirect(url_for('signup'))
+			
+		else:
+			if login_session['language'] == 'he':
+				flash("כתובת האימייל שגויה. אנא נסו שנית.")
+			elif login_session['language'] == 'ar':
+				flash("البريد الإلكتروني خطأ . من فضلك حاول مرة أخرى")
+			else:
+				flash("This email is invalid. Please try again")
+			return redirect(url_for('signup'))
 
 @app.route("/verify/<email>", methods = ['GET', 'POST'])
 def verify(email):
@@ -443,17 +412,12 @@ def verify(email):
                         return redirect(url_for('verify', email = email))
                 ## Make a Wallet for verified user
                 ## Make a Wallet for  newUser
-                group = get_mailing_email(email).group
-                if group == None:
-                    initial_value = BRONZE_AMOUNT
-                elif group=="gold":
-                    initial_value = GOLD_AMOUNT
-                elif group=="silver":
-                    initial_value = SILVER_AMOUNT
+                if user.group=="gold":
+                    usersWallet = create_wallet('1000000.00',user)
+                elif user.group=="silver":
+                    usersWallet = create_wallet('50000.00',user)
                 else:
-                    initial_value = BRONZE_AMOUNT
-                create_wallet(initial_value,user)
-
+                    usersWallet = create_wallet('10000.00',user)
 
                 if login_session['language']=='he':
                         flash("ווידוא חשבונך נעשה בהצלחה")
@@ -847,17 +811,18 @@ def remove_team(team_id):
 
 @app.route("/database")
 def showDatabase():
-	if 'language' not in login_session:
-		login_session['language'] = 'en'
-	if 'id' not in login_session:
-		flash("You do not have access to this page")
-		return redirect(url_for('showLandingPage'))
-	if login_session['group'] != "administrator":
-		flash("You do not have access to this page")
-		return redirect(url_for('showLandingPage'))
-	users = get_users()
-	mailing_list = get_mailing_list()
-	return render_template('database.html', users = users, mailing_list = mailing_list)
+    if 'language' not in login_session:
+    	login_session['language'] = 'en'
+    if 'id' not in login_session:
+    	flash("You do not have access to this page")
+    	return redirect(url_for('showLandingPage'))
+    if login_session['group'] != "administrator":
+    	flash("You do not have access to this page")
+    	return redirect(url_for('showLandingPage'))
+    users = get_users()
+    mailing_list = get_mailing_list()
+    special_users = get_special_users()
+    return render_template('database.html', users = users, mailing_list = mailing_list, special_users=special_users)
 
 
 def send_email(subject, sender, recipients, text_body, html_body):
@@ -881,25 +846,17 @@ def sendNotifications():
     if datetime.datetime.now().date()<get_start_date():
         flash("Campaing hasn't started yet!")
     elif datetime.datetime.now().date()>get_end_date():
-        flash("Campaign is over!")
+        flash("Campaing is over!")
     else:
         accounts = get_mailing_list()
-        year = datetime.datetime.now().year
-        for account in accounts:         
-            if account.group != None:
-                print(account.email,account.group)
-                if account.group =="gold":
-                    amount = GOLD_AMOUNT
-                else:
-                    amount = SILVER_AMOUNT
-                send_email("The MEETCampaign is Open!",EMAIL_SENDER,[account.email],render_template("special_user_email.html",year=year,group=account.group,amount=amount),render_template("special_user_email.html",year=year,group=account.group,amount=amount))
+        for account in accounts:
+            year = datetime.now().year()
+            if account.langauge=="he":
+                send_email("ה- MEETCampaign פתוח!",EMAIL_SENDER,[account.email],render_template("notification_email_he.html",year=year),render_template("notification_email_he.html",year=year))
+            elif account.language=="ar":
+                send_email("MEETCampaign مفتوح!",EMAIL_SENDER,[account.email],render_template("notification_email_ar.html",year=year),render_template("notification_email_ar.html",year=year))
             else:
-                if account.langauge=="he":
-                    send_email("ה- MEETCampaign פתוח!",EMAIL_SENDER,[account.email],render_template("notification_email_he.html",year=year),render_template("notification_email_he.html",year=year))
-                elif account.language=="ar":
-                    send_email("MEETCampaign مفتوح!",EMAIL_SENDER,[account.email],render_template("notification_email_ar.html",year=year),render_template("notification_email_ar.html",year=year))
-                else:
-                    send_email("The MEETCampaign is Open!",EMAIL_SENDER,[account.email],render_template("notification_email.html",year=year),render_template("notification_email.html",year=year))
+                send_email("The MEETCampaign is Open!",EMAIL_SENDER,[account.email],render_template("notification_email.html",year=year),render_template("notification_email.html",year=year))
         flash("Notification emails sent!")
     return redirect(url_for('showDashboard'))
 
@@ -946,54 +903,21 @@ def clear_database():
     if login_session['group'] != "administrator":
             flash("You do not have access to this page")
             return redirect(url_for('showLandingPage'))
-    #delete_everything()
-    flash(Markup("Currently you cannot clear the database."))
+    delete_everything()
+    flash(Markup("Datbase cleared"))
     return redirect(url_for('showDashboard'))
 
-@app.route("/addSpecialUser", methods = ['GET','POST'])
+@app.route("/add_special_user", methods = ['GET','POST'])
 def add_special_user():
-    if 'id' not in login_session or login_session['group'] != "administrator":
+    if 'id' not in login_session:
+            flash("You do not have access to this page")
+            return redirect(url_for('showLandingPage'))
+    if login_session['group'] != "administrator":
             flash("You do not have access to this page")
             return redirect(url_for('showLandingPage'))
     if request.method == 'POST':
-        #print(request.form)
-        #add_special_email(request.form['email'],request.form['status'])
-        add_to_mailing(request.form['email'],"en",group=request.form['status'])
-        #Change this to be a custom html doc for special users
-        #send_email("The MEETCampaign is Open!",EMAIL_SENDER,request.form['email'],render_template("special_user_email.html"),render_template("special_user_email.html"))
-
-
-
-    return redirect(url_for('showDashboard'))
-
-@app.route("/downloadDB")
-def downloadDB():
-    if 'id' not in login_session or login_session['group'] != "administrator":
-            flash("You do not have access to this page")
-            return redirect(url_for('showLandingPage'))
-    
-    mailing_list = get_mailing_list()
-    mail_data = [["MAILING LIST"],["language","email"]]+[[a.language,a.email] for a in mailing_list]
-    user_list = get_users()
-    user_data = [["USERS"],["first_name","last_name","username","group","hometown","email"]]+[[a.first_name,a.last_name,a.username,a.group,a.hometown,a.email] for a in user_list]
-    investments = get_investments()
-    investment_data = [["INVESTMENTS"],["user","product","amount"]]+[[a.wallet.user.first_name+""+a.wallet.user.last_name,a.product.team.name,a.amount] for a in investments]
-    teams = get_teams()
-    team_data = [["TEAMS"],["name","members"]] + [[a.name,a.product.team_members] for a in teams]
-
-     
-    myFile = open('static/database.csv', 'w')
-    with myFile:
-        writer = csv.writer(myFile)
-        writer.writerows(mail_data)
-
-        writer.writerows(user_data)
-
-        writer.writerows(investment_data)
-
-        writer.writerows(team_data)
-
-    flash(Markup("Dowload the database <a href='/static/database.csv' download>here</a>."))
+        add_special_user_database(request.form["email"],request.form["group"])
+    flash(Markup("User Added"))
     return redirect(url_for('showDashboard'))
 
 
