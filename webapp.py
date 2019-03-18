@@ -103,6 +103,9 @@ def authorized():
                 dummy_password = "cantguessthis"
                 ip_address = str(request.remote_addr)
                 newUser = create_user(first_name, last_name, "home", email, dummy_password, ip_address, verified=True)
+                print("----------------------------")
+                print("groups",[(a.group) for a in get_users()])
+                print("----------------------------")
                  
                 ## Make a Wallet for  newUser
                 group = get_mailing_email(email).group
