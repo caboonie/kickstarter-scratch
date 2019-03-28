@@ -19,7 +19,7 @@ CONFIG = json.loads(open('secrets.json', 'r').read())
 
 
 
-IP_THRESHOLD = 1 #how many distinct people would use one ip?
+IP_THRESHOLD = 10 #how many distinct people would use one ip?
 #Could make it so that they have to wait a day before voting if the ip is overused?
 
 app = Flask(__name__)
