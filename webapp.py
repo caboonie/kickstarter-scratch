@@ -406,8 +406,10 @@ def signup(email=None):
                                 initial_value = BRONZE_AMOUNT
                             create_wallet(initial_value,user)
                             return redirect(url_for("showLandingPage"))
+
                         newUser = create_user(first_name,last_name, hometown,email,password, str(request.remote_addr), False)
                         print("Creating a new user",newUser.confirmation_code)
+                        '''
                         render_template("confirmationemail.html", user=newUser)
                         if login_session['language'] == 'ar':
                                 send_email("أكد على بريدك الإلكتروني المستخدم للحملة",EMAIL_SENDER,[newUser.email],render_template("confirmationemail_ar.html", user=newUser),
@@ -421,6 +423,7 @@ def signup(email=None):
                                 send_email("Verify your MEETCampaign Account",EMAIL_SENDER,[newUser.email],render_template("confirmationemail.html", user=newUser),
                                 render_template("confirmationemail.html", user=newUser))
                                 flash("Please check your email to verify your confirmation code")
+                        '''
                         return redirect(url_for('verify', email = email))
     		
     	else:
