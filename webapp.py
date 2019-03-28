@@ -86,9 +86,15 @@ def authorized():
         login_session['google_token'] = (resp['access_token'], '')
         me = google.get('userinfo')
         print(me)
-        # print(me.data)
-        first_name = me.data['given_name']
-        last_name = me.data['family_name']
+        print(me.data)
+        try:
+            first_name = me.data['given_name']
+        except:
+            first_name = "first name"
+        try:
+            last_name = me.data['family_name']
+        except:
+            last_name = "last name"
         email = me.data['email']
         query = get_user_by_email(email)
         if query == None:
@@ -108,7 +114,10 @@ def authorized():
                 print("----------------------------")
                  
                 ## Make a Wallet for  newUser
-                group = get_mailing_email(email).group
+                if get_mailing_email(email) != None:
+                    group = get_mailing_email(email).group
+                else:
+                    group = None
                 if group == None:
                     initial_value = BRONZE_AMOUNT
                 elif group=="gold":
@@ -117,7 +126,7 @@ def authorized():
                     initial_value = SILVER_AMOUNT
                 else:
                     initial_value = BRONZE_AMOUNT
-                create_wallet(initial_value,user)
+                create_wallet(initial_value,newUser)
 
         else:
                 newUser = query
@@ -195,7 +204,10 @@ def facebook_authorized(resp):
                 newUser = create_user(first_name, last_name, "home", email, dummy_password, str(request.remote_addr), verified=True)
                 
                 ## Make a Wallet for  newUser
-                group = get_mailing_email(email).group
+                if get_mailing_email(email) != None:
+                    group = get_mailing_email(email).group
+                else:
+                    group = None
                 if group == None:
                     initial_value = BRONZE_AMOUNT
                 elif group=="gold":
@@ -204,7 +216,7 @@ def facebook_authorized(resp):
                     initial_value = SILVER_AMOUNT
                 else:
                     initial_value = BRONZE_AMOUNT
-                create_wallet(initial_value,user)
+                create_wallet(initial_value,newUser)
 	else:
 		newUser = query
 
@@ -374,7 +386,10 @@ def signup(email=None):
     	if True: #validate_email(email, verify=True)!=False:
                         print("client ip",request.remote_addr)
                         print("also client ip?",request.environ['REMOTE_ADDR'])
-                        group = group = get_mailing_email(email).group
+                        if get_mailing_email(email) != None:
+                            group = get_mailing_email(email).group
+                        else:
+                            group = None
             
                         if group != None:
                             user = create_user(first_name,last_name, hometown,email,password, str(request.remote_addr), verified=True)
@@ -446,7 +461,10 @@ def verify(email):
                         return redirect(url_for('verify', email = email))
                 ## Make a Wallet for verified user
                 ## Make a Wallet for  newUser
-                group = get_mailing_email(email).group
+                if get_mailing_email(email) != None:
+                    group = get_mailing_email(email).group
+                else:
+                    group = None
                 if group == None:
                     initial_value = BRONZE_AMOUNT
                 elif group=="gold":
@@ -712,6 +730,7 @@ def showProducts():
         products = get_products()
         random.shuffle(products)
         wallet = get_user_wallet(login_session['id']) 
+        print("WALLET",wallet)
         return render_template('productsPage.html', products = products, wallet = wallet)
 
 @app.route("/product/<int:product_id>")
