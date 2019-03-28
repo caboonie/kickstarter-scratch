@@ -409,21 +409,23 @@ def signup(email=None):
 
                         newUser = create_user(first_name,last_name, hometown,email,password, str(request.remote_addr), False)
                         print("Creating a new user",newUser.confirmation_code)
-                        '''
+                        
                         render_template("confirmationemail.html", user=newUser)
-                        if login_session['language'] == 'ar':
-                                send_email("أكد على بريدك الإلكتروني المستخدم للحملة",EMAIL_SENDER,[newUser.email],render_template("confirmationemail_ar.html", user=newUser),
-                                render_template("confirmationemail_ar.html", user=newUser))
-                                flash("Please check your email to verify your confirmation code")
-                        elif login_session['language'] == 'he':
-                                send_email("וודא את חשבון קמפיין המיט שלך",EMAIL_SENDER,[newUser.email],render_template("confirmationemail_he.html", user=newUser),
-                                render_template("confirmationemail_he.html", user=newUser))
-                                flash("Please check your email to verify your confirmation code")
-                        else:
-                                send_email("Verify your MEETCampaign Account",EMAIL_SENDER,[newUser.email],render_template("confirmationemail.html", user=newUser),
-                                render_template("confirmationemail.html", user=newUser))
-                                flash("Please check your email to verify your confirmation code")
-                        '''
+                        try:
+                            if login_session['language'] == 'ar':
+                                    send_email("أكد على بريدك الإلكتروني المستخدم للحملة",EMAIL_SENDER,[newUser.email],render_template("confirmationemail_ar.html", user=newUser),
+                                    render_template("confirmationemail_ar.html", user=newUser))
+                                    flash("Please check your email to verify your confirmation code")
+                            elif login_session['language'] == 'he':
+                                    send_email("וודא את חשבון קמפיין המיט שלך",EMAIL_SENDER,[newUser.email],render_template("confirmationemail_he.html", user=newUser),
+                                    render_template("confirmationemail_he.html", user=newUser))
+                                    flash("Please check your email to verify your confirmation code")
+                            else:
+                                    send_email("Verify your MEETCampaign Account",EMAIL_SENDER,[newUser.email],render_template("confirmationemail.html", user=newUser),
+                                    render_template("confirmationemail.html", user=newUser))
+                                    flash("Please check your email to verify your confirmation code")
+                        except:
+                            flash("Couldn't send...")
                         return redirect(url_for('verify', email = email))
     		
     	else:
