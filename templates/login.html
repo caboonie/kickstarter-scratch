@@ -6,9 +6,9 @@
 <div id = "login-container">
 
 {% if session['language'] == 'he' %}
-  <a href="{{url_for('loginWithFacebook')}}">
+  <!-- <a href="{{url_for('loginWithFacebook')}}">
     <img src = "{{url_for('static', filename='facebook1.png')}}" height=100px style=" height: 40px;" >
-  </a>
+  </a> -->
 
   <a href="{{url_for('loginWithGoogle')}}">
     <img src = "{{url_for('static', filename='google1.png')}}" height=60px style="max-height: 39px;">
@@ -33,9 +33,9 @@
   <p class="black">?אין לך חשבון <br>  <a href="{{url_for('signup')}}">!צור אחד כאן</a></p>
 
 {%elif session['language'] == 'ar' %}
-  <a href="{{url_for('loginWithFacebook')}}">
+<!--   <a href="{{url_for('loginWithFacebook')}}">
     <img src = "{{url_for('static', filename='facebook1.png')}}" height=100px style="height: 40px;">
-  </a>
+  </a> -->
 
   <a href="{{url_for('loginWithGoogle')}}">
     <img src = "{{url_for('static', filename='google1.png')}}" height=60px style="max-height: 39px;">
@@ -60,9 +60,9 @@
   <p class="black">ليس لديك حساب ؟  <br>   <a href="{{url_for('signup')}}">إعمل حساب هنا</a></p>
 
 {%else%}
-  <a href="{{url_for('loginWithFacebook')}}">
+<!--   <a href="{{url_for('loginWithFacebook')}}">
     <img src = "{{url_for('static', filename='facebook1.png')}}" height=100px  style=" height: 40px;">
-  </a>
+  </a> -->
 
   <a href="{{url_for('loginWithGoogle')}}">
     <img src = "{{url_for('static', filename='google1.png')}}" height=60px style="max-height: 39px;">
