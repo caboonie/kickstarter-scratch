@@ -924,7 +924,9 @@ def sendNotifications():
 					amount = GOLD_AMOUNT
 				else:
 					amount = SILVER_AMOUNT
-				send_email("The MEETCampaign is Open!",EMAIL_SENDER,[account.email],render_template("special_user_email.html",year=year,group=account.group,amount=amount),render_template("special_user_email.html",year=year,group=account.group,amount=amount))
+				link = "https://meet-kickstarter.herokuapp.com/signup/" + str(account.email)
+				print ("link is : " + link)
+				send_email("The MEETCampaign is Open!",EMAIL_SENDER,[account.email],render_template("special_user_email.html",year=year,group=account.group,amount=amount,link=link),render_template("special_user_email.html",year=year,group=account.group,amount=amount,link=link))
 			else:
 				if account.langauge=="he":
 					send_email("ה- MEETCampaign פתוח!",EMAIL_SENDER,[account.email],render_template("notification_email_he.html",year=year),render_template("notification_email_he.html",year=year))
@@ -989,12 +991,19 @@ def add_special_user():
 			return redirect(url_for('showLandingPage'))
 	if request.method == 'POST':
 		#print(request.form)
-		#add_special_email(request.form['email'],request.form['status'])
-		add_to_mailing(request.form['email'],"en",group=request.form['status'])
+		# add_special_email(request.form['email'],request.form['status'])
+		email = request.form['email']
+		group=request.form['status']
+		add_to_mailing(email,"en",group=group)
 		#Change this to be a custom html doc for special users
-		#send_email("The MEETCampaign is Open!",EMAIL_SENDER,request.form['email'],render_template("special_user_email.html"),render_template("special_user_email.html"))
+		# if group == "gold":
+		# 	amount = GOLD_AMOUNT
+		# else:
+		# 	amount = SILVER_AMOUNT
 
-
+		# year = datetime.datetime.now().year
+		# send_email("The MEETCampaign is Open!",EMAIL_SENDER,email,render_template("special_user_email.html",year=year,group=group,amount=amount),render_template("special_user_email.html",year=year,group=group,amount=amount))
+		# send_email("The MEETCampaign is Open!",EMAIL_SENDER,email,render_template("special_user_email.html",email=email),render_template("special_user_email.html",email=email))
 
 	return redirect(url_for('showDashboard'))
 
