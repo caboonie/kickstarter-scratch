@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, request, flash, url_for, redirect, send_from_directory, jsonify, current_app, Markup, make_response
+from flask import Flask, render_template, request, flash, url_for, redirect, send_from_directory, jsonify, current_app, Markup, make_response, send_file
 from database import *
 import random
 from flask import session as login_session
@@ -1013,6 +1013,7 @@ def downloadDB():
 			flash("You do not have access to this page")
 			return redirect(url_for('showLandingPage'))
 	
+	return send_file("kickstarter.db", as_attachment=True)
 	mailing_list = get_mailing_list()
 	mail_data = [["MAILING LIST"],["language","email"]]+[[a.language,a.email] for a in mailing_list]
 	user_list = get_users()
