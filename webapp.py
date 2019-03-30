@@ -1012,8 +1012,19 @@ def downloadDB():
 	if 'id' not in login_session or login_session['group'] != "administrator":
 			flash("You do not have access to this page")
 			return redirect(url_for('showLandingPage'))
-	
+	'''
+	import zipfile
+
+	def zipdir(path, ziph):
+	    # ziph is zipfile handle
+	    for root, dirs, files in os.walk(path):
+	        for file in files:
+	            ziph.write(os.path.join(root, file))
+
+	f for f in listdir("static/team_mockups19"):
+	'''
 	return send_file("kickstarter.db", as_attachment=True)
+
 	mailing_list = get_mailing_list()
 	mail_data = [["MAILING LIST"],["language","email"]]+[[a.language,a.email] for a in mailing_list]
 	user_list = get_users()
@@ -1035,7 +1046,7 @@ def downloadDB():
 
 		writer.writerows(team_data)
 
-	flash(Markup("Dowload the database <a href='/static/database.csv' download>here</a>."))
+	flash(Markup("Download the database <a href='/static/database.csv' download>here</a>."))
 	return redirect(url_for('showDashboard'))
 
 
