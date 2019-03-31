@@ -284,58 +284,58 @@ def changeLanguage(language):
 @app.route("/login", methods = ['GET', 'POST'])
 def login():
 		if 'language' not in login_session:
-				login_session['language'] = 'en'
+			login_session['language'] = 'en'
 		if 'id' in login_session:
-				return redirect(url_for("showProducts"))
+			return redirect(url_for("showProducts"))
 		if request.method == 'GET':
-				return render_template('login.html')
+			return render_template('login.html')
 		else:
-				email = request.form['email']
-				password = request.form['password']
-				if email is None or password is None:
-						if login_session['language'] == 'he':
-								flash("צירוף שם משתמש או סיסמא לא נכון")
-						elif login_session['language'] == 'ar':
-								flash("إسم المستخدم خطأ \ كلمة السر خطأ")
-						else:
-								flash("Missing Values")
-						return redirect(url_for('login'))
-				if verify_password(email, password):
-						user = get_user_by_email(email)
-						if user.verified == False:
-							print("not verified")
-							if login_session['language'] == 'he':
-									flash("עליך לאשר את חשבונך לפני שאתה ממשיך")
-							elif login_session['language'] == 'ar':
-									flash("يجب عليك أن تقوم بتفعيل حسابك قبل الإستمرار ")
-							else:
-									flash("You must verify your account before continuing")
-							return redirect(url_for('verify', email = email))
-						# if login_session['language'] == 'he':
-						# 	flash("התחברות מוצלחת. ברוכים הבאים,%s!" % user.first_name)
-						# elif login_session['language'] == 'ar':
-						# 	flash("تم تسجيل الدخول بنجاح ! أهلا و سهلا %s!" % user.first_name)
-						# else:
-						# 	flash("Login Successful. Welcome, %s!" % user.first_name)
-						login_session['first_name'] = user.first_name
-						login_session['last_name'] = user.last_name	
-						login_session['email'] = email
-						login_session['id'] = user.id
-						login_session['group'] = user.group
-						if user.group == 'student':
-								return redirect(url_for('studentPortal'))
-						if user.group == 'administrator':
-								return redirect(url_for('showDashboard'))
-						return redirect(url_for('showProducts'))
-						
+			email = request.form['email']
+			password = request.form['password']
+			if email is None or password is None:
+				if login_session['language'] == 'he':
+					flash("צירוף שם משתמש או סיסמא לא נכון")
+				elif login_session['language'] == 'ar':
+					flash("إسم المستخدم خطأ \ كلمة السر خطأ")
 				else:
-						if login_session['language'] == 'he':
-								flash("צירוף שם משתמש או סיסמא לא נכון")
-						elif login_session['language'] == 'ar':
-								flash("إسم المستخدم خطأ \ كلمة السر خطأ")
-						else:
-								flash("Incorrect email/password combination")
-						return redirect(url_for('login'))
+					flash("Missing Values")
+				return redirect(url_for('login'))
+			if verify_password(email, password):
+				user = get_user_by_email(email)
+				if user.verified == False:
+					print("not verified")
+					if login_session['language'] == 'he':
+						flash("עליך לאשר את חשבונך לפני שאתה ממשיך")
+					elif login_session['language'] == 'ar':
+						flash("يجب عليك أن تقوم بتفعيل حسابك قبل الإستمرار ")
+					else:
+						flash("You must verify your account before continuing")
+					return redirect(url_for('verify', email = email))
+					# if login_session['language'] == 'he':
+					# 	flash("התחברות מוצלחת. ברוכים הבאים,%s!" % user.first_name)
+					# elif login_session['language'] == 'ar':
+					# 	flash("تم تسجيل الدخول بنجاح ! أهلا و سهلا %s!" % user.first_name)
+					# else:
+					# 	flash("Login Successful. Welcome, %s!" % user.first_name)
+				login_session['first_name'] = user.first_name
+				login_session['last_name'] = user.last_name	
+				login_session['email'] = email
+				login_session['id'] = user.id
+				login_session['group'] = user.group
+				if user.group == 'student':
+					return redirect(url_for('studentPortal'))
+				if user.group == 'administrator':
+					return redirect(url_for('showDashboard'))
+				return redirect(url_for('showProducts'))
+				
+			else:
+				if login_session['language'] == 'he':
+					flash("צירוף שם משתמש או סיסמא לא נכון")
+				elif login_session['language'] == 'ar':
+					flash("إسم المستخدم خطأ \ كلمة السر خطأ")
+				else:
+					flash("Incorrect email/password combination")
+				return redirect(url_for('login'))
 
 @app.route("/signup/<email>")
 def signup_special(email):
@@ -1051,6 +1051,51 @@ def downloadDB():
 	flash(Markup("Download the database <a href='/static/database.csv' download>here</a>."))
 	return redirect(url_for('showDashboard'))
 
+def checkupdate_photos():
+	# teams = session.query(Team).all()
+	products = get_products()
+
+	
+	for product in products:
+		photo_url=""
+		print(product.team.name)
+		print (product.team.photo)
+		print ("email : " + product.team.email + " -- pass : " + product.team.password)
+		if product.team.photo == None:
+			print("Need to update photo")
+			if product.team.name == "Trues ":
+				photo_url = "static/team_mockups19/trues.jpeg"
+			elif product.team.name == "SJobs":
+				photo_url = "static/team_mockups19/sjobs.png"
+			elif product.team.name == "Reake":
+				photo_url = "static/team_mockups19/reake.jpeg"
+			elif product.team.name == "OverMedia ":
+				photo_url = "static/team_mockups19/over.png"
+			elif product.team.name == "LocalEat":
+				photo_url = "static/team_mockups19/local.png"
+			elif product.team.name == "Language For Two ":
+				photo_url = "static/team_mockups19/lf2.png"
+			elif product.team.name == "Shout Out Strong":
+				photo_url = "static/team_mockups19/sos.jpeg"
+			elif product.team.name == "Quickonomy":
+				photo_url = "static/team_mockups19/quick.jpeg"
+			elif product.team.name == "FamFun":
+				photo_url = "static/team_mockups19/famfun.gif"
+			elif product.team.name == "GOW":
+				photo_url = "static/team_mockups19/gow.jpeg"
+			elif product.team.name == "Nirvana":
+				photo_url = "static/team_mockups19/nirvana.png"
+			elif product.team.name == "Refact":
+				photo_url = "static/team_mockups19/refact.jpeg"
+			elif product.team.name == "Hope.point":
+				photo_url = "static/team_mockups19/hope.png"
+			elif product.team.name == "Safalugha":
+				photo_url = "static/team_mockups19/safalugha.PNG"
+			product.photo = photo_url
+			session.commit()
+			print("Photo updated")
+
+checkupdate_photos()
 
 if __name__ == '__main__':
 	app.run(debug=True)
