@@ -1074,7 +1074,7 @@ def checkupdate_photos():
 			elif product.team.name == "LocalEat":
 				photo_url = "static/team_mockups19/local.png"
 			elif product.team.name == "Language For Two ":
-				photo_url = "static/team_mockups19/lf2.png"
+				photo_url = "static/team_mockups19/lf2.jpg"
 			elif product.team.name == "Shout Out Strong":
 				photo_url = "static/team_mockups19/sos.jpeg"
 			elif product.team.name == "Quickonomy":
