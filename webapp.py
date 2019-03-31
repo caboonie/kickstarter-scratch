@@ -995,6 +995,8 @@ def add_special_user():
 		email = request.form['email']
 		group=request.form['status']
 		add_to_mailing(email,"en",group=group)
+		flash(group +" member added to database!")
+
 		#Change this to be a custom html doc for special users
 		# if group == "gold":
 		# 	amount = GOLD_AMOUNT
