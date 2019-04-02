@@ -1097,5 +1097,45 @@ def checkupdate_photos():
 
 checkupdate_photos()
 
+engine2 = create_engine('sqlite:///test2.db?check_same_thread=False')
+Base.metadata.create_all(engine2)
+DBSession2 = sessionmaker(bind=engine2)
+session2 = DBSession2()
+
+def checkDatabase():
+	products = session.query(Product).all()
+	products2 = session2.query(Product).all()
+
+	investments = []
+	for product in products2:
+		for inv in product.investments:
+			investments.append(inv)
+	for product in products:
+		for inv in product.investments:
+			investments.append(inv)
+
+	total = 0        
+	c=0
+
+	for inv in investments:
+		for inv2 in investments:
+			if inv.wallet.user.email==inv2.wallet.user.email and inv.amount>5000 and inv.amount==inv2.amount and inv.wallet.user.group !="gold" and inv.wallet.user.group!="silver":
+				print ("Deleting duplicate "+ inv2.wallet.user.email)
+				investments.remove(inv2)
+
+	for product in products:
+		print ("------------------")
+		print (product.team.name)
+		print ("Investments:")
+		for inv in investments:
+			if inv.product.team.name == product.team.name:
+				total += inv.amount
+				c+=1
+				print (inv.wallet.user.email + " - invested " + str(inv.amount))
+		print ("---------"+str(total)+" invested by "+ str(c)+ " investors ----------")
+		total=0
+		c=0
+# checkDatabase()
+
 if __name__ == '__main__':
 	app.run(debug=True)
