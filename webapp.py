@@ -1095,7 +1095,7 @@ def checkupdate_photos():
 			session.commit()
 			print("Photo updated")
 
-checkupdate_photos()
+# checkupdate_photos()
 
 engine2 = create_engine('sqlite:///test2.db?check_same_thread=False')
 Base.metadata.create_all(engine2)
@@ -1136,6 +1136,22 @@ def checkDatabase():
 		total=0
 		c=0
 # checkDatabase()
+
+def delete_acc(email):
+	user = session.query(User).filter_by(email=email).one_or_none()
+	if user!=None:
+		print("delete attempt to " + user.first_name)
+		session.delete(user)
+		del user
+		session.commit()
+	user2 = session.query(User).filter_by(email=email).one_or_none()
+	if user2!=None:
+		print ("deleting failed. user is still here by the name of " + user2.first_name)
+	else:
+		print("deleted successfully.")
+
+# delete_acc("nadinenidalkamleh@gmail.com")
+
 
 if __name__ == '__main__':
 	app.run(debug=True)
