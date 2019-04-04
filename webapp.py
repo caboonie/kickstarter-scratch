@@ -1165,7 +1165,7 @@ def add_ranked():
 		if user!=None:
 			del user
 			session.commit()
-			
+
 	for email in golden:
 		CanAddEmail = True
 		for check in mailing_list:
@@ -1173,7 +1173,6 @@ def add_ranked():
 				CanAddEmail = False
 		if CanAddEmail:
 			add_to_mailing(email,"en",group="gold")
-			print "added " + email + " to gold."
 	for email in silver:
 		CanAddEmail = True
 		for check in mailing_list:
@@ -1181,7 +1180,6 @@ def add_ranked():
 				CanAddEmail = False
 		if CanAddEmail:
 			add_to_mailing(email,"en",group="silver")
-			print "added " + email + " to silver."
 
 # add_ranked()
 
