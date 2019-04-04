@@ -1186,7 +1186,6 @@ def add_ranked():
 				CanAddEmail = False
 		if CanAddEmail:
 			add_to_mailing(email,"en",group="gold")
-			print "added " + email + " to gold."
 		user = session.query(User).filter_by(email=email).one_or_none()
 		if user!=None:
 			if user.group!="gold":
@@ -1199,7 +1198,6 @@ def add_ranked():
 				CanAddEmail = False
 		if CanAddEmail:
 			add_to_mailing(email,"en",group="silver")
-			print "added " + email + " to silver."
 		user = session.query(User).filter_by(email=email).one_or_none()
 		if user!=None:
 			if user.group!="silver":
