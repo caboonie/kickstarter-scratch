@@ -738,17 +738,17 @@ def showProducts():
 		random.shuffle(products)
 
 		wallet = get_user_wallet(login_session['id']) 
-		print("NEW WALLET",wallet.initial_value,wallet.current_value)
+		print("OLD WALLET",wallet.initial_value,wallet.current_value)
 		user = session.query(User).filter_by(id=login_session['id']).one()
 		print (user.email)
-		if user.group =="gold":
-			print("gold")
-			if wallet.initial_value!=GOLD_AMOUNT:
-				print("creating new wallet")
-				create_wallet(GOLD_AMOUNT,user)
-		elif user.group == "silver":
-			if wallet.initial_value!=SILVER_AMOUNT:
-				create_wallet(SILVER_AMOUNT,user)
+		# if user.group =="gold":
+		# 	print("gold")
+		# 	if wallet.initial_value!=GOLD_AMOUNT:
+		# 		print("creating new wallet")
+		# 		create_wallet(GOLD_AMOUNT,user)
+		# elif user.group == "silver":
+		# 	if wallet.initial_value!=SILVER_AMOUNT:
+		# 		create_wallet(SILVER_AMOUNT,user)
 		
 		wallet = get_user_wallet(login_session['id']) 
 		print("NEW WALLET",wallet.initial_value,wallet.current_value)
@@ -1169,50 +1169,55 @@ def add_ranked():
 	mailing_list=session.query(MailingList).all()
 	golden = ["yohanan@simpo.io","sharif.shayma@bcg.com","sam@lionheart.ps","fadis@1.maof.co.il","danaamoss@gmail.com","h.netnet@gmail.com","abinur@meet.mit.edu","liorgallia@gmail.com","taliasoffer@gmail.com","sohel.zoabi@gmail.com","loai17@meet.mit.edu","ahmadanati@meet.mit.edu","koral@meet.mit.edu","yaraa@meet.mit.edu","uriel10@meet.mit.edu","mustafa@meet.mit.edu","cilina11@meet.mit.edu","tedg@meet.mit.edu"]
 	silver = ["harlap@gmail.com","subhi06@meet.mit.edu","larry_albin@yahoo.com","anat@meet.mit.edu","ybinur@meet.mit.edu","rmasri@meet.mit.edu","wsalloum@gmail.com","adam@bvp.com","gigi@meet.mit.edu","r.younis@alphaomega-eng.com","ada@meet.mit.edu","haimerlich@meet.mit.edu","rawan09@meet.mit.edu","rakheli@meet.mit.edu","gwen@meet.mit.edu" ,"abed@meet.mit.edu","etaifreedman@meet.mit.edu" ,"rkipnis@meet.mit.edu","hmad.hasna@meet.mit.edu","moshiko05@meet.mit.edu","nizar@meet.mit.edu","sadek07@meet.mit.edu","boaz@meet.mit.edu","tasneem@meet.mit.edu","nada17@meet.mit.edu","marjieh.badea@gmail.com","lour16@meet.mit.edu","dor@meet.mit.edu"]
-	for email in golden:
-		user = session.query(User).filter_by(email=email).one_or_none()
-		if user!=None:
-			del user
-			session.commit()
-	for email in silver:
-		user = session.query(User).filter_by(email=email).one_or_none()
-		if user!=None:
-			del user
-			session.commit()
+	# for email in golden:
+	# 	user = session.query(User).filter_by(email=email).one_or_none()
+	# 	if user!=None:
+	# 		del user
+	# 		session.commit()
+	# for email in silver:
+	# 	user = session.query(User).filter_by(email=email).one_or_none()
+	# 	if user!=None:
+	# 		del user
+	# 		session.commit()
 	for email in golden:
 		CanAddEmail = True
-		for check in mailing_list:
-			if check.email==email:
-				CanAddEmail = False
-		if CanAddEmail:
-			add_to_mailing(email,"en",group="gold")
+		# for check in mailing_list:
+		# 	if check.email==email:
+		# 		CanAddEmail = False
+		# if CanAddEmail:
+		# 	add_to_mailing(email,"en",group="gold")
 		user = session.query(User).filter_by(email=email).one_or_none()
 		if user!=None:
+			print(user.email,user.wallet.initial_value,user.wallet.current_value)
 			if user.group!="gold":
 				user.group = "gold"
 				session.commit()
 	for email in silver:
-		CanAddEmail = True
-		for check in mailing_list:
-			if check.email==email:
-				CanAddEmail = False
-		if CanAddEmail:
-			add_to_mailing(email,"en",group="silver")
+		# CanAddEmail = True
+		# for check in mailing_list:
+		# 	if check.email==email:
+		# 		CanAddEmail = False
+		# if CanAddEmail:
+		# 	add_to_mailing(email,"en",group="silver")
 		user = session.query(User).filter_by(email=email).one_or_none()
 		if user!=None:
+			print(user.email,user.wallet.initial_value,user.wallet.current_value)
 			if user.group!="silver":
 				user.group = "silver"
 				session.commit()
 
-# add_ranked()
-def fix_amount(email):
+add_ranked()
+
+def fix_amount(email,initial_value,current_value):
 	user = session.query(User).filter_by(email=email).one()
 	print(user.email,user.first_name)
-	user.wallet.current_value = SILVER_AMOUNT
-	user.wallet.initial_value = SILVER_AMOUNT
+	user.wallet.current_value = current_value
+	user.wallet.initial_value = initial_value
 	session.commit()
 	print (user.wallet.initial_value,user.wallet.current_value)
-# user = get_user_by_email("rakheli@meet.mit.edu")
+# fix_amount("nizar@meet.mit.edu",SILVER_AMOUNT,40000)
+# fix_amount("marjieh.badea@gmail.com",SILVER_AMOUNT,SILVER_AMOUNT)
+# user = get_user_by_email("etaifreedman@meet.mit.edu")
 # print ("before")
 # print (user.wallet.initial_value,user.wallet.current_value)
 # print ("after fix.")
