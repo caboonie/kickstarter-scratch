@@ -736,8 +736,22 @@ def showProducts():
 				return redirect(url_for('login'))
 		products = get_products()
 		random.shuffle(products)
+
 		wallet = get_user_wallet(login_session['id']) 
-		print("WALLET",wallet)
+		print("NEW WALLET",wallet.initial_value,wallet.current_value)
+		user = session.query(User).filter_by(id=login_session['id']).one()
+		print (user.email)
+		if user.group =="gold":
+			print("gold")
+			if wallet.initial_value!=GOLD_AMOUNT:
+				print("creating new wallet")
+				create_wallet(GOLD_AMOUNT,user)
+		elif user.group == "silver":
+			if wallet.initial_value!=SILVER_AMOUNT:
+				create_wallet(SILVER_AMOUNT,user)
+		
+		wallet = get_user_wallet(login_session['id']) 
+		print("NEW WALLET",wallet.initial_value,wallet.current_value)
 		return render_template('productsPage.html', products = products, wallet = wallet)
 
 @app.route("/product/<int:product_id>")
@@ -1165,7 +1179,6 @@ def add_ranked():
 		if user!=None:
 			del user
 			session.commit()
-
 	for email in golden:
 		CanAddEmail = True
 		for check in mailing_list:
@@ -1173,6 +1186,12 @@ def add_ranked():
 				CanAddEmail = False
 		if CanAddEmail:
 			add_to_mailing(email,"en",group="gold")
+			print "added " + email + " to gold."
+		user = session.query(User).filter_by(email=email).one_or_none()
+		if user!=None:
+			if user.group!="gold":
+				user.group = "gold"
+				session.commit()
 	for email in silver:
 		CanAddEmail = True
 		for check in mailing_list:
@@ -1180,6 +1199,12 @@ def add_ranked():
 				CanAddEmail = False
 		if CanAddEmail:
 			add_to_mailing(email,"en",group="silver")
+			print "added " + email + " to silver."
+		user = session.query(User).filter_by(email=email).one_or_none()
+		if user!=None:
+			if user.group!="silver":
+				user.group = "silver"
+				session.commit()
 
 # add_ranked()
 

@@ -82,6 +82,9 @@ def verify_user(user):
     session.commit()
 
 def create_wallet(coins, user):
+    if user.wallet is not None:
+        del user.wallet
+        session.commit()
     wallet = Wallet(initial_value = coins, current_value = coins, user = user)
     session.add(wallet)
     session.commit()
