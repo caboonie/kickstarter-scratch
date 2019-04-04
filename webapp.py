@@ -1205,6 +1205,19 @@ def add_ranked():
 				session.commit()
 
 # add_ranked()
+def fix_amount(email):
+	user = session.query(User).filter_by(email=email).one()
+	print(user.email,user.first_name)
+	user.wallet.current_value = SILVER_AMOUNT
+	user.wallet.initial_value = SILVER_AMOUNT
+	session.commit()
+	print (user.wallet.initial_value,user.wallet.current_value)
+# user = get_user_by_email("rakheli@meet.mit.edu")
+# print ("before")
+# print (user.wallet.initial_value,user.wallet.current_value)
+# print ("after fix.")
+# fix_amount("rakheli@meet.mit.edu")
+
 
 if __name__ == '__main__':
 	app.run(debug=True)
