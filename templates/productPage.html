@@ -26,11 +26,11 @@
 			</p>
 			<hr>
 
-			{% if session['group'] == 'silver' or session['group'] == 'gold'%}
+<!-- 			{% if session['group'] == 'silver' or session['group'] == 'gold'%}
 				<div class="invest-form">
 					<form action = "{{url_for('addComment', team_id = product.team_id)}}" method = 'post'>
 						<div class="form-group">
-							<!-- <h4>Please leave commentary or feedback for this team here.</h4> -->
+							<h4>Please leave commentary or feedback for this team here.</h4>
 							<textarea name='commentary' class="form-control" rows="3" placeholder="אנא השאר תגובה או ביקורת לקבוצה כאן."></textarea>
 						</div>
 
@@ -38,14 +38,14 @@
 					</form>
 				</div>
 				<br>
-			{%endif%}
+			{%endif%} -->
 
-			<div class="invest-form">
+<!-- 			<div class="invest-form">
 				<form action="{{ url_for('makeAnInvestment', product_id = product.id) }}" method = 'post'>
 					<h4>האם ברצונך להשקיע בסטארט-אפ זה? הגדר את סכום השקעתך למטה:</h4>
 					<div class="form-group">
-						<!-- <label for="invest-amount"> Specify your investment amount below: </label> -->
-						<!-- <p> Specify your investment amount below: </p> -->
+						<label for="invest-amount"> Specify your investment amount below: </label>
+						 <p> Specify your investment amount below: </p>
 						<input id="invest-amount" class="number form-control" type="number" name="amount">
 					</div>
 
@@ -53,8 +53,7 @@
 				</form>
 			</div>
 		</div> 
-
-
+ --> 
 		<div id="back-btn">
 			<a href="/products">
 				<button class="btn btn-danger">חזרה לרשימת הקבוצות</button>
@@ -94,12 +93,12 @@
 			</p>
 			<hr>
 
-			{% if session['group'] == 'silver' or session['group'] == 'gold'%}
+			<!-- {% if session['group'] == 'silver' or session['group'] == 'gold'%}
 				<div class="invest-form">
 					<form action = "{{url_for('addComment', team_id = product.team_id)}}" method = 'post'>
-						<div class="form-group">
+						<div class="form-group"> -->
 							<!-- <h4>Please leave commentary or feedback for this team here.</h4> -->
-							<textarea name='commentary' class="form-control" rows="3" placeholder="من فضلك قم بترك ملاحظاتك و تعليقاتك لهذا الفريق هنا" ></textarea>
+							<!-- <textarea name='commentary' class="form-control" rows="3" placeholder="من فضلك قم بترك ملاحظاتك و تعليقاتك لهذا الفريق هنا" ></textarea>
 						</div>
 
 						<button type="submit" class="submitproduct btn btn-success">أرسل</button>
@@ -111,17 +110,17 @@
 			<div class="invest-form">
 				<form action="{{ url_for('makeAnInvestment', product_id = product.id) }}" method = 'post'>
 					<h4>هل تريد الإستثمار في هذا المشروع ؟ حدد مقدار الإستثمار الذي تريده هنا </h4>
-					<div class="form-group">
+					<div class="form-group"> -->
 						<!-- <label for="invest-amount"> Specify your investment amount below: </label> -->
 						<!-- <p> Specify your investment amount below: </p> -->
-						<input id="invest-amount" class="number form-control" type="number" name="amount">
+			<!-- 			<input id="invest-amount" class="number form-control" type="number" name="amount">
 					</div>
 
 					<button type="submit" class="submitproduct btn btn-success">أرسل</button>
 				</form>
 			</div>
 		</div> 
-
+ -->
 
 		<div id="back-btn">
 			<a href="/products">
@@ -163,12 +162,12 @@
 			</p>
 			<hr>
 
-			{% if session['group'] == 'silver' or session['group'] == 'gold'%}
+	<!-- 		{% if session['group'] == 'silver' or session['group'] == 'gold'%}
 				<div class="invest-form">
 					<form action = "{{url_for('addComment', team_id = product.team_id)}}" method = 'post'>
-						<div class="form-group">
+						<div class="form-group"> -->
 							<!-- <h4>Please leave commentary or feedback for this team here.</h4> -->
-							<textarea name='commentary' class="form-control" rows="3" placeholder="Please leave commentary or feedback for this team here."></textarea>
+					<!-- 		<textarea name='commentary' class="form-control" rows="3" placeholder="Please leave commentary or feedback for this team here."></textarea>
 						</div>
 
 						<button type="submit" class="submitproduct btn btn-success">Submit</button>
@@ -176,13 +175,13 @@
 				</div>
 				<br>
 			{%endif%}
-
-			<div class="invest-form">
+ -->
+<!-- 			<div class="invest-form">
 				<form action="{{ url_for('makeAnInvestment', product_id = product.id) }}" method = 'post'>
 					<h4>Would you like to invest in this startup?</h4>
-					<div class="form-group">
+					<div class="form-group"> -->
 						<!-- <label for="invest-amount"> Specify your investment amount below: </label> -->
-						<p> Specify your investment amount below: </p>
+		<!-- 				<p> Specify your investment amount below: </p>
 						<input id="invest-amount" class="number form-control" type="number" name="amount">
 					</div>
 
@@ -190,7 +189,7 @@
 				</form>
 			</div>
 		</div> 
-
+ -->
 
 		<div id="back-btn">
 			<a href="/products">

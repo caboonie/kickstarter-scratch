@@ -92,20 +92,20 @@
             
         {%else%}
             {%if session['language'] == 'he'%}
-              <ul class="nav navbar-nav">
+            <!--   <ul class="nav navbar-nav">
                 <li><a href = "/login">התחברות</a></li>
               </ul>
-
+ -->
             {%elif session['language']=='ar'%}
-              <ul class="nav navbar-nav">
+           <!--    <ul class="nav navbar-nav">
                 <li><a href = "{{url_for('logout')}}">تسجيل الدخول</a></li>
-              </ul>
+              </ul> -->
            
             {%else%}
-              <ul class="nav navbar-nav">
+             <!--  <ul class="nav navbar-nav">
                 <li><a href = "/login">Login</a></li>
               </ul>
-            {%endif%}
+ -->            {%endif%}
 
         {%endif%}
         </div>

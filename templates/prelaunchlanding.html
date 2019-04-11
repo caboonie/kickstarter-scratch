@@ -71,7 +71,7 @@
 
 		<div id="notify">
 			{% if timeline == "before" %}
-				<div class="before-notify">
+			<!-- 	<div class="before-notify">
 					<p>أضف عنوان بريدك الإلكتروني أدناه ليتم إخطارك عندما تبدأ الحملة.</p></br>
 					<form action="{{url_for('notifyList')}}" method = 'post' value="Type your Email Address Here">
 						<input  class="emailindex" type="email" name="email"  placeholder="email">
@@ -79,16 +79,16 @@
 					</form>
 				</div>
 				
-				<a href="/login"><button class="btn btn-success btn-lg" type = "submit" name="Notify me" disabled>فل نستثمر!</button></a>
+				<a href="/login"><button class="btn btn-success btn-lg" type = "submit" name="Notify me" disabled>فل نستثمر!</button></a> -->
 			{% else %}
 				<!-- during the competition -->
-				<div class="counter">
+				<!-- <div class="counter">
 					<h3>الوقت المتبقي في الحملة</h3>
-					<div id="countdown">Countdown</div><!-- /#Countdown Div -->
+					<div id="countdown">Countdown</div> --><!-- /#Countdown Div -->
 				</div>
-				<br>
-				<a href="/login"><button class="btn btn-success btn-lg" type = "submit" name="Notify me">فل نستثمر!</button></a>
-				
+				<br><div align="center">
+				<a href="/products"><button class="btn btn-success btn-lg" type = "submit" name="Notify me">رؤية المشاريع</button></a>
+				</div>
 			{% endif %}
 		</div>
 	</div>
@@ -125,7 +125,7 @@
 					</form>
 				</div>
 			{% elif timeline == "after" %}
-				<a href="/login"><button class="btn btn-success btn-lg" type="submit" name="Notify me" disabled>יאללה משקיעים!</button></a>
+				<a href="/products"><button class="btn btn-success btn-lg" type="submit" name="Notify me">ראה פרויקטים</button></a>
 			{% else %}
 				<div class="counter">
 					<h3>הזמן שנותר במסע הפרסום</h3>
@@ -160,7 +160,7 @@
 				</div>
 		
 			{% elif timeline == "after" %}
-				<a href="/login"><button class="btn btn-success btn-lg" type="submit" name="Notify me" disabled>Let's invest! </button></a>
+				<a href="/products"><button class="btn btn-success btn-lg" type="submit" name="Notify me">See Projects! </button></a>
 			{% else %}
 				<div class="counter">
 					<h3>Time Left in Campaign:</h3>

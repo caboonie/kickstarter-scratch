@@ -268,7 +268,7 @@ def showLandingPage():
 	if now < get_start_date():
 		timeline = "before"
 	elif now > get_end_date():
-		flash(Markup("The competition has ended. Thank you for your participation! <a href='/viewResults'>Click Here to See Results</a>"))
+		flash(Markup("The competition has ended. Thank you for your participation! <a href='/products'>Click Here to See Projects</a>"))
 		timeline = "after"
 	else:
 		#during the competition
@@ -721,26 +721,26 @@ def showPoliciesPage():
 
 @app.route("/products")
 def showProducts():
-		if check_valid_time() != "valid":
-				print("not valid time for this page")
-				return check_valid_time()
+		# if check_valid_time() != "valid":
+		# 		print("not valid time for this page")
+		# 		return check_valid_time()
 		if 'language' not in login_session:
 				login_session['language'] = 'en'
-		if 'id' not in login_session:
-				if login_session['language'] == 'he':
-						flash("עליך להיות מחובר על מנת לצפות בדף זה.")
-				elif login_session['language'] == 'ar':
-						flash("يجب عليك تسجيل الدخول من أجل عرض هذه الصفحة")
-				else:
-						flash("You must be logged in to view this page.")
-				return redirect(url_for('login'))
+		# if 'id' not in login_session:
+		# 		if login_session['language'] == 'he':
+		# 				flash("עליך להיות מחובר על מנת לצפות בדף זה.")
+		# 		elif login_session['language'] == 'ar':
+		# 				flash("يجب عليك تسجيل الدخول من أجل عرض هذه الصفحة")
+		# 		else:
+		# 				flash("You must be logged in to view this page.")
+		# 		return redirect(url_for('login'))
 		products = get_products()
 		random.shuffle(products)
 
-		wallet = get_user_wallet(login_session['id']) 
-		print("OLD WALLET",wallet.initial_value,wallet.current_value)
-		user = session.query(User).filter_by(id=login_session['id']).one()
-		print (user.email)
+		# wallet = get_user_wallet(login_session['id']) 
+		# print("OLD WALLET",wallet.initial_value,wallet.current_value)
+		# user = session.query(User).filter_by(id=login_session['id']).one()
+		# print (user.email)
 		# if user.group =="gold":
 		# 	print("gold")
 		# 	if wallet.initial_value!=GOLD_AMOUNT:
@@ -750,21 +750,21 @@ def showProducts():
 		# 	if wallet.initial_value!=SILVER_AMOUNT:
 		# 		create_wallet(SILVER_AMOUNT,user)
 		
-		wallet = get_user_wallet(login_session['id']) 
-		print("NEW WALLET",wallet.initial_value,wallet.current_value)
-		return render_template('productsPage.html', products = products, wallet = wallet)
+		# wallet = get_user_wallet(login_session['id']) 
+		# print("NEW WALLET",wallet.initial_value,wallet.current_value)
+		return render_template('productsPage.html', products = products, wallet = None)
 
 @app.route("/product/<int:product_id>")
 def showProduct(product_id):
-	if check_valid_time() != "valid":
-			return check_valid_time()
+	# if check_valid_time() != "valid":
+	# 		return check_valid_time()
 	if 'language' not in login_session:
 			login_session['language'] = 'en'
-	if 'id' not in login_session:
-			return redirect(url_for('login'))
+	# if 'id' not in login_session:
+	# 		return redirect(url_for('login'))
 	product = get_prod_by_id(product_id)
-	wallet = get_user_wallet(login_session['id'])
-	return render_template('productPage.html', product = product, wallet = wallet)
+	# wallet = get_user_wallet(login_session['id'])
+	return render_template('productPage.html', product = product, wallet = None)
 
 @app.route("/makeAnInvestment/<int:product_id>", methods = ['POST'])
 def makeAnInvestment(product_id):
@@ -1111,20 +1111,65 @@ def checkupdate_photos():
 
 # checkupdate_photos()
 
-engine2 = create_engine('sqlite:///test2.db?check_same_thread=False')
-Base.metadata.create_all(engine2)
-DBSession2 = sessionmaker(bind=engine2)
-session2 = DBSession2()
+# engine2 = create_engine('sqlite:///kickstarter2.db?check_same_thread=False')
+# Base.metadata.create_all(engine2)
+# DBSession2 = sessionmaker(bind=engine2)
+# session2 = DBSession2()
+
+# engine3 = create_engine('sqlite:///kickstarter3.db?check_same_thread=False')
+# Base.metadata.create_all(engine3)
+# DBSession3 = sessionmaker(bind=engine3)
+# session3 = DBSession3()
+
+# engine4 = create_engine('sqlite:///kickstarter4.db?check_same_thread=False')
+# Base.metadata.create_all(engine4)
+# DBSession4 = sessionmaker(bind=engine4)
+# session4 = DBSession4()
+
+# engine5 = create_engine('sqlite:///kickstarter5.db?check_same_thread=False')
+# Base.metadata.create_all(engine5)
+# DBSession5 = sessionmaker(bind=engine5)
+# session5 = DBSession5()
+
+# engine6 = create_engine('sqlite:///kickstarter6.db?check_same_thread=False')
+# Base.metadata.create_all(engine6)
+# DBSession6 = sessionmaker(bind=engine6)
+# session6 = DBSession6()
+
+# engine7 = create_engine('sqlite:///kickstarter7.db?check_same_thread=False')
+# Base.metadata.create_all(engine7)
+# DBSession7 = sessionmaker(bind=engine7)
+# session7 = DBSession7()
 
 def checkDatabase():
 	products = session.query(Product).all()
 	products2 = session2.query(Product).all()
+	products3 = session3.query(Product).all()
+	products4 = session4.query(Product).all()
+	products5 = session5.query(Product).all()
+	products6 = session6.query(Product).all()
+	products7 = session7.query(Product).all()
 
 	investments = []
+	for product in products:
+		for inv in product.investments:
+			investments.append(inv)
 	for product in products2:
 		for inv in product.investments:
 			investments.append(inv)
-	for product in products:
+	for product in products3:
+		for inv in product.investments:
+			investments.append(inv)
+	for product in products4:
+		for inv in product.investments:
+			investments.append(inv)
+	for product in products5:
+		for inv in product.investments:
+			investments.append(inv)
+	for product in products6:
+		for inv in product.investments:
+			investments.append(inv)
+	for product in products7:
 		for inv in product.investments:
 			investments.append(inv)
 
@@ -1132,11 +1177,26 @@ def checkDatabase():
 	c=0
 
 	for inv in investments:
-		for inv2 in investments:
-			if inv.wallet.user.email==inv2.wallet.user.email and inv.amount>5000 and inv.amount==inv2.amount and inv.wallet.user.group !="gold" and inv.wallet.user.group!="silver":
-				print ("Deleting duplicate "+ inv2.wallet.user.email)
-				investments.remove(inv2)
+		print inv
 
+
+	for inv in investments:
+		for inv2 in investments:
+			# print (inv2.wallet.user_id)
+
+			if inv2.wallet.user_id==None:
+				investments.remove(inv2)
+				print("Account with no email deleted.")
+			elif inv.wallet.user_id==None:
+				investments.remove(inv)
+				print("Account with no email deleted.")
+			else:
+				if inv.wallet.user.email==inv2.wallet.user.email and inv.amount>5000 and inv.amount==inv2.amount and inv.wallet.user.group !="gold" and inv.wallet.user.group!="silver":
+					print ("Deleting duplicate "+ inv2.wallet.user.email)
+					investments.remove(inv2)
+				elif inv.wallet.user.email==inv2.wallet.user.email and inv.amount==inv2.amount and inv.wallet.user.group !="bronze" and inv.product_id==inv2.product_id:
+					print ("Deleting duplicate "+ inv2.wallet.user.email)
+					investments.remove(inv2)
 	for product in products:
 		print ("------------------")
 		print (product.team.name)
@@ -1149,7 +1209,21 @@ def checkDatabase():
 		print ("---------"+str(total)+" invested by "+ str(c)+ " investors ----------")
 		total=0
 		c=0
+
 # checkDatabase()
+
+def goldenOrSilver():
+	golden = ["pomerus@gmail.com","yohanan@simpo.io","sharif.shayma@bcg.com","sam@lionheart.ps","fadis@1.maof.co.il","danaamoss@gmail.com","h.netnet@gmail.com","abinur@meet.mit.edu","liorgallia@gmail.com","taliasoffer@gmail.com","sohel.zoabi@gmail.com","loai17@meet.mit.edu","ahmadanati@meet.mit.edu","koral@meet.mit.edu","yaraa@meet.mit.edu","uriel10@meet.mit.edu","mustafa@meet.mit.edu","cilina11@meet.mit.edu","tedg@meet.mit.edu"]
+	silver = ["harlap@gmail.com","subhi06@meet.mit.edu","larry_albin@yahoo.com","anat@meet.mit.edu","ybinur@meet.mit.edu","rmasri@meet.mit.edu","wsalloum@gmail.com","adam@bvp.com","gigi@meet.mit.edu","r.younis@alphaomega-eng.com","ada@meet.mit.edu","haimerlich@meet.mit.edu","rawan09@meet.mit.edu","rakheli@meet.mit.edu","gwen@meet.mit.edu" ,"abed@meet.mit.edu","etaifreedman@meet.mit.edu" ,"rkipnis@meet.mit.edu","hmad.hasna@meet.mit.edu","moshiko05@meet.mit.edu","nizar@meet.mit.edu","sadek07@meet.mit.edu","boaz@meet.mit.edu","tasneem@meet.mit.edu","nada17@meet.mit.edu","marjieh.badea@gmail.com","lour16@meet.mit.edu","dor@meet.mit.edu"]
+
+	for email in silver:
+		user=session.query(User).filter_by(email=email).one_or_none()
+		if user!=None:
+			print("-----------"+ user.email +"------------")
+			for inv in user.wallet.investments:
+				print("Invested " + str(inv.amount) + " to " + inv.product.team.name)
+
+# goldenOrSilver()
 
 def delete_acc(email):
 	user = session.query(User).filter_by(email=email).one_or_none()
@@ -1206,7 +1280,7 @@ def add_ranked():
 				user.group = "silver"
 				session.commit()
 
-add_ranked()
+# add_ranked()
 
 def fix_amount(email,initial_value,current_value):
 	user = session.query(User).filter_by(email=email).one()
