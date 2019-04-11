@@ -1177,7 +1177,7 @@ def checkDatabase():
 	c=0
 
 	for inv in investments:
-		print inv
+		print (inv)
 
 
 	for inv in investments:
