@@ -262,6 +262,8 @@ def check_valid_time():
 @app.route("/")
 @app.route("/main")
 def showLandingPage():
+	if 'id' in login_session:
+			return redirect(url_for("logout"))
 	if 'language' not in login_session:
 		login_session['language'] = 'en'
 	now = datetime.datetime.now().date()
